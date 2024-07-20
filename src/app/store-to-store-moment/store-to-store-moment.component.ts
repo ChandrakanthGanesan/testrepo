@@ -382,5 +382,6 @@ export class StoreToStoreMomentComponent implements OnInit {
     })
     console.log(this.storetostoreUpdateArr);
     console.log(this.storetostoreUpdateArr);
+    console.log(this.storetostoreUpdateArr);
   }
 }
