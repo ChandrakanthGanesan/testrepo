@@ -1,0 +1,162 @@
+<ngx-spinner>
+  <div class="spinner-border text-danger" role="status" style="width: 5rem; height: 5rem;">
+  <span class="visually-hidden">Loading...</span>
+</div>
+</ngx-spinner>
+<app-navigation></app-navigation>
+<mat-card-header class="justify-content-center mt-1">
+  <mat-card-title class="title" >REWORK ISSUE</mat-card-title>
+</mat-card-header>
+<div class="main content mb-2">
+  <mat-card>
+    <mat-card-content>
+      <div class="container-fluid">
+        <form [formGroup]="ReworkIssueForm">
+          <div class="row mb-2">
+            <div class="col ">
+              <label for="exampleFormControlInput3" class="form-label">Issue No <span>*</span> </label>
+              <input type="text" class="form-control" formControlName="IssueNo" readonly>
+            </div>
+            <div class="col">
+              <label for="exampleFormControlInput3" class="form-label">Issue Date <span>*</span> </label>
+              <input type="date" class="form-control" [value]="this.Issuedate" readonly>
+            </div>
+            <div class="col ">
+              <label for="exampleFormControlInput3" class="form-label">From Dt <span>*</span> </label>
+              <input type="date" class="form-control" [value]="fromdt" (change)="Frmdatevent($event)">
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col" style="width: fit-content;">
+              <label for="exampleFormControlInput3" class="form-label">Department <span>*</span> </label>
+              <mat-select class="form-control" placeholder="--Select--" formControlName='Department'
+                (selectionChange)="DeptEvent()" [ngClass]="{ 'is-invalid':viewbtn && view['Department'].errors}">
+                <mat-option *ngFor="let item of Deptdata" [value]="item.Deptid">{{item.Deptname}}</mat-option>
+              </mat-select>
+              <div *ngIf="viewbtn && view['Department'].errors" class="invalid-feedback">
+                <div *ngIf="view['Department'].errors['required']"> Field must be Selected-Department</div>
+              </div>
+            </div>
+            <div class="col">
+              <label for="exampleFormControlInput3" class="form-label">Ref. No <span>*</span> </label>
+              <mat-select class="form-control" placeholder="--Select--" formControlName="Refno"
+                (selectionChange)="RefnoEvent()" [ngClass]="{ 'is-invalid':viewbtn && view['Refno'].errors}">
+                <mat-option *ngFor="let item of RefnoData" [value]="item.SrNo">{{item.Sr_Ref_No}}</mat-option>
+              </mat-select>
+              <div *ngIf="viewbtn && view['Refno'].errors" class="invalid-feedback">
+                <div *ngIf="view['Refno'].errors['required']"> Field must be Selected->Ref. No </div>
+              </div>
+            </div>
+            <div class="col" style="width: fit-content;">
+              <label for="exampleFormControlInput3" class="form-label">To Date <span>*</span> </label>
+              <input type="date" class="form-control" [value]="Todate" (change)="TodateEvent($event)">
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col">
+              <label for="exampleFormControlInput3" class="form-label">Warehouse <span>*</span> </label>
+              <mat-select class="form-control" placeholder="--Select--" formControlName="Warehouse"
+                (selectionChange)="WarehouseEvent()" [ngClass]="{ 'is-invalid':viewbtn && view['Warehouse'].errors}">
+                <mat-option *ngFor="let item of warehouseData"
+                  [value]="item.Location_ID">{{item.LocationName}}</mat-option>
+              </mat-select>
+              <div *ngIf="viewbtn && view['Warehouse'].errors" class="invalid-feedback">
+                <div *ngIf="view['Warehouse'].errors['required']"> Field must be Selected-Warehouse</div>
+              </div>
+            </div>
+            <div class="col">
+              <label for="exampleFormControlInput3" class="form-label">Material <span>* </span>
+              </label>
+              <mat-select class="form-control" placeholder="--Select--" formControlName="material"
+                (selectionChange)="getMaterialDetails()" [ngClass]="{ 'is-invalid':viewbtn && view['material'].errors}">
+                <mat-option *ngFor="let item of Materialdata" [value]="item.RawMatID">{{item.RawMatName}}</mat-option>
+              </mat-select>
+              <div *ngIf="viewbtn && view['material'].errors" class="invalid-feedback">
+                <div *ngIf="view['material'].errors['required']"> Field must be Selected-Material</div>
+              </div>
+            </div>
+            <div class="col model-footer viewbtn">
+              <button mat-raised-button type="button" color="primary" (click)="View()">View</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="mt-3" *ngIf="ViewMaterial">
+    <mat-card-content>
+      <mat-tab-group mat-align-tabs="start" [selectedIndex]="Tab1" (selectedTabChange)="tabChangedRegular($event)"
+        class="mattab mt-2">
+        <mat-tab label="Material Detalis">
+          <table style="width: 100%;">
+            <thead>
+              <tr>
+                <th class="head" style="width: 10%;">Ref_No</th>
+                <th class="head" style="width: 8%;">Date</th>
+                <th class="head">Material</th>
+                <th class="head">UOM</th>
+                <th class="head">SR_qty</th>
+                <th class="head">Pend_Qty</th>
+                <th class="head">Issue_Qty</th>
+                <th class="head">Release</th>
+                <th class="head">Avl_Stock</th>
+                <th class="head">Min_Qty</th>
+                <th class="head">Max_Qty</th>
+                <th class="head">Reorder_Qty</th>
+                <th class="head">Dept_Name</th>
+              </tr>
+            </thead>
+            <tbody *ngFor="let material of MaterialRealase let i =index;">
+              <td class="body" style="width: fit-content;">{{material.Sr_Ref_No}}</td>
+              <td class="body" style="width: fit-content;">{{material.SRDate | date : 'dd-MM-yyyy ' }}</td>
+              <td class="body">{{material.gStrMatDisp}}</td>
+              <td class="body">{{material.SRUom}}</td>
+              <td class="body" style="text-align: right;">{{material.srqty}}</td>
+              <td class="body" style="text-align: right;">{{this.PendingQty}}</td>
+              <td class="body"><input type="number" class="form-control" (input)="issueQty($event)"></td>
+              <td class="body"><button mat-raised-button type="button" color="primary"
+                  (click)="Release(i)" [disabled]="Releasebtn">Release</button></td>
+              <td class="body" style="text-align: right;" id="Avlstock">{{material.stock}}</td>
+              <td class="body" style="text-align: right;">{{material.min_level }}</td>
+              <td class="body" style="text-align: right;">{{material.max_level}}</td>
+              <td class="body" style="text-align: right;">{{material.reorder_level}}</td>
+              <td class="body">{{material.deptname}}</td>
+            </tbody>
+          </table>
+        </mat-tab>
+        <mat-tab label="Issue Detalis">
+          <mat-card>
+            <mat-card-content>
+              <table style="width: 100%;">
+                <thead>
+                  <tr>
+                    <th class="head" style="width: 12%;">Ref_No</th>
+                    <th class="head" style="width: 8%;">Date</th>
+                    <th class="head">Material</th>
+                    <th class="head">UOM</th>
+                    <th class="head">SR_qty</th>
+                    <th class="head">Issue_Qty</th>
+                    <th class="head">GrnRefNo</th>
+                    <th class="head">GrnQty</th>
+                    <th class="head">Dept.Name</th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let material of IssueDetalisArray; let i =index;">
+                  <td class="body" style="width: fit-content;">{{material.Refno}}</td>
+                  <td class="body" style="width: fit-content;">{{material.Date | date : 'dd-MM-yyyy ' }}</td>
+                  <td class="body">{{material.Material}}</td>
+                  <td class="body">{{material.Uom}}</td>
+                  <td class="body" style="text-align: right;">{{material.SRQty}}</td>
+                  <td class="body" style="text-align: right;">{{material.Stock}}</td>
+                  <td class="body" style="text-align: right;">{{material.GrnRefno}}</td>
+                  <td class="body" style="text-align: right;">{{material.GrnQty }}</td>
+                  <td class="body">{{material.Department}}</td>
+                </tbody>
+              </table>
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>

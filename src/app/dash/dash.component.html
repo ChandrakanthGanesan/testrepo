@@ -1,0 +1,60 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <span class="example-spacer"></span>
+      <h1 class="heading">AIVA VENTURES</h1>
+      <span class="example-spacer"></span>
+      <button mat-button class="example-icon" aria-label="Example icon-button with share icon" routerLink="/login">
+        Logout
+      </button>
+    </mat-toolbar>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+<div class="container-fuild">
+  <div class="grid-container">
+    <mat-grid-list cols="3">
+      <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
+        <mat-card class="dashboard-card">
+          <mat-card-content class="dashboard-card-content">
+            <div class="row">
+              <div class="col">
+                <figure>
+                  <a class="linkname" [routerLink]="['/examble']">
+                    <img src="assets/Accounting.png">
+                    <figcaption>Finance</figcaption>
+                  </a>
+                </figure>
+              </div>
+              <div class="col">
+                <figure>
+                  <a class="linkname" [routerLink]="['/examble']">
+                    <img src="assets/sales.png">
+                    <figcaption>Sales</figcaption>
+                  </a>
+                </figure>
+              </div>
+              <div class="col">
+                <figure>
+                  <a class="linkname" [routerLink]="['/examble']">
+                    <img src="assets/payroll.png">
+                    <figcaption>PayRoll</figcaption>
+                  </a>
+                </figure>
+              </div>
+              <div class="col">
+                <figure>
+                  <a class="linkname" [routerLink]="['/examble']">
+                    <img src="assets/Accounting.png">
+                    <figcaption>Finance</figcaption>
+                  </a>
+                </figure>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+      </mat-grid-tile>
+
+    </mat-grid-list>
+  </div>
+</div>

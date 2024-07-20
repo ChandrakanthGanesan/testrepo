@@ -1,0 +1,258 @@
+.body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 99.8%;
+  // background: url("https://images.alphacoders.com/135/1350899.png") no-repeat;
+  background:url(https://images.unsplash.com/photo-1501975558162-0be7b8ca95ea?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDk2NTI3NDJ8&ixlib=rb-4.0.3&q=85) no-repeat;
+  background-position: center;
+  background-size: cover;
+
+}
+
+.wrapper {
+  width: 420px;
+  background-color: transparent;
+  color: #fff;
+  border-radius: 20px;
+  padding: 30px 40px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-color: rgb(255, 255, 255);
+  border-radius: 10px;
+}
+
+.wrapper h1 {
+  font-size: 36px;
+  text-align: center;
+
+}
+
+.wrapper .input-box {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  margin: 30px 0;
+}
+
+.input-box input {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  // border-radius: 40px;
+  font-size: 16px;
+  color: #fff;
+  padding: 20px 45px 20px 20px;
+  border-color: rgb(255, 255, 255);
+}
+
+.input-box input::placeholder {
+  color: #fff;
+}
+
+.input-box i {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.wrapper .remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin: -15px 0 15px;
+}
+
+.remember-forgot label input {
+  accent-color: #fff;
+  margin-right: 3px;
+}
+
+.remember-forgot a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.remember-forgot a:hover {
+  text-decoration: underline;
+  color: #568b8c;
+}
+
+.wrapper .btn {
+  width: 100%;
+  height: 40px;
+  background-color: #fff;
+  border: none;
+  outline: none;
+  // border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+  transition: all 0.8s ease-out;
+}
+
+.wrapper .btn:hover {
+  background-color: #568b8c;
+  color: #fff;
+}
+
+.wrapper .register-link {
+  font-size: 14px;
+  text-align: center;
+  margin: 10px 0 15px;
+}
+
+.register-link p a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.register-link p a:hover {
+  text-decoration: underline;
+  color: #568b8c;
+}
+
+.example-spacer {
+  flex: 1%;
+
+}
+
+.sidenav {
+  width: 200px;
+  display: none;
+}
+
+
+.sidenav-content {
+  top: 10%;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  z-index: 1;
+}
+h1{
+  margin-right: 5%;
+  font-size: large;
+  // font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+}
+.heading {
+  margin-right: 3.8%;
+  font-size: x-large;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+}
+
+button {
+  font-size: large;
+  font-family:'Times New Roman', Times, serif;
+
+}
+.pass{
+  margin-left: 15px;
+  margin-top: 2px;
+}
+.send{
+  margin-top:7%;
+}
+label{
+  font-size: medium;
+  color: brown;
+  font-weight: 550;
+}
+.otp{
+  margin-left: 18%;
+}
+// Gokuls
+@media screen and (min-width: 575px) and (max-width: 750px) {
+  .heading {
+    font-size: medium;
+  }
+
+  button {
+    font-size: medium;
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .heading {
+    font-size: medium;
+  }
+
+  button {
+    font-size: small;
+  }
+}
+
+@media screen and (max-width:450px) {
+  .heading {
+    font-size: 14px;
+  }
+
+  button {
+    font-size: 11px;
+  }
+
+  .Tool {
+    display: none;
+  }
+}
+
+form .activebutton {
+  border-radius: 10px;
+  font-size: 20px;
+  margin-top: 12%;
+  padding: 0%2%0%2%;
+}
+
+.po {
+  color: black;
+  cursor: pointer;
+  width: 150px;
+  height: 30px;
+  border-radius: 10px;
+  text-align: center;
+  background-color: #cdd6e2;
+  font-size: 18px;
+  margin: 0 0 5px;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.first {
+  background-color: brown;
+  font-weight: 700;
+  font-size: 18px;
+  color: white;
+
+}
+select
+{
+  // border-radius: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+}
+.invalid-feedback{
+  font-weight: bolder;
+  font-size: medium;
+}
+
+.lk{
+  background: aqua;
+}

@@ -1,0 +1,11 @@
+.box {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  padding: 10px;
+  text-align: center;
+  margin: 5px;
+}
+
+.no-gutters > .col, .no-gutters > [class*="col-"] {
+padding: 0%;
+}

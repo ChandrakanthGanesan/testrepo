@@ -1,0 +1,88 @@
+<app-navigation></app-navigation>
+<mat-card-header class="justify-content-center mt-3">
+  <mat-card-title class="title">Material Recevied From Department</mat-card-title>
+</mat-card-header>
+<mat-card>
+  <mat-card-content>
+    <div class="container-fluid">
+      <form>
+        <div class="row mb-2">
+          <div class="col">
+            <label for="exampleFormControlInput3" class="form-label">Tran No <span>*</span> </label>
+            <input type="text" class="form-control" [value]="this.path" readonly>
+          </div>
+          <div class="col" style="margin-top: 3px;">
+            <label for="exampleFormControlInput3" class="form-label">Tran Date </label>
+            <input type="date" class="form-control" [value]="Currdate" disabled>
+          </div>
+        </div>
+        <div class="row mb-1">
+          <div class="col-md-6">
+            <label for="exampleFormControlInput3" class="form-label">Deaparment <span>*</span> </label>
+            <ng-select class="form-select" placeholder="--Select--" (change)="deptEvent($event)">
+              <ng-option *ngFor="let dept of Deptdata" [value]="dept.Deptid">{{dept.Deptname}}</ng-option>
+            </ng-select>
+          </div>
+          <div class="col-md-5">
+            <label for="exampleFormControlInput3" class="form-label">Material <span>*</span> </label>
+            <ng-select [(ngModel)]="materialId" (change)="materialEvent()" (input)="Rawmat($event)"
+              placeholder="--Select--" [items]="materialdata" class="form-control" [ngModelOptions]="{standalone: true}"
+              bindLabel="Rawmatname" bindValue="Rawmatid" [searchFn]="customSearchFn">
+            </ng-select>
+          </div>
+
+          <div class="col viewbtn" align="end">
+            <button mat-raised-button type="button" color="primary" (click)="ViewRecivedMaterial()">View</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>
+<mat-card class="mt-3" *ngIf="MaterialTabel">
+  <mat-card-content>
+    <p-table [value]="RecivedMaterial" [scrollable]="true" scrollHeight="400px">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="tabelhead">Min.Ref.No</th>
+          <th class="tabelhead">Min.Date</th>
+          <th class="tabelhead">UOM</th>
+          <th class="tabelhead">IssueQty</th>
+          <th class="tabelhead">ConsQty</th>
+          <th class="tabelhead">BalQty</th>
+          <th class="tabelhead">ReturnQty</th>
+          <th class="tabelhead">GRNRefNo</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-data let-i="rowIndex">
+        <tr>
+          <td class="tabelbody">{{data.min_ref_no}}</td>
+          <td class="tabelbody">{{data.mindate | date : 'dd-MM-yyyy '}}</td>
+          <td class="tabelbody">{{data.uom}}</td>
+          <td class="tabelbody" style="text-align: right;">{{data.qty | number : "1.3-3" }}</td>
+          <td class="tabelbody" style="text-align: right;">{{data.consqty | number : "1.6-6"}}</td>
+          <td class="tabelbody balQty" style="text-align: right;">{{data.qty | number : "1.3-3" }}</td>
+          <td class="tabelbody"><input type="number" class="form-control returnQty" value=""  (change)="ReturnqtyEvent($event)" style=" box-shadow: 0  #d6d9e0;  -webkit-box-shadow: 0 #ecedee;"></td>
+          <td class="tabelbody">{{data.grn_ref_no}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </mat-card-content>
+</mat-card>
+
+<button style="display: none;" id="Returncheck" data-bs-toggle="modal" data-bs-target="#ReturncheckDialog"></button>
+
+<div class="modal" id="ReturncheckDialog" data-bs-backdrop='static'>
+  <div class=" modal-dialog  modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;color: brown;font-weight: 600;">WARNING !!! </div>
+      <div class="modal-body">
+        <h4>You cannot Return more than Balance Qty !!!</h4>
+      </div>
+      <div class="modal-footer">
+        <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
+          data-bs-target="#Material" data-bs-toggle="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

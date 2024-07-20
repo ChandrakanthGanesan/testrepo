@@ -1,0 +1,220 @@
+<ngx-spinner type="ball-scale-multiple">
+  <div class="spinner-border text-danger" role="status" style="width: 5rem; height: 5rem;">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</ngx-spinner>
+<app-navigation></app-navigation>
+<mat-card-header class="justify-content-center mt-1">
+  <mat-card-title class="title" style="text-transform: uppercase;font-weight: 600;">Batch Quantity Entry</mat-card-title>
+</mat-card-header>
+<div class="main content mt-3">
+  <mat-card>
+    <mat-card-content>
+      <div class="container-fluid">
+        <form [formGroup]="selflife">
+          <div class="row">
+            <div class="col ">
+              <label for="exampleFormControlInput3" class="form-label">GRN No <span>*</span> </label>
+              <ng-select placeholder="--Select--" formControlName="GrnRefno" (change)="GRNo($event)">
+                <ng-option *ngFor="let item of this.GrnnoData" [value]="item.GRN_NO">{{item.GRN_Ref_No}}</ng-option>
+              </ng-select>
+            </div>
+            <div class="col">
+              <label for="exampleFormControlInput3" class="form-label">Supplier Name<span>*</span> </label>
+              <ng-select appendTo="body" placeholder="--Select--" formControlName="party"
+                (change)="supplierEvent($event)">
+                <ng-option *ngFor="let item of this.SupplierData" [value]="item.PartyId">{{item.PartyName}}</ng-option>
+              </ng-select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col ">
+              <label for="exampleFormControlInput3" class="form-label">DC No <span>*</span> </label>
+              <input type="text" class="form-control" readonly formControlName="dcno">
+            </div>
+            <div class="col">
+              <button mat-raised-button class="button viewbtn" type="button" color="primary"
+                (click)="View()">View</button>
+            </div>
+          </div>
+        </form>
+        <table mat-table [dataSource]="ViewItem" class="mat-elevation-z2 p-0" *ngIf="Viewclick">
+          <ng-container matColumnDef="GRN_Date">
+            <th mat-header-cell *matHeaderCellDef class="ggf" style="background-color: #59abfd;">GRN_Date</th>
+            <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;">{{element.GRN_Date| date :
+              'dd-MM-yyyy '}}</td>
+          </ng-container>
+          <ng-container matColumnDef="Spilt">
+            <th mat-header-cell *matHeaderCellDef style="background-color: #59abfd;"> Spilt </th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              <button mat-raised-button class="buttton" color="primary" type="button" data-bs-toggle="modal"
+                data-bs-target="#SpiltBatchwise" (click)="SpiltBatchwise(i)">Spilt</button>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="Rawmatname">
+            <th mat-header-cell *matHeaderCellDef style="background-color: #59abfd;"> Rawmatname </th>
+            <td mat-cell *matCellDef="let element" style="text-align: left;"> {{element.Rawmatname}} </td>
+          </ng-container>
+          <ng-container matColumnDef="UOM">
+            <th mat-header-cell *matHeaderCellDef style="background-color: #59abfd;"> UOM </th>
+            <td mat-cell *matCellDef="let element"> {{element.Uom}} </td>
+          </ng-container>
+          <ng-container matColumnDef="Qty">
+            <th mat-header-cell *matHeaderCellDef style="background-color: #59abfd;"> Qty </th>
+            <td mat-cell *matCellDef="let element" style="text-align: right;"> {{element.GRN_Qty}} </td>
+          </ng-container>
+          <ng-container matColumnDef="Rate">
+            <th mat-header-cell *matHeaderCellDef style="background-color: #59abfd;"> Rate </th>
+            <td mat-cell *matCellDef="let element" style="text-align: right;"> {{element.GRN_BasicPrice}} </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div class="modal" id="SpiltBatchwise" data-bs-backdrop='static'>
+  <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"
+        style="font-size: large;color: brown;  background-color: rgb(214, 247, 247);font-weight: bold;"> Batch Qunatity
+        Details
+        <button type="button" class="btn-close btn btn-outline-danger" data-bs-dismiss="modal" aria-label="Close"
+          (click)="close()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">GRN_Qty</span>
+              <input type="text" class="form-control" value="{{this.GrnQty}}">
+            </div>
+          </div>
+        </div>
+        <p-table [value]="SplitBtachwiseArr" [scrollable]="true">
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="head inputspace">SplitQty</th>
+              <th class="head inputspace">BatchNo</th>
+              <th class="head ">Manfacture-Date</th>
+              <th class="head">Expiry-Date</th>
+              <th class="head">Add</th>
+              <th class="head">Delete</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item let-i="rowIndex">
+            <tr>
+              <td class="body" style="display: none;">{{item.TotalQty}}</td>
+              <td class="body inputspace">
+                <input type="number" class="form-control " [(ngModel)]="item.SplitQty" (input)="SpiltQtyEvent(i)">
+              </td>
+              <td class="body inputspace"><input type="number" class="form-control " [(ngModel)]="item.Batchno"></td>
+              <td class="body"><input type="date" class="form-control" [(ngModel)]="item.Expirydate"
+                  style="width: fit-content;"></td>
+              <td class="body"><input type="date" class="form-control" [(ngModel)]="item.Manfacturedate"
+                  style="width: fit-content;"></td>
+              <td class="body" style="text-align: center;"><button mat-raised-button class="adbtn" color="primary"
+                  type="button" [disabled]="Addbtndisable[i]" (click)="add(i)">Add</button></td>
+              <td class="body" style="text-align: center;"><i class="fa-regular fa-trash-can" style="color: #f91f4b;"
+                  (click)="DeleteBatchSplit(i)"></i></td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+      </div>
+      <div class="modal-footer" style="background-color: rgb(214, 248, 206);">
+        <button mat-raised-button class="updatebtn" type="button" color="primary" [disabled]="UpdateBtndisable"
+          (click)="UpdateVaild()">Update</button>
+        <button mat-raised-button class="clearbtn" type="button" color="warn">Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+<button style="display: none;" id="Error" data-bs-toggle="modal" data-bs-target="#ErrorDialog"></button>
+<div class="modal" id="ErrorDialog" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;color: rgb(252, 83, 83);font-weight: bold;">Warning!!!</div>
+      <div class="modal-body">
+        <h4 *ngIf="this.Error===1">Please Select a Grnno...</h4>
+        <h4 *ngIf="this.Error===2">Please Check Supllier (OR) DC No ...</h4>
+        <h4 *ngIf="this.Error===3">Spilt Qty Should Not Greater than the GRN-QTY...</h4>
+        <h4 *ngIf="this.Error===4">Please Enter Split Qty...</h4>
+        <h4 *ngIf="this.Error===5">Please Enter BatchNo...</h4>
+        <h4 *ngIf="this.Error===6">Please Enter Expirydate...</h4>
+        <h4 *ngIf="this.Error===7">Please Enter Manfacturedate...</h4>
+        <h4 *ngIf="this.Error===8">You Cannot Enter more than GRN Qty...</h4>
+        <h4 *ngIf="this.Error===9">Already Entered Batch Qty..Please Check...</h4>
+        <h4 *ngIf="this.Error===10"> Quantity..Please Check...</h4>
+        <div class="modal-footer m-0 p-0" style="margin: 0%;">
+          <div *ngIf="this.Error !==9">
+            <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
+              data-bs-toggle="modal" data-bs-target="#SpiltBatchwise">OK</button>
+          </div>
+          <div *ngIf="this.Error===9">
+            <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
+              data-bs-dismiss="modal" (click)="BatchQtyVaild()">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button style="display: none;" id="apierror" data-bs-toggle="modal" data-bs-target="#apierrorDialog"></button>
+<div class="modal" id="apierrorDialog" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;color: rgb(248, 89, 89);font-weight: bold;">Warning!!!</div>
+      <div class="modal-body">
+        <h3>
+          <p style="font-family: 'Times New Roman', Times, serif;font-weight:550;font-size: large;color: rgb(0, 0, 0);">{{this.errorMessage}}</p><br>
+          <h2>Please Contact Admin...</h2>
+        </h3>
+      </div>
+    </div>
+  </div>
+</div>
+<button style="display: none;" id="Savemenu" data-bs-toggle="modal" data-bs-target="#Savemenudialog"></button>
+<div class="modal" id="Savemenudialog" data-bs-backdrop='static'>
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;background-color: rgb(240, 255, 241);">SAVE:</div>
+      <div class="modal-body" style="margin: 0%;">
+        <div>
+          <h4 style="color: rgb(3, 3, 3);font-weight: 550;">Do you yant to Save Data?</h4>
+        </div>
+      </div>
+      <div class="modal-footer" style="background-color: rgb(214, 248, 206);">
+        <button mat-raised-button type="button" style="background-color: #92d87e;" data-bs-dismiss="modal"
+          (click)="Update()">Yes</button>
+        <button mat-raised-button type="button" style="background-color: #f57c7c;" data-bs-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+<button style="display: none;" id="Save" data-bs-toggle="modal" data-bs-target="#Savedialog"></button>
+<div class="modal" id="Savedialog" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"></div>
+      <div class="modal-body" style="margin-left: 1%;">
+        <div style="font-size: medium;font-weight: 600;color: rgb(140, 232, 140);">
+          {{Msg}}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div *ngIf="this.Status == 'Y'">
+          <button mat-raised-button style="background-color: #92d87e;" type="button" data-bs-dismiss="modGeral"
+            (click)="finalSave()">OK</button>
+        </div>
+        <div *ngIf="this.Status == 'N'">
+          <button mat-raised-button class="btn btn-secondary" style="background-color: rgb(247, 107, 75);" type="button"
+            data-bs-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

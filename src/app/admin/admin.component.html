@@ -1,0 +1,235 @@
+<app-navigation></app-navigation>
+<div>
+  <div class="container-fulid">
+    <mat-card-header class="justify-content-center mt-0 mb-3">
+      <mat-card-title class="title">USER RIGHTS</mat-card-title>
+    </mat-card-header>
+    <mat-card>
+      <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" [selectedIndex]="Tab1" (selectedTabChange)="tabChangedRegular($event)">
+        <mat-tab label="RIGHTS">
+          <mat-card-content>
+            <form [formGroup]="Menuform">
+              <div class="row ">
+                <div class="col">
+                  <label for="exampleFormControlInput3" class="form-label">Module Name <span>*</span> </label>
+                  <ng-select class="form-select" (change)="MenuEvent($event)" placeholder="--Select--"
+                    formControlName="modulname" [ngClass]="{ 'is-invalid':Menubtn && Menu['modulname'].errors}">
+                    <ng-option value="" disabled selected hidden>--Select--</ng-option>
+                    <ng-option *ngFor="let item of MenuNameData" [value]="item.Menuid">{{item.Menuname}}</ng-option>
+                  </ng-select>
+                  <div *ngIf="Menubtn && Menu['modulname'].errors" class="invalid-feedback">
+                    <div *ngIf="Menu['modulname'].errors['required']"> Field must be entered-Module Name</div>
+                  </div>
+                </div>
+                <div class="col">
+                  <label for="exampleFormControlInput3" class="form-label">Dept Name <span>*</span> </label>
+                  <ng-select class="form-select" (change)="DeptEvent($event)" placeholder="--Select--"
+                    formControlName="Dept" [ngClass]="{ 'is-invalid':Menubtn && Menu['Dept'].errors}">
+                    <ng-option value="" disabled selected hidden>--Select--</ng-option>
+                    <ng-option *ngFor="let item of Department" [value]="item.DeptID">{{item.DeptName}}</ng-option>
+                  </ng-select>
+                  <div *ngIf="Menubtn && Menu['Dept'].errors" class="invalid-feedback">
+                    <div *ngIf="Menu['Dept'].errors['required']"> Field must be Selected-Department</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row ">
+                <div class="col">
+                  <label for="exampleFormControlInput3" class="form-label">Emp. Name <span>*</span> </label>
+                  <select class="form-select" formControlName="Emp"
+                    [ngClass]="{ 'is-invalid':Menubtn && Menu['Emp'].errors}" (change)="EmpEvent($event)">
+                    <option value="" disabled selected hidden>--Select--</option>
+                    <option *ngFor="let item of Employee" [value]="item.Empid">{{item.Empname}}</option>
+                  </select>
+                  <div *ngIf="Menubtn && Menu['Emp'].errors" class="invalid-feedback">
+                    <div *ngIf="Menu['Emp'].errors['required']"> Field must be Selected-Employee</div>
+                  </div>
+                </div>
+                <div class="col">
+                  <label for="exampleFormControlInput3" class="form-label">Location <span>*</span> </label>
+                  <mat-select class="form-select" placeholder="--Select--" multiple
+                    (selectionChange)="Locationevent($event)" formControlName="Loaction"
+                    [ngClass]="{ 'is-invalid':Menubtn && Menu['Loaction'].errors}">
+                    <mat-option disabled selected hidden>--Select--</mat-option>
+                    <mat-option *ngFor="let item of LocationData"
+                      [value]="item.CompanyID">{{item.CompShort}}</mat-option>
+                  </mat-select>
+                  <div *ngIf="Menubtn && Menu['Loaction'].errors" class="invalid-feedback">
+                    <div *ngIf="Menu['Loaction'].errors['required']"> Field must be Selected-Location</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row ">
+                <div class="col">
+                  <label for="exampleFormControlInput3" class="form-label">Approved By <span>*</span> </label>
+                  <select class="form-select" (selectionChange)="Locationevent($event)" formControlName="ApprovedBy"
+                    [ngClass]="{ 'is-invalid':Menubtn && Menu['ApprovedBy'].errors}">
+                    <option value="" disabled selected hidden>--Select--</option>
+                    <option *ngFor="let item of AppovedData" [value]="item.Empid">{{item.EmpName}}</option>
+                  </select>
+                  <div *ngIf="Menubtn && Menu['ApprovedBy'].errors" class="invalid-feedback">
+                    <div *ngIf="Menu['ApprovedBy'].errors['required']"> Field must be Selected-Approved By</div>
+                  </div>
+                </div>
+                <div class="col aprbtn " align="end" >
+                  <button mat-raised-button type="button" color="primary" (click)=" Approve()">Approve</button>
+                  <button mat-raised-button type="button" color="warn" style="margin-left: 3%;"
+                  data-bs-toggle="modal" data-bs-target="#Unapprove" >UnApprove</button>
+                </div>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-tab>
+        <mat-tab label="VIEW" >
+          <mat-card-content>
+          <div class="row ">
+            <div class="col">
+              <label for="exampleFormControlInput3" class="form-label">Location <span>*</span> </label>
+              <mat-select class="form-select" placeholder="--Select--" multiple
+                (selectionChange)="Locationevent($event)">
+                <mat-option disabled selected hidden>--Select--</mat-option>
+                <mat-option *ngFor="let item of LocationData" [value]="item.CompanyID">{{item.CompShort}}</mat-option>
+              </mat-select>
+              <!-- <div *ngIf="Menubtn && Menu['Loaction'].errors" class="invalid-feedback">
+                <div *ngIf="Menu['Loaction'].errors['required']"> Field must be Selected-Location</div>
+              </div> -->
+            </div>
+            <div class="col">
+              <label for="exampleFormControlInput3" class="form-label">Dept Name <span>*</span> </label>
+              <ng-select appendTo="body" class="form-select" (change)="DeptEvent($event)" placeholder="--Select--" >
+                <ng-option value="" disabled selected hidden>--Select--</ng-option>
+                <ng-option *ngFor="let item of Department" [value]="item.DeptID">{{item.DeptName}}</ng-option>
+              </ng-select>
+              <!-- <div *ngIf="Menubtn && Menu['Dept'].errors" class="invalid-feedback">
+                <div *ngIf="Menu['Dept'].errors['required']"> Field must be Selected-Department</div>
+              </div> -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="exampleFormControlInput3" class="form-label">Emp. Name <span>*</span> </label>
+              <select class="form-select"
+                 (change)="EmpEvent($event)">
+                <option value="" disabled selected hidden>--Select--</option>
+                <option *ngFor="let item of Employee" [value]="item.Empid">{{item.Empname}}</option>
+              </select>
+              <!-- <div *ngIf="Menubtn && Menu['Emp'].errors" class="invalid-feedback">
+                <div *ngIf="Menu['Emp'].errors['required']"> Field must be Selected-Employee</div>
+              </div> -->
+            </div>
+            <div class="col">
+              <button mat-raised-button type="button" class="viewbtn" (click)="view()" color="primary">View</button>
+            </div>
+          </div>
+          <table mat-table [dataSource]="RightsDetView" class="mat-elevation-z2"  *ngIf="UserRightsCheck">
+            <ng-container matColumnDef="S.No" >
+              <th mat-header-cell *matHeaderCellDef  style="background-color: #59abfd;"> S.No </th>
+              <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;">{{i + 1}}</td>
+            </ng-container>
+            <ng-container matColumnDef="Empid" >
+              <th mat-header-cell *matHeaderCellDef  style="background-color: #59abfd;"> Empid </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.Empid}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Menuname">
+              <th mat-header-cell *matHeaderCellDef  style="background-color: #59abfd;"> Menuname </th>
+              <td mat-cell *matCellDef="let element"> {{element.Menuname}} </td>
+            </ng-container>
+            <ng-container matColumnDef="MenuId">
+              <th mat-header-cell *matHeaderCellDef  style="background-color: #59abfd;"> MenuId </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.Modules}} </td>
+            </ng-container>
+            <ng-container matColumnDef="LocationId">
+              <th mat-header-cell *matHeaderCellDef  style="background-color: #59abfd;"> LocationId </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.Locationid}} </td>
+            </ng-container>
+            <ng-container matColumnDef="DeptId">
+              <th mat-header-cell *matHeaderCellDef  style="background-color: #59abfd;"> DeptId </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.DeptId}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Status">
+              <th mat-header-cell *matHeaderCellDef  style="background-color: #59abfd;"> Status </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.Status}} </td>
+            </ng-container>
+            <ng-container matColumnDef="ApprovedBy">
+              <th mat-header-cell *matHeaderCellDef  style="background-color: #59abfd;"> ApprovedBy </th>
+              <td mat-cell *matCellDef="let element" > {{element.ApprovedBy}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          </mat-card-content>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+  </div>
+</div>
+<!-- ***********************SAVE **********************************-->
+
+<button style="display: none;" id="saveaccess" data-bs-toggle="modal" data-bs-target="#save"></button>
+<div class="modal" id="save" data-bs-backdrop='static'>
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;background-color: rgb(240, 255, 241);font-weight: bolder;">SAVE
+      </div>
+      <div class="modal-body" style="margin: 0%;">
+        <div>
+          <h4 style="color: rgb(3, 3, 3);font-weight: 550;">Do you want to Save Data?</h4>
+        </div>
+      </div>
+      <div class="modal-footer" style="background-color: rgb(214, 248, 206);padding: .5%;">
+        <button mat-raised-button type="button" style="background-color: #92d87e;" data-bs-dismiss="modal"
+          (click)="Approvebtn()">Yes</button>
+        <button mat-raised-button type="button" style="background-color: #f57c7c;" data-bs-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button style="display: none;" id="RightsSave" data-bs-toggle="modal" data-bs-target="#Save"></button>
+
+<div class="modal" id="Save" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div style="font-size: medium;font-weight: 500;color: rgb(140, 232, 140);" *ngIf="this.Success === 'Y'">
+          {{Success_Error}}
+        </div>
+        <div style="font-size: medium;font-weight: 500;color: rgb(247, 107, 75)" *ngIf="this.Success === 'N'">
+          {{Success_Error}}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div *ngIf="this.Success === 'Y'">
+          <button mat-raised-button type="button" class="btn  m-2" style="background-color: rgb(62, 172, 62);"
+            data-bs-dismiss="modal" (click)="FinalSave()">Ok</button>
+        </div>
+        <div *ngIf="this.Success === 'N'">
+          <button mat-raised-button type="button" class="btn  m-2" style="background-color: rgb(62, 172, 62);"
+            data-bs-dismiss="modal">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="Unapprove" data-bs-backdrop='static'>
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;background-color: rgb(240, 255, 241);font-weight: bolder;">SAVE
+      </div>
+      <div class="modal-body" style="margin: 0%;">
+        <div>
+          <h4 style="color: rgb(3, 3, 3);font-weight: 550;">Do you want to UnApprove?</h4>
+        </div>
+      </div>
+      <div class="modal-footer" style="background-color: rgb(214, 248, 206);padding: .5%;">
+        <button mat-raised-button type="button" style="background-color: #92d87e;" data-bs-dismiss="modal"
+          (click)="unapprove()">Yes</button>
+        <button mat-raised-button type="button" style="background-color: #f57c7c;" data-bs-dismiss="modal" >No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

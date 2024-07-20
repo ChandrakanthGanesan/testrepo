@@ -1,0 +1,161 @@
+<ngx-spinner type="ball-scale-multiple">
+  <div class="spinner-border text-danger" role="status" style="width: 5rem; height: 5rem;">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</ngx-spinner>
+<app-navigation></app-navigation>
+<mat-card-header class="justify-content-center mt-1">
+  <mat-card-title class="title" style="text-transform: uppercase;font-weight: 600;">Store To Store</mat-card-title>
+</mat-card-header>
+<div class="container-fluid mt-4">
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="storetostoreform">
+        <div class="row mt-0 p-0 mb-0">
+          <div class="col-sm-6 col-6 col-md-6 col-lg-6">
+            <label class="form-label">Trano <span>*</span></label>
+            <input type="text" class="form-control" formControlName="Min_ref_no">
+          </div>
+          <div class="col-sm-6 col-6  col-md-6 col-lg-6">
+            <label class="form-label">Tran Date <span>*</span></label>
+            <input type="date" class="form-control" formControlName="Trandate">
+          </div>
+        </div>
+        <div class="row  mt-0 p-0 mb-0">
+          <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+            <label class="form-label">From WareHouse <span>*</span></label>
+            <select class="form-select" formControlName="frmwarehouse" (change)="FrmwarehouseEvent($event)">
+              <option selected disabled hidden value="">-Select--</option>
+              <option *ngFor="let item of WarehouseData" [value]="item.WareHouse_Id">{{item.Warehouse_Name}}</option>
+            </select>
+          </div>
+          <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+            <label class="form-label">To Warehouse<span>*</span></label>
+            <select class="form-select" formControlName="Towarehouse" (change)="TowarehouseEvent($event)">
+              <option selected disabled hidden value="">-Select--</option>
+              <option *ngFor="let item of WarehouseData" [value]="item.WareHouse_Id">{{item.Warehouse_Name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mt-0 p-0 mb-0">
+          <div class="col">
+            <label class="form-label">Material <span>*</span></label>
+            <ng-select [(ngModel)]="RawmaterialId" (change)="RawmaterialChangeEvent($event)" (input)="Rawmat($event)"
+              formControlName="material" placeholder="--Select--" [items]="RawmaterialIdData" class="form-control"
+              bindLabel="RawmatName" [ngClass]="{ 'is-invalid':Viewbtn && View['material'].errors}" bindValue="RawmatId"
+              [searchFn]="customSearchFn">
+            </ng-select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <label class="form-label">Stock <span>*</span></label>
+            <input type="number" class="form-control" formControlName="stock">
+          </div>
+          <div class="col  mt-4">
+            <button mat-raised-button class="stckbtn" style="margin-right: 2%;" type="button" color="primary"
+              (click)=" getView()">View</button>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+    <p-table class="m-1" [value]="ViewStockData" [scrollable]="true" scrollHeight="400px" *ngIf="Viewclick">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="head">GRN_Ref_No</th>
+          <th class="head">GRNDate</th>
+          <th class="head">GRNQty</th>
+          <th class="head">TransferQty</th>
+          <th class="head">Add</th>
+          <th class="head">Remove</th>
+          <th class="head">Uom</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+        <tr>
+          <td class="body">{{ rowData.GRN_Ref_No }}</td>
+          <td class="body">{{ rowData.GRNDate }}</td>
+          <td class="body">{{ rowData.Stock }}</td>
+          <td style="display: none;">{{rowData.GRNId}}</td>
+          <td style="display: none;">{{rowData.TransId}}</td>
+          <td class="body p-2"><input type="number" class="form-control" [disabled]="transferqtydisable[i]"
+              [(ngModel)]="rowData.TransferQty " (change)="TranferqtyEvent($event,i)">
+          </td>
+          <td class="body"> <i class="fa-solid fa-plus fa-lg"
+              style="color: #2fe821;margin-left: 2%;border-color: #8dd0ec;margin-top: 3%;" (click)="Add(i)"></i></td>
+          <td class="body">
+            <i class="fa-solid fa-trash-can fa-lg" style="color: #d5552a;margin-left: 3%;margin-top: 3%;"
+              (click)="Remove(i)"></i>
+          </td>
+          <td class="body">{{ rowData.Uom }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <tr>
+          <td colspan="2" class="">Totals</td>
+          <td class="body">{{ this.Total }}</td>
+          <td class="body">{{ this.TransferQtyToatl }}</td>
+          <td class="body">{{ this.TransferTotal }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <mat-card-actions align="end" *ngIf="Viewclick">
+      <button mat-raised-button class="button" type="button" (click)="savevaildation()"
+        style="background-color: lightgreen;">Save</button>
+    </mat-card-actions>
+  </mat-card>
+
+</div>
+<button style="display: none;" id="apierror" data-bs-toggle="modal" data-bs-target="#apierrorDialog"></button>
+<div class="modal" id="apierrorDialog" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;color: rgb(248, 89, 89);font-weight: bold;">Warning!!!</div>
+      <div class="modal-body">
+        <h3>
+          <p style="font-family: 'Times New Roman', Times, serif;font-weight:550;font-size: large;color: rgb(0, 0, 0);">
+            {{this.apiErrorMsg}}</p><br>
+          <h2>Please Contact Admin...</h2>
+        </h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button style="display: none;" id="Error" data-bs-toggle="modal" data-bs-target="#ErrorDialog"></button>
+<div class="modal" id="ErrorDialog" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;color: brown;font-weight: 550;text-transform: uppercase;">
+        Warning!!!</div>
+      <div class="modal-body">
+        <p style="font-family: 'Times New Roman', Times, serif;font-weight: 550;color: rgb(3, 3, 3);font-size: large;">
+          {{ErrorMsg}}
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button mat-raised-button type="button" class="btn" style="background-color: lightgreen;"
+          data-bs-dismiss="modal" (click)="empty()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+<button style="display: none;" id="savevaild" data-bs-toggle="modal" data-bs-target="#savevaildDialog"></button>
+<div class="modal" id="savevaildDialog" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;color: brown;font-weight: 550;text-transform: uppercase;">
+        STATUS</div>
+      <div class="modal-body">
+        <p style="font-family: 'Times New Roman', Times, serif;font-weight: 550;color: rgb(3, 3, 3);font-size: large;">
+          Do You Want To Save ?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button mat-raised-button type="button" class="btn" style="background-color: lightgreen;"
+          data-bs-dismiss="modal" (click)="save()">Yes</button>
+        <button mat-raised-button type="button" class="btn" color="warn" data-bs-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>

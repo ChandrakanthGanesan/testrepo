@@ -1,0 +1,109 @@
+<ngx-spinner>
+  <div class="spinner-border text-danger" role="status" style="width: 5rem; height: 5rem;">
+  <span class="visually-hidden">Loading...</span>
+</div>
+</ngx-spinner>
+<div class="body">
+  <div class="wrapper">
+    <h1>AIVA VENTURERS</h1>
+    <div class="activebutton mt-4">
+      <input type="checkbox" class="btn-check" id="btn-check-1" value="Pin"  (click)="action($event)"
+        autocomplete="off">
+      <label class="po" for="btn-check-1" [ngClass]="{'first':Mpin==true}">MPin</label>
+      <input type="checkbox" class="btn-check" id="btn-check-2" value="Name" [checked]="Login" (click)="action($event)"
+        autocomplete="off" >
+      <label class="po" for="btn-check-2" style="margin-right: 10px;" [ngClass]="{'first' : Login==true}">Login</label>
+    </div>
+    <form [formGroup]="loginform" >
+      <div class="input-box">
+        <input type="text" placeholder="Username" formControlName="UserName" onpaste="return false"
+          [ngClass]="{ 'is-invalid':gobtn && go['UserName'].errors}" required />
+        <div *ngIf="gobtn && go['UserName'].errors" class="invalid-feedback">
+          <div *ngIf="go['UserName'].errors['required']"> Field must be entered-Username</div>
+        </div>
+        <i class='bx bxs-user'></i>
+      </div>
+      <div class="input-box">
+        <input [type]="password" placeholder="Password" formControlName="Pwd" onpaste="return false"
+          [ngClass]="{ 'is-invalid':gobtn && go['Pwd'].errors}" required >
+          <i class="fa-solid fa-eye pass"  style="color: #7deefd;"  (click)="onClick()" *ngIf="!show"></i>
+          <i class="fa-solid fa-eye-slash pass" style="color: #7deefd;" (click)="onClick()" *ngIf="show"></i>
+        <div *ngIf="gobtn && go['Pwd'].errors" class="invalid-feedback">
+          <div *ngIf="go['Pwd'].errors['required']"> Field must be entered-Password</div>
+        </div>
+      </div>
+        <i class='bx bxs-lock-alt'></i>
+      <div class="input-box">
+        <select class="form-select" formControlName="Loaction" (change)="LoactionEvent($event)"
+          [ngClass]="{ 'is-invalid':gobtn && go['Loaction'].errors}" required>
+          <option value="" disabled selected hidden>Select a Location-ID</option>
+          <option *ngFor="let item of Loaction" [value]="item.CompanyID">{{item.CompShort}}</option>
+        </select>
+        <div *ngIf="gobtn && go['Loaction'].errors" class="invalid-feedback">
+          <div *ngIf="go['Loaction'].errors['required']"> Field must be Select-Loaction</div>
+        </div>
+      </div>
+      <button type="submit" class="btn" (click)="login()">Login</button>
+    </form>
+  </div>
+</div>
+
+<div class="card ">
+  <p-dialog class="lk" header="LOGIN"  [(visible)]="visible" [draggable]="false" [resizable]="false">
+    <div class="card" style="width: 12rem;">
+      <label class="mb-2 m-2">Select a Type</label>
+      <mat-radio-group aria-label="Select an option">
+        <mat-radio-button value="1">SMS</mat-radio-button>
+        <mat-radio-button value="2" checked>Email</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="row">
+      <div class="col-9">
+       <label class="mb-2">Select a Person</label>
+       <select  class="form-select" (change)="LoginUserEvent($event)">
+        <option selected hidden disabled>--Select--</option>
+        <option *ngFor="let item of this.Mailuserlist" [value]="item.EmpId">{{item.EmpName}}</option>
+       </select>
+      </div>
+      <div class="col send">
+        <button mat-raised-button type="button" color="primary" id="clk" (click)="send()">Send</button>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center" *ngIf="Otpsucess">
+      <div class="spinner-border text-danger" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div class="d-flex otp  mt-3">
+      <p-inputOtp id="myInput" [(ngModel)]="OtpManual"   [integerOnly]="true" [mask]="true"></p-inputOtp>
+    </div>
+  <div class="modal-footer" style="margin-bottom:1%;"  >
+    <button mat-raised-button type="button" id="closeModalBtn" class="btn" style="background-color: rgb(104, 241, 104)"
+     (click)="FinalLogin()">OK</button>
+  </div>
+  </p-dialog>
+</div>
+
+<button style="display: none;" id="OtpReq" data-bs-toggle="modal"
+  data-bs-target="#OtpReqdialog"></button>
+
+<div class="modal" id="OtpReqdialog" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;background-color: rgb(250, 223, 205);">!!! Warning</div>
+      <div class="modal-body">
+        <h4>Already Password Send To Authorised Person For Today. <br> If You Have That Password, Click
+          'NO' And Use It.<br> Otherwise Click 'YES' For Send It Again !!!</h4>
+      </div>
+      <div class="modal-footer">
+        <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
+          (click)="ExisitingOtpUpdateY()" data-bs-dismiss="modal">Yes</button>
+        <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightcoral;"
+         (click)="ExisitingOtpUpdateN()"  data-bs-dismiss="modal" >No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

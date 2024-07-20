@@ -1,0 +1,74 @@
+<app-navigation></app-navigation>
+<div class="sidebar close">
+
+  <ul class="nav-links" id="request">
+    <li  style="padding-top: 10px;">
+      <a>
+        <!-- <img class="object-fit-cover border rounded" src="assets/PurchaseRequest.png"> -->
+        <h1 class="link_name" routerLink="/approval">Inventory</h1>
+      </a>
+      <ul class="sub-menu blank" *ngIf="PurchaseRequest || IssueRequest || DirectIndent || StoreIssue || ReworkIssue || MatlReturnFrmDept||StorageQtyAlloc||Shelflife">
+        <li><a  routerLink="/PurchaseReq" id="menu" [ngClass]="{'disable-link':!PurchaseRequest}"  class="subhead">Purchase Request</a></li>
+        <li><a  routerLink="/issueReq" id="menu" [ngClass]="{'disable-link':!IssueRequest}"  class="subhead">Issue Request</a></li>
+        <li><a class="subhead" id="menu" [ngClass]="{'disable-link':!DirectIndent}"   routerLink="/directIndent">Direct Indent</a></li>
+        <li><a class="subhead" id="menu"  [ngClass]="{'disable-link':!StoreIssue}"  routerLink="/storeissue">Store Issue</a></li>
+        <li><a class="subhead" id="menu"  [ngClass]="{'disable-link':!ReworkIssue}"  routerLink="/reworkissue">Rework Issue</a></li>
+        <li><a class="subhead" id="menu"  [ngClass]="{'disable-link':!MatlReturnFrmDept}" routerLink="/MatlReceiveFrmDept">Material Return From Department</a></li>
+        <li><a class="subhead" id="menu"  [ngClass]="{'disable-link':!StorageQtyAlloc}" routerLink="/StorageQtyAlloc"  >Storage Quantity Allocation</a></li>
+        <li><a class="subhead" id="menu"  [ngClass]="{'disable-link':!Shelflife}" routerLink="/Shelflife"  >Self-Life Batch Quantity Entry</a></li>
+        <li><a class="subhead" id="menu"  [ngClass]="{'disable-link':!StoretoStore}" routerLink="/StoretoStore"  >Store To Store</a></li>
+      </ul>
+    </li>
+    <li>
+      <a>
+        <h1 class="link_name" routerLink="/approval">Inspection</h1>
+      </a>
+      <ul class="sub-menu" *ngIf="">
+
+      </ul>
+    </li>
+    <li>
+      <a>
+        <h1 class="link_name" routerLink="/approval">Approvals</h1>
+      </a>
+      <ul class="sub-menu" *ngIf="">
+
+      </ul>
+    </li>
+    <li >
+      <a>
+        <h1 class="link_name" routerLink="/approval">Reports</h1>
+      </a>
+      <ul class="sub-menu" *ngIf="">
+      </ul>
+    </li>
+    <li >
+      <a>
+        <h1 class="link_name" routerLink="/approval">Weighment</h1>
+      </a>
+      <ul class="sub-menu" *ngIf="">
+      </ul>
+    </li>
+    <li >
+      <a>
+        <h1 class="link_name" routerLink="/approval">Master</h1>
+      </a>
+      <ul class="sub-menu" *ngIf="">
+      </ul>
+    </li>
+    <li >
+      <a>
+        <h1 class="link_name" routerLink="/approval">Quality</h1>
+      </a>
+      <ul class="sub-menu" *ngIf="">
+      </ul>
+    </li>
+    <li >
+      <a>
+        <h1 class="link_name" routerLink="/approval">Tools</h1>
+      </a>
+      <ul class="sub-menu" *ngIf="">
+      </ul>
+    </li>
+  </ul>
+</div>
