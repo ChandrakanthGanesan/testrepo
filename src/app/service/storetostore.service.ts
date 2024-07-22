@@ -29,7 +29,7 @@ export class StoretostoreService {
       catchError(this.handleError)
     );
   }
-  Path3(Path:any,Path1:any){
+  Path3(Path:any,Path1:any  ){
     return this.http.get("http://192.168.203.59:4000/Indent/Path3?Path="+Path+'&Path1='+Path1).pipe(
       catchError(this.handleError)
     );

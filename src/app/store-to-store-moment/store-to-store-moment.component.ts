@@ -140,7 +140,6 @@ export class StoreToStoreMomentComponent implements OnInit {
   Rawmat(e: any) {
     this.RawmaterialName = e.target.value
     console.log(this.RawmaterialName, 'this.RawmaterialName');
-
     if (this.RawmaterialName.length >= 2) {
       if (this.RawmaterialName !== null && this.RawmaterialName !== undefined && this.RawmaterialName !== '') {
         this.getRawmaterial()
@@ -382,6 +381,7 @@ export class StoreToStoreMomentComponent implements OnInit {
   StoretostoreDet: any[] = new Array()
   Min_ref_no: string = ''
   save() {
+    this.storetostoreUpdateArr = []
     for (let i = 0; i < this.TransferQtyArr.length; i++) {
       this.StoretostoreDet.push({
         TransferQty: this.TransferQtyArr[i].TransferQty,
@@ -396,7 +396,7 @@ export class StoreToStoreMomentComponent implements OnInit {
         ToStoreId: this.storetostoreform.controls['Towarehouse'].value
       })
     }
-    this.storetostoreUpdateArr = []
+
     this.storetostoreUpdateArr.push({
       Deptid: this.Deptid,
       RamatId: this.RawmaterialId,
