@@ -77,10 +77,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "Commerical:build:production"
+              "buildTarget": "Commerical:build:production"
             },
             "development": {
-              "browserTarget": "Commerical:build:development"
+              "buildTarget": "Commerical:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -88,7 +88,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Commerical:build"
+            "buildTarget": "Commerical:build"
           }
         },
         "test": {

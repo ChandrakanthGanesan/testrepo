@@ -40,7 +40,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { DirectIndentComponent } from './direct-indent/direct-indent.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { IssueRequestComponent } from './issue-request/issue-request.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { StoreIssueComponent } from './store-issue/store-issue.component'
@@ -60,55 +60,50 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DashComponent } from './dash/dash.component';
 import { ShelfLifeBatchQtyComponent } from './shelf-life-batch-qty/shelf-life-batch-qty.component';
 import { StoreToStoreMomentComponent } from './store-to-store-moment/store-to-store-moment.component';
-@NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    DashboardComponent,
-    InventoryMainModuleComponent,
-    PurchaseRequestComponent,
-    SetupComponent,
-    DemoComponent,
-    ExamblesComponent,
-    NavigationComponent,
-    DirectIndentComponent,
-    IssueRequestComponent,
-    StoreIssueComponent,
-    AdminComponent,
-    MaterialReturnFrmDeptComponent,
-    ReworkissueComponent,
-    StorageQtyAllocationComponent,
-    DashComponent,
-    ShelfLifeBatchQtyComponent,
-    StoreToStoreMomentComponent,
-    // DashboardCommericaComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    ToastrModule.forRoot({
-      preventDuplicates:true,
-    }),
-    MatGridListModule,
-    MatCardModule,
-    MatMenuModule,
-    MatIconModule,
-    MatButtonModule,SplitButtonModule,
-    MatToolbarModule,
-    MatRadioModule,
-    MatDatepickerModule,
-    MatInputModule,
-    MatFormFieldModule,MatSelectModule,
-    FormsModule,ReactiveFormsModule,
-    NgSelectModule,
-    MatCheckboxModule,
-    InputOtpModule,
-    FieldsetModule,MatTooltipModule,DialogModule,NgxSpinnerModule,ConfirmDialogModule,TooltipModule,
-    TableModule,ContextMenuModule, MatSidenavModule, MatListModule, MatTableModule, MatPaginatorModule, MatSortModule,
-    HttpClientModule,MatAutocompleteModule,MatTabsModule,NgMultiSelectDropDownModule,MatButtonToggleModule,MatProgressBarModule
-  ],
-  providers: [{ provide: LocationStrategy, useClass:HashLocationStrategy},DatePipe  ,DecimalPipe],
-  bootstrap: [AppComponent]
-})
+import { StoreModule } from '@ngrx/store';
+@NgModule({ declarations: [
+        AppComponent,
+        LoginComponent,
+        DashboardComponent,
+        InventoryMainModuleComponent,
+        PurchaseRequestComponent,
+        SetupComponent,
+        DemoComponent,
+        ExamblesComponent,
+        NavigationComponent,
+        DirectIndentComponent,
+        IssueRequestComponent,
+        StoreIssueComponent,
+        AdminComponent,
+        MaterialReturnFrmDeptComponent,
+        ReworkissueComponent,
+        StorageQtyAllocationComponent,
+        DashComponent,
+        ShelfLifeBatchQtyComponent,
+        StoreToStoreMomentComponent,
+        // DashboardCommericaComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        ToastrModule.forRoot({
+            preventDuplicates: true,
+        }),
+        MatGridListModule,
+        MatCardModule,
+        MatMenuModule,
+        MatIconModule,
+        MatButtonModule, SplitButtonModule,
+        MatToolbarModule,
+        MatRadioModule,
+        MatDatepickerModule,
+        MatInputModule,
+        MatFormFieldModule, MatSelectModule,
+        FormsModule, ReactiveFormsModule,
+        NgSelectModule,
+        MatCheckboxModule,
+        InputOtpModule,
+        FieldsetModule, MatTooltipModule, DialogModule, NgxSpinnerModule, ConfirmDialogModule, TooltipModule,
+        TableModule, ContextMenuModule, MatSidenavModule, MatListModule, MatTableModule, MatPaginatorModule, MatSortModule,
+        MatAutocompleteModule, MatTabsModule, NgMultiSelectDropDownModule, MatButtonToggleModule, MatProgressBarModule, StoreModule.forRoot({}, {})], providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }, DatePipe, DecimalPipe, provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
