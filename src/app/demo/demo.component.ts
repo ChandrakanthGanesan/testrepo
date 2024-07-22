@@ -21,6 +21,10 @@ export class DemoComponent  {
   LoactionId:number=1
   ngOnInit() {
 
+
+
+  }
+  btn(){
     const storefrmid=26
 
 
@@ -35,7 +39,6 @@ export class DemoComponent  {
             readOnly: false,
             allowAdd: false,
           }
-
           this.items.forEach(obj => {
             Object.assign(obj, newarr);
           });
@@ -45,23 +48,20 @@ export class DemoComponent  {
         }
       },
       })
-
   }
-
   onTransferQtyInput(index: number): void {
-    debugger
     this.items[index].allowAdd = this.items[index].TransferQty !== null && this.items[index].TransferQty > 0;
-    if(this.items[index-1].allowAdd === true){
-      alert('pppp')
+    if (this.items[index].TransferQty === null || this.items[index].TransferQty === 0) {
+      this.items[index].allowAdd = false;
+      this.clearReadonlyState();
     }
   }
 
-  enableNextRow(index: number): void {
+  confirmTransferQty(index: number): void {
     if (this.items[index].TransferQty !== null && this.items[index].TransferQty > 0) {
-      for (let i = index + 1; i < this.items.length; i++) {
-        this.items[i].readOnly = false;
-      }
-      this.items[index].allowAdd = false; // Disable the current add button
+      // Disable the current input field
+      this.items[index].readOnly = true;
+      this.items[index].allowAdd = false;
     } else {
       alert('Please enter a valid TransferQty before proceeding.');
     }
@@ -75,4 +75,17 @@ export class DemoComponent  {
     }
   }
 
+  // Check if any TransferQty is unconfirmed (entered but add button not clicked)
+  isAnyUnconfirmedTransferQty(currentIndex: number): boolean {
+    return this.items.some((item, index) => {
+      return index !== currentIndex && item.TransferQty !== null && item.TransferQty > 0 && !item.readOnly;
+    });
+  }
+
+  // Clear readonly state for all rows
+  clearReadonlyState(): void {
+    this.items.forEach((item) => {
+      item.readOnly = false;
+    });
+  }
 }

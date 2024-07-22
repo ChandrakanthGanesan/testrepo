@@ -1,19 +1,23 @@
+<button (click)="btn()">add</button>
 <table>
   <tr *ngFor="let item of items; let i = index">
     <td>{{ item.GRN_Ref_No }}</td>
     <td>{{ item.GRNDate }}</td>
     <td>{{ item.GRNQty }}</td>
     <td>
-      <input [readonly]="item.readOnly" [(ngModel)]="item.TransferQty" (input)="onTransferQtyInput(i)"
-        placeholder="Enter Transfer Qty" />
+      <input type="number"
+        [readonly]="item.readOnly || isAnyUnconfirmedTransferQty(i)"
+        [(ngModel)]="item.TransferQty"
+        (input)="onTransferQtyInput(i)"
+        placeholder="Enter Transfer Qty"
+      />
     </td>
     <td>
-      <button (click)="enableNextRow(i)" [disabled]="!item.allowAdd">+</button>
+      <button (click)="confirmTransferQty(i)" [disabled]="!item.allowAdd">+</button>
     </td>
     <td>
       <button (click)="removeRow(i)">🗑️</button>
     </td>
     <td>{{ item.Uom }}</td>
-    
   </tr>
 </table>
