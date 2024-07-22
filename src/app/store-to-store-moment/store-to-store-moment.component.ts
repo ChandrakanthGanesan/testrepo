@@ -488,7 +488,7 @@ export class StoreToStoreMomentComponent implements OnInit {
       StoretostoreDet: this.StoretostoreDet
     })
     console.log(this.storetostoreUpdateArr);
-
+    console.log(this.storetostoreUpdateArr);
 
   }
 }
