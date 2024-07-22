@@ -78,11 +78,14 @@
           <td class="body">{{ rowData.Stock }}</td>
           <td style="display: none;">{{rowData.GRNId}}</td>
           <td style="display: none;">{{rowData.TransId}}</td>
-          <td class="body p-2"><input type="number" class="form-control" [disabled]="transferqtydisable[i]"
-              [(ngModel)]="rowData.TransferQty " (change)="TranferqtyEvent($event,i)">
+          <td class="body p-2"><input type="number" class="form-control" [readonly]="rowData.readOnly" [(ngModel)]="rowData.TransferQty"
+              (keypress)="onTransferQtyInput($event,i)" placeholder="Enter Transfer Qty" />
           </td>
-          <td class="body"> <i class="fa-solid fa-plus fa-lg"
-              style="color: #2fe821;margin-left: 2%;border-color: #8dd0ec;margin-top: 3%;" (click)="Add(i)"></i></td>
+          <td class="body"> <button mat-raised-button class="button" type="button" (click)="Add(i)"
+              [disabled]="!rowData.allowAdd">
+              <i class="fa-solid fa-plus fa-lg"
+                style="color: #2fe821;margin-left: 2%;border-color: #8dd0ec;margin-top: 3%;"></i>
+            </button></td>
           <td class="body">
             <i class="fa-solid fa-trash-can fa-lg" style="color: #d5552a;margin-left: 3%;margin-top: 3%;"
               (click)="Remove(i)"></i>
@@ -133,9 +136,14 @@
           {{ErrorMsg}}
         </p>
       </div>
-      <div class="modal-footer">
+      <!--  -->
+      <div class="modal-footer" *ngIf="Error !==1">
         <button mat-raised-button type="button" class="btn" style="background-color: lightgreen;"
-          data-bs-dismiss="modal" (click)="empty()">OK</button>
+          data-bs-dismiss="modal">OK</button>
+      </div>
+      <div class="modal-footer" *ngIf="Error ==1">
+        <button mat-raised-button type="button" class="btn" style="background-color: lightgreen;"
+          data-bs-dismiss="modal" (click)=" TransferQtyvaild()">OK</button>
       </div>
     </div>
   </div>

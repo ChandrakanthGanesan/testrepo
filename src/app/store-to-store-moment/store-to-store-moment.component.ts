@@ -126,6 +126,7 @@ export class StoreToStoreMomentComponent implements OnInit {
       this.ErrorMsg = 'FromWareHouse and To WareHouse are Equal..Please Check...'
       const error = document.getElementById('Error')
       error?.click()
+      this.storetostoreform.controls['Towarehouse'].setValue('')
     } else {
 
     }
@@ -198,6 +199,7 @@ export class StoreToStoreMomentComponent implements OnInit {
   ViewStock: any[] = new Array()
   Viewclick: boolean = false
   ViewStockData: any[] = new Array()
+  ViewStockData2: any
   Total: any
   TransferQtyToatl: any
   getView() {
@@ -208,9 +210,17 @@ export class StoreToStoreMomentComponent implements OnInit {
         this.ViewStockData = res
         console.log(this.ViewStockData, ' this.ViewStockData');
         if (this.ViewStockData.length > 0) {
+          const newarr = {
+            TransferQty: null,
+            readOnly: false,
+            allowAdd: false,
+          }
+          this.ViewStockData.forEach(obj => {
+            Object.assign(obj, newarr);
+          });
+          console.log(this.ViewStockData, ' this.ViewStockData');
           this.Viewclick = true
           this.Total = this.ViewStockData.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.Stock), 0);
-          // this.enabledIndex = 0
         }
       },
       error: (err) => {
@@ -221,105 +231,122 @@ export class StoreToStoreMomentComponent implements OnInit {
     })
   }
   // enabledIndex: number = 0;
-  TranferqtyEvent(e: any, Index: number) {
+  Error: number = 0
+  onTransferQtyInput(e: any, Index: number) {
     debugger
-    this.trQty = e.target.value
-    if (this.TransferQtyArr.length === 0) {
-      console.log(this.count,'!');
-      if (this.count === 0) {
-        this.ErrorMsg = ''
-        this.ErrorMsg = 'Please Add the Transfer Qty By Click Add Button/Icon...'
-        const error = document.getElementById('Error')
-        this.transferqtydisable[this.ViewtabelIndex]=true
-        error?.click()
-        return
-      }
-    } else {
-      if (this.count[Index] === 0) {
-        this.transferqtydisable[this.ViewtabelIndex]=true
+    this.trQty = parseFloat(e.target.value)
+    this.ViewStockData[Index].allowAdd = this.ViewStockData[Index].TransferQty !== null && this.ViewStockData[Index].TransferQty > 0;
+    if(Index ===1 ){
+      if (this.ViewStockData[Index - 1].allowAdd === true) {
         this.ErrorMsg = ''
         this.ErrorMsg = 'Please Add the Transfer Qty By Click Add Button/Icon...'
         const error = document.getElementById('Error')
         error?.click()
+        this.TransferQtyArr[Index + 1].readOnly = true;
         return
       }
     }
-  }
 
-  trQty: number = 0
+  }
+  TransferQtyvaild() {
+    this.ViewStockData.forEach((rowData, i) => {
+      rowData.readOnly = i !== this.ViewtabelIndex;
+    });
+
+  }
+  trQty: any
   transferqtydisable = [false, false]
   TransferQtyArr: any[] = new Array()
   value: number = 0
   ViewtabelIndex: any
   TransferTotal: any
-  count: any = 0
+
   Add(Index: number) {
     this.ViewtabelIndex = Index
     debugger
     if (this.trQty > 0) {
-      this.count =1
-      console.log(this.count);
+      this.ViewStockData[Index].Add = 1
       if (this.ViewStockData[Index].TransferQty > 0) {
+        if (Index < this.TransferQtyArr.length - 1) {
+          this.TransferQtyArr[Index + 1].readOnly = false;
+        }
         if (this.TransferQtyArr.length === 0) {
           if (parseFloat(this.ViewStockData[Index].TransferQty) > parseFloat(this.StockData[0].Stock)) {
             this.ViewStockData[Index].TransferQty = ''
             this.ErrorMsg = ''
-            this.ErrorMsg = 'You Cannot Transfer more than Stock'
+            this.ErrorMsg = 'You Cannot Enter More Than Stock'
             const error = document.getElementById('Error')
             error?.click()
             return
           } else {
-            this.TransferQtyArr.push({
-              TransferQty: this.ViewStockData[Index].TransferQty,
-              RamatId: this.RawmaterialId,
-              GRNId: this.ViewStockData[Index].GRNId,
-              GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
-              GRNDate: this.ViewStockData[Index].GRNDate,
-              Uom: this.ViewStockData[Index].Uom,
-              TransId: this.ViewStockData[Index].TransId,
-              GRNNo: this.ViewStockData[Index].GRNNo
-            })
-            console.log(this.TransferQtyArr);
-            // if (this.enabledIndex < this.ViewStockData.length - 1) {
-            //   this.enabledIndex++;
-            // }
-            this.count =0
-            this.transferqtydisable[Index] = true
-            console.log(this.TransferQtyArr[Index].TransferQty, '!');
+            if (parseFloat(this.ViewStockData[Index].TransferQty) > this.ViewStockData[Index].Stock) {
+              this.ViewStockData[Index].TransferQty = ''
+              this.ErrorMsg = ''
+              this.ErrorMsg = 'You Cannot Enter More Than GRN Qty '
+              const error = document.getElementById('Error')
+              error?.click()
+              return
+            } else {
+              this.TransferQtyArr.push({
+                TransferQty: this.ViewStockData[Index].TransferQty,
+                RamatId: this.RawmaterialId,
+                GRNId: this.ViewStockData[Index].GRNId,
+                GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
+                GRNDate: this.ViewStockData[Index].GRNDate,
+                Uom: this.ViewStockData[Index].Uom,
+                TransId: this.ViewStockData[Index].TransId,
+                GRNNo: this.ViewStockData[Index].GRNNo
+              })
+              console.log(this.TransferQtyArr);
+
+              this.transferqtydisable[Index] = true
+              for (let i = 0; i < this.ViewStockData.length; i++) {
+                this.ViewStockData[i].Add = 0
+              }
+            }
           }
         } else {
-          this.count =1
+
           this.TransferTotal = this.TransferQtyArr.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.TransferQty), 0);
           this.TransferTotal = this.ViewStockData[Index].TransferQty + this.TransferTotal
           console.log(this.TransferTotal);
           if (this.TransferTotal > parseFloat(this.StockData[0].Stock)) {
             this.ViewStockData[Index].TransferQty = ''
             this.ErrorMsg = ''
-            this.ErrorMsg = 'You Cannot Transfer more than Stock'
+            this.ErrorMsg = 'You Cannot Enter More Than Stock'
             const error = document.getElementById('Error')
             error?.click()
             return
           } else {
-            this.TransferQtyArr.push({
-              TransferQty: this.ViewStockData[Index].TransferQty,
-              RamatId: this.RawmaterialId,
-              GRNId: this.ViewStockData[Index].GRNId,
-              GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
-              GRNDate: this.ViewStockData[Index].GRNDate,
-              Uom: this.ViewStockData[Index].Uom,
-              TransId: this.ViewStockData[Index].TransId,
-              GRNNo: this.ViewStockData[Index].GRNNo
-            })
-            console.log(this.TransferQtyArr);
-            this.transferqtydisable[Index] = true
-            // if (this.enabledIndex < this.ViewStockData.length - 1) {
-            //   this.enabledIndex++;
-            // }
-            this.count =0
+            if (parseFloat(this.ViewStockData[Index].TransferQty) > this.ViewStockData[Index].Stock) {
+              this.ViewStockData[Index].TransferQty = ''
+              this.ErrorMsg = ''
+              this.ErrorMsg = 'You Cannot Enter More Than GRN Qty'
+              const error = document.getElementById('Error')
+              error?.click()
+              return
+            } else {
+              this.TransferQtyArr.push({
+                TransferQty: this.ViewStockData[Index].TransferQty,
+                RamatId: this.RawmaterialId,
+                GRNId: this.ViewStockData[Index].GRNId,
+                GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
+                GRNDate: this.ViewStockData[Index].GRNDate,
+                Uom: this.ViewStockData[Index].Uom,
+                TransId: this.ViewStockData[Index].TransId,
+                GRNNo: this.ViewStockData[Index].GRNNo
+              })
+              console.log(this.TransferQtyArr);
+              this.transferqtydisable[Index] = true
+
+              for (let i = 0; i < this.ViewStockData.length; i++) {
+                this.ViewStockData[i].Add = 0
+              }
+            }
           }
         }
       } else {
-        this.count =0
+
         this.ErrorMsg = ''
         this.ErrorMsg = 'Transfer Quantity Should be Greater Than Zero..Please Check...'
         const error = document.getElementById('Error')
@@ -327,7 +354,7 @@ export class StoreToStoreMomentComponent implements OnInit {
         return
       }
     } else {
-      this.count =0
+
       this.ErrorMsg = ''
       this.ErrorMsg = 'Transfer Quantity Should be Greater Than Zero..Please Check...'
       const error = document.getElementById('Error')
@@ -338,18 +365,16 @@ export class StoreToStoreMomentComponent implements OnInit {
 
   }
   Remove(Index: number) {
-    // if (Index <= this.enabledIndex) {
-    //   this.enabledIndex = Index;
-    // }
-    this.count =0
+
     this.transferqtydisable[Index] = false
     this.ViewStockData[Index].TransferQty = ''
     this.TransferQtyArr.splice(Index, 1)
   }
   empty() {
-    this.storetostoreform.controls['Towarehouse'].setValue('')
+
   }
   savevaildation() {
+
     const save = document.getElementById('savevaild') as HTMLInputElement
     save?.click()
   }
@@ -381,7 +406,6 @@ export class StoreToStoreMomentComponent implements OnInit {
       StoretostoreDet: this.StoretostoreDet
     })
     console.log(this.storetostoreUpdateArr);
-    console.log(this.storetostoreUpdateArr);
-    console.log(this.storetostoreUpdateArr);
+
   }
 }
