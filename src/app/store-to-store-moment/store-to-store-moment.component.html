@@ -104,7 +104,7 @@
     </p-table>
     <mat-card-actions align="end" *ngIf="Viewclick">
       <button mat-raised-button class="button" type="button" (click)="savevaildation()"
-        style="background-color: lightgreen;">Save</button>
+        style="background-color: lightgreen;" >Save</button>
     </mat-card-actions>
   </mat-card>
 
@@ -159,6 +159,32 @@
         <button mat-raised-button type="button" class="btn" style="background-color: lightgreen;"
           data-bs-dismiss="modal" (click)="save()">Yes</button>
         <button mat-raised-button type="button" class="btn" color="warn" data-bs-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+<button style="display: none;" id="Save" data-bs-toggle="modal" data-bs-target="#Savedialog"></button>
+<div class="modal" id="Savedialog" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"></div>
+      <div class="modal-body" style="margin-left: 1%;">
+        <div style="font-size: medium;font-weight: 600;color: rgb(140, 232, 140);" *ngIf="this.status == 'Y'">
+          {{this.Msg}}
+        </div>
+        <div style="font-size: medium;font-weight: 600;color: rgb(202, 52, 47);" *ngIf="this.status == 'N'">
+          {{this.Msg}}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div *ngIf="this.status == 'Y'">
+          <button mat-raised-button style="background-color: #92d87e;" type="button" data-bs-dismiss="modGeral"
+            (click)="finalSave()">OK</button>
+        </div>
+        <div *ngIf="this.status == 'N'">
+          <button mat-raised-button class="btn btn-secondary" style="background-color: rgb(247, 107, 75);" type="button"
+            data-bs-dismiss="modal">OK</button>
+        </div>
       </div>
     </div>
   </div>

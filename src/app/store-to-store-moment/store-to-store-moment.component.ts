@@ -46,9 +46,9 @@ export class StoreToStoreMomentComponent implements OnInit {
       qty: new FormControl('', Validators.required)
     })
     this.storetostoreform.controls['Trandate'].setValue(this.date.transform(this.cuurendate, 'yyyy-MM-dd'))
-    this.getWarehouse()
     this.getpath1()
     this.getpath2()
+    this.getDept()
     this.RawmaterialIdData = []
   }
   RefNo: string = 'STM/'
@@ -68,8 +68,8 @@ export class StoreToStoreMomentComponent implements OnInit {
       next: (res: any) => {
         const path = res
         console.log(path, 't');
-        this.RefNo = 'STM/' + this.RefNo + '/' + path[0].Yearmonth
-        this.RefNo1 = '/' + path[0].Yearmonth + '/'
+        this.RefNo = 'STM/' + this.RefNo + '/' + path[0].Yearmonth + '/'
+
       },
       error: (err) => {
         this.apiErrorMsg = err;
@@ -82,11 +82,19 @@ export class StoreToStoreMomentComponent implements OnInit {
     })
   }
   getpath3() {
-    this.service.Path3(this.RefNo, this.RefNo1).subscribe({
+    this.service.Path3(this.RefNo).subscribe({
       next: (res: any) => {
         const path = res
         console.log(path);
-        this.storetostoreform.controls['Min_ref_no'].setValue(this.RefNo + '/' + path[0].Trano)
+        this.storetostoreform.controls['Min_ref_no'].setValue(this.RefNo  + path[0].Trano)
+      },
+      error:(err)=>{
+        this.apiErrorMsg = err;
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+      },
+      complete: () => {
+        this.getWarehouse()
       }
     })
   }
@@ -95,6 +103,7 @@ export class StoreToStoreMomentComponent implements OnInit {
     this.service.Deptid(this.Empid).subscribe((data: any) => {
       const deptid = data
       this.Deptid = deptid[0].Deptid
+      console.log(this.Deptid);
     })
   }
   apiErrorMsg: string = ''
@@ -229,8 +238,9 @@ export class StoreToStoreMomentComponent implements OnInit {
       }
     })
   }
-
+  btnIndex: number = 0
   onTransferQtyInput(index: number): void {
+
     this.ViewStockData[index].allowAdd = this.ViewStockData[index].TransferQty !== null && this.ViewStockData[index].TransferQty > 0;
     if (this.ViewStockData[index].TransferQty === '' || this.ViewStockData[index].TransferQty === 0) {
       this.ViewStockData[index].allowAdd = false;
@@ -262,6 +272,7 @@ export class StoreToStoreMomentComponent implements OnInit {
   ViewtabelIndex: any
   TransferTotal: any
   confirmTransferQty(Index: number): void {
+
     if (this.ViewStockData[Index].TransferQty !== null && this.ViewStockData[Index].TransferQty > 0) {
       // Disable the current input field
       this.ViewStockData[Index].readOnly = true;
@@ -302,7 +313,6 @@ export class StoreToStoreMomentComponent implements OnInit {
           }
         }
       } else {
-
         this.TransferTotal = this.TransferQtyArr.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.TransferQty), 0);
         this.TransferTotal = this.ViewStockData[Index].TransferQty + this.TransferTotal
         console.log(this.TransferTotal);
@@ -349,97 +359,6 @@ export class StoreToStoreMomentComponent implements OnInit {
       return
     }
   }
-  // Add(Index: number) {
-  //   this.ViewtabelIndex = Index
-  //   debugger
-  //   if (this.ViewStockData[Index].TransferQty !== null && this.ViewStockData[Index].TransferQty > 0) {
-  //     this.ViewStockData[Index].readOnly = true;
-  //     this.ViewStockData[Index].allowAdd = false;
-  //     if (this.TransferQtyArr.length === 0) {
-  //       if (parseFloat(this.ViewStockData[Index].TransferQty) > parseFloat(this.StockData[0].Stock)) {
-  //         this.ViewStockData[Index].TransferQty = ''
-  //         this.ErrorMsg = ''
-  //         this.ErrorMsg = 'You Cannot Enter More Than Stock'
-  //         const error = document.getElementById('Error')
-  //         error?.click()
-  //         return
-  //       } else {
-  //         if (parseFloat(this.ViewStockData[Index].TransferQty) > this.ViewStockData[Index].Stock) {
-  //           this.ViewStockData[Index].TransferQty = ''
-  //           this.ErrorMsg = ''
-  //           this.ErrorMsg = 'You Cannot Enter More Than GRN Qty '
-  //           const error = document.getElementById('Error')
-  //           error?.click()
-  //           return
-  //         } else {
-  //           this.TransferQtyArr.push({
-  //             TransferQty: this.ViewStockData[Index].TransferQty,
-  //             RamatId: this.RawmaterialId,
-  //             GRNId: this.ViewStockData[Index].GRNId,
-  //             GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
-  //             GRNDate: this.ViewStockData[Index].GRNDate,
-  //             Uom: this.ViewStockData[Index].Uom,
-  //             TransId: this.ViewStockData[Index].TransId,
-  //             GRNNo: this.ViewStockData[Index].GRNNo
-  //           })
-  //           console.log(this.TransferQtyArr);
-
-  //           this.transferqtydisable[Index] = true
-  //           for (let i = 0; i < this.ViewStockData.length; i++) {
-  //             this.ViewStockData[i].Add = 0
-  //           }
-  //         }
-  //       }
-  //     } else {
-
-  //       this.TransferTotal = this.TransferQtyArr.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.TransferQty), 0);
-  //       this.TransferTotal = this.ViewStockData[Index].TransferQty + this.TransferTotal
-  //       console.log(this.TransferTotal);
-  //       if (this.TransferTotal > parseFloat(this.StockData[0].Stock)) {
-  //         this.ViewStockData[Index].TransferQty = ''
-  //         this.ErrorMsg = ''
-  //         this.ErrorMsg = 'You Cannot Enter More Than Stock'
-  //         const error = document.getElementById('Error')
-  //         error?.click()
-  //         return
-  //       } else {
-  //         if (parseFloat(this.ViewStockData[Index].TransferQty) > this.ViewStockData[Index].Stock) {
-  //           this.ViewStockData[Index].TransferQty = ''
-  //           this.ErrorMsg = ''
-  //           this.ErrorMsg = 'You Cannot Enter More Than GRN Qty'
-  //           const error = document.getElementById('Error')
-  //           error?.click()
-  //           return
-  //         } else {
-  //           this.TransferQtyArr.push({
-  //             TransferQty: this.ViewStockData[Index].TransferQty,
-  //             RamatId: this.RawmaterialId,
-  //             GRNId: this.ViewStockData[Index].GRNId,
-  //             GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
-  //             GRNDate: this.ViewStockData[Index].GRNDate,
-  //             Uom: this.ViewStockData[Index].Uom,
-  //             TransId: this.ViewStockData[Index].TransId,
-  //             GRNNo: this.ViewStockData[Index].GRNNo
-  //           })
-  //           console.log(this.TransferQtyArr);
-  //           this.transferqtydisable[Index] = true
-
-  //           for (let i = 0; i < this.ViewStockData.length; i++) {
-  //             this.ViewStockData[i].Add = 0
-  //           }
-  //         }
-  //       }
-  //     }
-  //   } else {
-
-  //     this.ErrorMsg = ''
-  //     this.ErrorMsg = 'Transfer Quantity Should be Greater Than Zero..Please Check...'
-  //     const error = document.getElementById('Error')
-  //     error?.click()
-  //     return
-  //   }
-
-  // }
   Remove(Index: number): void {
 
     this.transferqtydisable[Index] = false
@@ -455,19 +374,34 @@ export class StoreToStoreMomentComponent implements OnInit {
 
   }
   savevaildation() {
-
-    const save = document.getElementById('savevaild') as HTMLInputElement
-    save?.click()
+    for (let i = 0; i < this.ViewStockData.length; i++) {
+      if (this.ViewStockData[i].allowAdd === true) {
+        this.ErrorMsg = ''
+        this.ErrorMsg = 'Please Add Transfer Quantity...'
+        const error = document.getElementById('Error')
+        error?.click()
+        return
+      } else {
+        const save = document.getElementById('savevaild') as HTMLInputElement
+        save?.click()
+      }
+    }
   }
   storetostoreUpdateArr: any[] = new Array()
   StoretostoreDet: any[] = new Array()
-  Min_ref_no: string = ''
+  StoreToStoreSave: any[] = new Array()
+  Msg: string = ''
+  status: string = ''
   save() {
+    this.getpath1()
+    this.getpath2()
+    this.getpath3()
     this.storetostoreUpdateArr = []
+    this.StoretostoreDet = []
     for (let i = 0; i < this.TransferQtyArr.length; i++) {
       this.StoretostoreDet.push({
-        TransferQty: this.TransferQtyArr[i].TransferQty,
         Rawmatid: this.TransferQtyArr[i].RamatId,
+        Qty: this.TransferQtyArr[i].TransferQty,
         Uom: this.TransferQtyArr[i].Uom,
         Mindate: this.date.transform(this.cuurendate, 'yyyy-MM-dd'),
         GRNo: this.TransferQtyArr[i].GRNNo,
@@ -480,14 +414,36 @@ export class StoreToStoreMomentComponent implements OnInit {
     }
 
     this.storetostoreUpdateArr.push({
-      Deptid: this.Deptid,
-      RamatId: this.RawmaterialId,
+      DeptId: this.Deptid,
+      Mindate:this.storetostoreform.controls['Trandate'].value,
+      Min_ref_no: this.storetostoreform.controls['Min_ref_no'].value,
       LocationId: this.LoactionId,
       Empid: this.Empid,
-      Min_ref_no: this.Min_ref_no,
-      StoretostoreDet: this.StoretostoreDet
+      StoreToStoreDet: this.StoretostoreDet
     })
     console.log(this.storetostoreUpdateArr);
+    this.service.save(this.storetostoreUpdateArr).subscribe({
+      next: (res: any) => {
+        this.StoreToStoreSave = res
+        console.log(this.StoreToStoreSave, 'save');
+        this.status = this.StoreToStoreSave[0].status
+        this.Msg = this.StoreToStoreSave[0].Msg
+        if (this.StoreToStoreSave[0].status === 'Y') {
+          const save = document.getElementById('Save') as HTMLInputElement
+          save?.click()
+        } else {
+          const save = document.getElementById('Save') as HTMLInputElement
+          save?.click()
+        }
+      },
+      error: (err) => {
+        this.apiErrorMsg = err;
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+      },
+    })
+  }
+  finalSave() {
 
   }
 }
