@@ -47,6 +47,6 @@ export class StoreIssueService {
     return this.http.get("http://103.21.76.94:6055/Indent/Storeissue-Batchwise?Grnid="+Grnid)
   }
   Save(UpdateStoreIssue:any){
-    return this.http.post('http://192.168.203.59.4000/Indent/Post_StoreIssue',UpdateStoreIssue)
+    return this.http.post('http://103.21.76.94:6055/Indent/Post_StoreIssue',UpdateStoreIssue)
   }
 }

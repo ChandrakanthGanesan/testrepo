@@ -50,7 +50,7 @@ export class StoretostoreService {
     );
   }
   Stockchck(RawmatId: any, LocationId: any, FrmstoreId: any) {
-    return this.http.get('http://103.21.76.94:6055/Indent/storetostore-Stockchck?RawmatId=' + RawmatId + '&LocationId=' + LocationId + '&FrmstoreId=' + FrmstoreId).pipe(
+    return this.http.get('http://192.168.203.59:4000/Indent/storetostore-Stockchck?RawmatId=' + RawmatId + '&LocationId=' + LocationId + '&FrmstoreId=' + FrmstoreId).pipe(
       catchError(this.handleError)
     );
   }

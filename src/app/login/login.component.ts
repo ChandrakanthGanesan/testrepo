@@ -104,10 +104,13 @@ export class LoginComponent implements OnInit {
     this.LoactionId.push(LoactionId)
     sessionStorage.setItem('location', JSON.stringify(this.LoactionId));
 
+    
+
   }
   get go(): { [key: string]: AbstractControl } {
     return this.loginform.controls;
   }
+
   gobtn: any
   logindata: any[] = new Array()
   Strvar: any = ''

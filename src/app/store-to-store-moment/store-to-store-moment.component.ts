@@ -29,11 +29,11 @@ export class StoreToStoreMomentComponent implements OnInit {
     const user = JSON.parse(sessionStorage.getItem('session') || '{}');
     this.Empid = user[0].empid
     console.log(this.Empid);
-    this.storetostoreform = this.fb.group({
+    this.storetostoreform = this.fb.nonNullable.group({
       Min_ref_no: new FormControl('', Validators.required),
       Trandate: new FormControl(''),
       frmwarehouse: new FormControl('', Validators.required),
-      material: new FormControl('', Validators.required),
+      RawmaterialId: new FormControl('', Validators.required),
       Towarehouse: new FormControl('', Validators.required),
       stock: new FormControl('', Validators.required),
       qty: new FormControl('', Validators.required)
@@ -42,7 +42,9 @@ export class StoreToStoreMomentComponent implements OnInit {
     this.getpath1()
     this.getDept()
     this.RawmaterialIdData = []
+
   }
+
   RefNo: string = 'STM/'
   getpath1() {
     this.service.Path1(this.LoactionId).subscribe({
@@ -52,7 +54,7 @@ export class StoreToStoreMomentComponent implements OnInit {
         console.log(this.RefNo);
         this.RefNo = path[0].Compshort
       },
-      error:(err) =>{
+      error: (err) => {
         this.apiErrorMsg = err;
         const Error = document.getElementById('apierror') as HTMLInputElement
         Error.click()
@@ -151,7 +153,7 @@ export class StoreToStoreMomentComponent implements OnInit {
   customSearchFn(term: string, item: any) {
     return item.RawmatName.toLowerCase().startsWith(term.toLowerCase())
   }
-  RawmaterialId: number = 0
+
   RawmaterialName: any
   Rawmat(e: any) {
     this.RawmaterialName = e.target.value
@@ -185,7 +187,9 @@ export class StoreToStoreMomentComponent implements OnInit {
   }
 
   RawmaterialChangeEvent(e: any) {
-    if (this.RawmaterialId != 0 && this.RawmaterialId !== null && this.RawmaterialId !== undefined) {
+    if (this.storetostoreform.controls['RawmaterialId'].value != 0 &&
+      this.storetostoreform.controls['RawmaterialId'].value !== null &&
+      this.storetostoreform.controls['RawmaterialId'].value !== undefined) {
       this.getStock()
     } else {
       return
@@ -194,7 +198,7 @@ export class StoreToStoreMomentComponent implements OnInit {
   StockData: any[] = new Array()
   getStock() {
     this.spinner.show()
-    this.service.Stockchck(this.RawmaterialId, this.LoactionId, this.storetostoreform.controls['frmwarehouse'].value).subscribe({
+    this.service.Stockchck(this.storetostoreform.controls['RawmaterialId'].value, this.LoactionId, this.storetostoreform.controls['frmwarehouse'].value).subscribe({
       next: (res: any) => {
         this.spinner.hide()
         this.StockData = res
@@ -218,40 +222,46 @@ export class StoreToStoreMomentComponent implements OnInit {
   ViewStockData2: any
   Total: any
   getView() {
-    if(this.storetostoreform.controls['stock'].value >0){
-      this.spinner.show()
-      this.service.ViewStock(this.LoactionId, this.storetostoreform.controls['frmwarehouse'].value, this.RawmaterialId).subscribe({
-        next: (res: any) => {
-          this.spinner.hide()
-          this.ViewStockData = res
-          console.log(this.ViewStockData, ' this.ViewStockData');
-          if (this.ViewStockData.length > 0) {
-            const newarr = {
-              TransferQty: '',
-              readOnly: false,
-              allowAdd: false,
-            }
-            this.ViewStockData.forEach(obj => {
-              Object.assign(obj, newarr);
-            });
-            console.log(this.ViewStockData, ' this.ViewStockData');
-            this.Viewclick = true
-            this.Total = this.ViewStockData.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.Stock), 0);
-          }
-        },
-        error: (err) => {
-          this.apiErrorMsg = err;
-          const Error = document.getElementById('apierror') as HTMLInputElement
-          Error.click()
-          return
-        }
-      })
-    }else{
-      this.ErrorMsg = ''
-      this.ErrorMsg = 'Stock Is Not Avialable For This Material..Please Select Another Material'
-      const error = document.getElementById('Error')
-      error?.click()
+    this.Viewbtn = true
+    if (this.storetostoreform.invalid) {
       return
+    }
+    else {
+      if (this.storetostoreform.controls['stock'].value > 0) {
+        this.spinner.show()
+        this.service.ViewStock(this.LoactionId, this.storetostoreform.controls['frmwarehouse'].value, this.storetostoreform.controls['RawmaterialId'].value).subscribe({
+          next: (res: any) => {
+            this.spinner.hide()
+            this.ViewStockData = res
+            console.log(this.ViewStockData, ' this.ViewStockData');
+            if (this.ViewStockData.length > 0) {
+              const newarr = {
+                TransferQty: '',
+                readOnly: false,
+                allowAdd: false,
+              }
+              this.ViewStockData.forEach(obj => {
+                Object.assign(obj, newarr);
+              });
+              console.log(this.ViewStockData, ' this.ViewStockData');
+              this.Viewclick = true
+              this.Total = this.ViewStockData.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.Stock), 0);
+            }
+          },
+          error: (err) => {
+            this.apiErrorMsg = err;
+            const Error = document.getElementById('apierror') as HTMLInputElement
+            Error.click()
+            return
+          }
+        })
+      } else {
+        this.ErrorMsg = ''
+        this.ErrorMsg = 'Stock Is Not Avialable For This Material..Please Select Another Material'
+        const error = document.getElementById('Error')
+        error?.click()
+        return
+      }
     }
 
   }
@@ -322,7 +332,7 @@ export class StoreToStoreMomentComponent implements OnInit {
         } else {
           this.TransferQtyArr.push({
             TransferQty: this.ViewStockData[Index].TransferQty,
-            RamatId: this.RawmaterialId,
+            RamatId: this.storetostoreform.controls['RawmaterialId'].value,
             GRNId: this.ViewStockData[Index].GRNId,
             GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
             GRNDate: this.ViewStockData[Index].GRNDate,
@@ -352,7 +362,7 @@ export class StoreToStoreMomentComponent implements OnInit {
         } else {
           this.TransferQtyArr.push({
             TransferQty: this.ViewStockData[Index].TransferQty,
-            RamatId: this.RawmaterialId,
+            RamatId: this.storetostoreform.controls['RawmaterialId'].value,
             GRNId: this.ViewStockData[Index].GRNId,
             GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
             GRNDate: this.ViewStockData[Index].GRNDate,
@@ -458,7 +468,7 @@ export class StoreToStoreMomentComponent implements OnInit {
     })
   }
   finalSave() {
-    this.Viewbtn=false
+    this.Viewbtn = false
     this.storetostoreform.reset()
   }
 }

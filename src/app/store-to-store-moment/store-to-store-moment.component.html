@@ -11,7 +11,7 @@
   <mat-card>
     <mat-card-content>
       <form [formGroup]="storetostoreform">
-        <div class="row mt-0 p-0 mb-0" >
+        <div class="row mt-0 p-0 mb-0">
           <div class="col-sm-6 col-6 col-md-6 col-lg-6">
             <label class="form-label">Trano <span>*</span></label>
             <input type="text" class="form-control" formControlName="Min_ref_no">
@@ -24,38 +24,47 @@
         <div class="row  mt-0 p-0 mb-0">
           <div class="col-6 col-sm-6 col-md-6 col-lg-6">
             <label class="form-label">From WareHouse <span>*</span></label>
-            <select class="form-select" formControlName="frmwarehouse"  (change)="FrmwarehouseEvent($event)">
+            <select class="form-select" formControlName="frmwarehouse" (change)="FrmwarehouseEvent($event)">
               <option selected disabled hidden value="">-Select--</option>
               <option *ngFor="let item of WarehouseData" [value]="item.WareHouse_Id">{{item.Warehouse_Name}}</option>
             </select>
-            <h5></h5>
+            <p class="Error" *ngIf="Viewbtn && storetostoreform.controls['frmwarehouse'].invalid">
+              Please Select FromHouse -Field
+            </p>
           </div>
           <div class="col-6 col-sm-6 col-md-6 col-lg-6">
             <label class="form-label">To Warehouse<span>*</span></label>
-            <select class="form-select" formControlName="Towarehouse"  (change)="TowarehouseEvent($event)">
+            <select class="form-select" formControlName="Towarehouse" (change)="TowarehouseEvent($event)" required>
               <option selected disabled hidden value="">-Select--</option>
               <option *ngFor="let item of WarehouseData" [value]="item.WareHouse_Id">{{item.Warehouse_Name}}</option>
             </select>
+            <p class="Error" *ngIf="Viewbtn && storetostoreform.controls['Towarehouse'].invalid">
+              Please Select Towarehouse -Field
+            </p>
           </div>
         </div>
-        <div class="row mt-0 p-0 mb-0">
+        <div class="row">
           <div class="col">
             <label class="form-label">Material <span>*</span></label>
-            <ng-select [(ngModel)]="RawmaterialId" (change)="RawmaterialChangeEvent($event)" (input)="Rawmat($event)"
-              formControlName="material" placeholder="--Select--" [items]="RawmaterialIdData" class="form-control"
-              bindLabel="RawmatName" [ngClass]="{ 'is-invalid':Viewbtn && View['material'].errors}" bindValue="RawmatId"
+            <ng-select  (change)="RawmaterialChangeEvent($event)" (input)="Rawmat($event)"
+              formControlName="RawmaterialId"  [items]="RawmaterialIdData" class="form-control"
+              bindLabel="RawmatName"  bindValue="RawmatId"
               [searchFn]="customSearchFn">
             </ng-select>
+            <p class="Error" *ngIf="Viewbtn && storetostoreform.controls['RawmaterialId'].invalid">
+              Please Select Material -Field
+            </p>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 col-md-6 col-lg-6">
             <label class="form-label">Stock <span>*</span></label>
             <input type="number" class="form-control" formControlName="stock">
+
           </div>
           <div class="col  mt-4">
             <button mat-raised-button class="stckbtn" style="margin-right: 2%;" type="button" color="primary"
-              (click)=" getView()" >View</button>
+              (click)=" getView()">View</button>
           </div>
         </div>
       </form>
@@ -79,11 +88,12 @@
           <td class="body">{{ rowData.Stock }}</td>
           <td style="display: none;">{{rowData.GRNId}}</td>
           <td style="display: none;">{{rowData.TransId}}</td>
-          <td class="body p-2"><input type="number" class="form-control" [readonly]="rowData.readOnly || isAnyUnconfirmedTransferQty(i)"
-              [(ngModel)]="rowData.TransferQty" (input)="onTransferQtyInput(i)" placeholder="Enter Transfer Qty" />
+          <td class="body p-2"><input type="number" class="form-control"
+              [readonly]="rowData.readOnly || isAnyUnconfirmedTransferQty(i)" [(ngModel)]="rowData.TransferQty"
+              (input)="onTransferQtyInput(i)" placeholder="Enter Transfer Qty" />
           </td>
-          <td class="body"> <button mat-raised-button class="button" color="primary" type="button" (click)="confirmTransferQty(i)"
-              [disabled]="!rowData.allowAdd">
+          <td class="body"> <button mat-raised-button class="button" color="primary" type="button"
+              (click)="confirmTransferQty(i)" [disabled]="!rowData.allowAdd">
               <i class="fa-solid fa-plus fa-lg"
                 style="color: #080808;margin-left: 2%;border-color: #8dd0ec;margin-top: 3%;"></i>
             </button></td>
@@ -104,7 +114,7 @@
     </p-table>
     <mat-card-actions align="end" *ngIf="Viewclick">
       <button mat-raised-button class="button" type="button" (click)="savevaildation()"
-        style="background-color: lightgreen;" >Save</button>
+        style="background-color: lightgreen;">Save</button>
     </mat-card-actions>
   </mat-card>
 

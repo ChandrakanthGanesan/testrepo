@@ -99,30 +99,167 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-@media only screen and (min-width: 575px) and (max-width: 759px) {
-  .content {
-    margin: 1%;
-    padding: 2.5%;
+@media screen and  (max-width: 575px) {
+
+  .title {
+    font-size: medium;
   }
-  example-spacer {
-    flex: 1 1 auto;
+
+  .container-fluid {
+    margin-top: 1%;
   }
+
+  span {
+    font-size: x-small;
+  }
+
   .form-label {
-    font-size: small;
+    font-size: x-small;
+    margin: .1%;
   }
+
+  input {
+    font-size: x-small;
+    margin: .1%;
+  }
+
+  .form-select {
+    font-size: x-small;
+    margin: .1%;
+  }
+
+  .form-control {
+    font-size: x-small;
+    margin: .1%;
+  }
+
+  .head {
+    font-size: small;
+    padding: 6px;
+  }
+
+  .body {
+    font-size: small;
+    padding: 6px;
+  }
+
+  button {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: small;
+    width: fit-content;
+  }
+  .stckbtn{
+    margin-top: -6.5%;
+  }
+}
+@media screen and (min-width: 576px) and (max-width: 749px) {
+
+  .title {
+    font-size: x-large;
+  }
+
+  .container-fluid {
+    margin-top: 1%;
+  }
+
   span {
     font-size: small;
   }
-  .heading {
-    font-size: 25px;
+
+  .form-label {
+    font-size: small;
+    margin: .1%;
   }
+
+  input {
+    font-size: small;
+    margin: .1%;
+  }
+
+  .form-select {
+    font-size: small;
+    margin: .1%;
+  }
+
   .form-control {
     font-size: small;
+    margin: .1%;
   }
-  ng-select {
-    font-size: small;
+
+  .head {
+    font-size: smaller;
+    padding: 6px;
+  }
+
+  .body {
+    font-size: smaller;
+    padding: 6px;
+  }
+
+  button {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: smaller;
+    width: fit-content;
+  }
+  .stckbtn{
+    margin-top: -4.5%;
   }
   .inputspace{
     width: 150%;
   }
+
 }
+@media screen and (min-width: 749px) and (max-width: 992px) {
+
+  .title {
+    font-size: x-large;
+  }
+
+  .container-fluid {
+    margin-top: 1%;
+  }
+
+  span {
+    font-size: medium;
+  }
+
+  .form-label {
+    font-size: smaller;
+    margin: .1%;
+  }
+
+  input {
+    font-size: smaller;
+    margin: .1%;
+  }
+
+  .form-select {
+    font-size: smaller;
+    margin: .1%;
+  }
+
+  .form-control {
+    font-size: smaller;
+    margin: .1%;
+  }
+
+  .head {
+    font-size: medium;
+    padding: 6px;
+  }
+
+  .body {
+    font-size: medium;
+    padding: 6px;
+  }
+
+  button {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: smaller;
+    width: fit-content;
+  }
+  .stckbtn{
+    margin-top: -2%;
+  }
+}
+
