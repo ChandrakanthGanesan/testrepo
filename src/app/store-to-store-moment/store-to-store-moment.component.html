@@ -7,7 +7,7 @@
 <mat-card-header class="justify-content-center mt-1">
   <mat-card-title class="title" style="text-transform: uppercase;font-weight: 600;">Store To Store</mat-card-title>
 </mat-card-header>
-<div class="container-fluid mt-4">
+<div class="container-fluid">
   <mat-card>
     <mat-card-content>
       <form [formGroup]="storetostoreform">
@@ -24,16 +24,17 @@
         <div class="row  mt-0 p-0 mb-0">
           <div class="col-6 col-sm-6 col-md-6 col-lg-6">
             <label class="form-label">From WareHouse <span>*</span></label>
-            <select class="form-select" formControlName="frmwarehouse" (change)="FrmwarehouseEvent($event)">
+            <select class="form-select" formControlName="frmwarehouse"  (change)="FrmwarehouseEvent($event)">
               <option selected disabled hidden value="">-Select--</option>
               <option *ngFor="let item of WarehouseData" [value]="item.WareHouse_Id">{{item.Warehouse_Name}}</option>
             </select>
+            <h5></h5>
           </div>
           <div class="col-6 col-sm-6 col-md-6 col-lg-6">
             <label class="form-label">To Warehouse<span>*</span></label>
-            <select class="form-select" formControlName="Towarehouse" (change)="TowarehouseEvent($event)">
+            <select class="form-select" formControlName="Towarehouse"  (change)="TowarehouseEvent($event)">
               <option selected disabled hidden value="">-Select--</option>
-              <option *ngFor="let item of WarehouseData" [value]="item.WareHouse_Id">{{item.Warehouse_Name}}</option>
+              <option *ngFor="let item of TowarehouseData" [value]="item.WareHouse_Id">{{item.Warehouse_Name}}</option>
             </select>
           </div>
         </div>
@@ -81,10 +82,10 @@
           <td class="body p-2"><input type="number" class="form-control" [readonly]="rowData.readOnly || isAnyUnconfirmedTransferQty(i)"
               [(ngModel)]="rowData.TransferQty" (input)="onTransferQtyInput(i)" placeholder="Enter Transfer Qty" />
           </td>
-          <td class="body"> <button mat-raised-button class="button" type="button" (click)="confirmTransferQty(i)"
+          <td class="body"> <button mat-raised-button class="button" color="primary" type="button" (click)="confirmTransferQty(i)"
               [disabled]="!rowData.allowAdd">
               <i class="fa-solid fa-plus fa-lg"
-                style="color: #2fe821;margin-left: 2%;border-color: #8dd0ec;margin-top: 3%;"></i>
+                style="color: #080808;margin-left: 2%;border-color: #8dd0ec;margin-top: 3%;"></i>
             </button></td>
           <td class="body">
             <i class="fa-solid fa-trash-can fa-lg" style="color: #d5552a;margin-left: 3%;margin-top: 3%;"
@@ -97,7 +98,6 @@
         <tr>
           <td colspan="2" class="">Totals</td>
           <td class="body">{{ this.Total }}</td>
-          <td class="body">{{ this.TransferQtyToatl }}</td>
           <td class="body">{{ this.TransferTotal }}</td>
         </tr>
       </ng-template>
@@ -137,9 +137,13 @@
         </p>
       </div>
       <!--  -->
-      <div class="modal-footer" >
+      <div class="modal-footer" *ngIf="Error===0">
         <button mat-raised-button type="button" class="btn" style="background-color: lightgreen;"
           data-bs-dismiss="modal">OK</button>
+      </div>
+      <div class="modal-footer" *ngIf="Error ===1">
+        <button mat-raised-button type="button" class="btn" style="background-color: lightgreen;"
+          data-bs-dismiss="modal" (click)="StockchckClearence()">OK</button>
       </div>
     </div>
   </div>

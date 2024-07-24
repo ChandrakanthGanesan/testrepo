@@ -19,16 +19,9 @@ export class StoreToStoreMomentComponent implements OnInit {
   Empid: number = 0
   cols: any
   currentDate = new Date()
+
   constructor(private date: DatePipe, private fb: FormBuilder, private service: StoretostoreService, private spinner: NgxSpinnerService) { }
   ngOnInit() {
-
-    this.cols = [
-      { header: 'GRN_Ref_No' },
-      { header: 'GRNDate' },
-      { header: 'Stock' },
-      { header: 'Transfer_Qty' },
-      { header: 'Uom' }
-    ];
 
     const data = JSON.parse(sessionStorage.getItem('location') || '{}');
     this.LoactionId = data[data.length - 1]
@@ -47,7 +40,6 @@ export class StoreToStoreMomentComponent implements OnInit {
     })
     this.storetostoreform.controls['Trandate'].setValue(this.date.transform(this.cuurendate, 'yyyy-MM-dd'))
     this.getpath1()
-    this.getpath2()
     this.getDept()
     this.RawmaterialIdData = []
   }
@@ -59,7 +51,15 @@ export class StoreToStoreMomentComponent implements OnInit {
         console.log(path);
         console.log(this.RefNo);
         this.RefNo = path[0].Compshort
-      }
+      },
+      error:(err) =>{
+        this.apiErrorMsg = err;
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+      },
+      complete: () => {
+        this.getpath2()
+      },
     })
   }
   RefNo1: string = ''
@@ -86,9 +86,9 @@ export class StoreToStoreMomentComponent implements OnInit {
       next: (res: any) => {
         const path = res
         console.log(path);
-        this.storetostoreform.controls['Min_ref_no'].setValue(this.RefNo  + path[0].Trano)
+        this.storetostoreform.controls['Min_ref_no'].setValue(this.RefNo + path[0].Trano)
       },
-      error:(err)=>{
+      error: (err) => {
         this.apiErrorMsg = err;
         const Error = document.getElementById('apierror') as HTMLInputElement
         Error.click()
@@ -121,11 +121,13 @@ export class StoreToStoreMomentComponent implements OnInit {
       }
     })
   }
+  TowarehouseData: any[] = new Array()
   FrmwarehouseEvent(e: any) {
-    const FrmwarehouseId = parseInt(e.target.value)
-    this.storetostoreform.controls['frmwarehouse'].setValue(FrmwarehouseId)
+    let FrmwarehouseId = e.target.value
+    this.storetostoreform.controls['frmwarehouse'].setValue(parseInt(FrmwarehouseId))
 
   }
+
   ErrorMsg: string = ''
   TowarehouseEvent(e: any) {
     const TowarehouseId = parseInt(e.target.value)
@@ -209,7 +211,6 @@ export class StoreToStoreMomentComponent implements OnInit {
   ViewStockData: any[] = new Array()
   ViewStockData2: any
   Total: any
-  TransferQtyToatl: any
   getView() {
     this.spinner.show()
     this.service.ViewStock(this.LoactionId, this.storetostoreform.controls['frmwarehouse'].value, this.RawmaterialId).subscribe({
@@ -240,15 +241,30 @@ export class StoreToStoreMomentComponent implements OnInit {
   }
   btnIndex: number = 0
   onTransferQtyInput(index: number): void {
-
     this.ViewStockData[index].allowAdd = this.ViewStockData[index].TransferQty !== null && this.ViewStockData[index].TransferQty > 0;
     if (this.ViewStockData[index].TransferQty === '' || this.ViewStockData[index].TransferQty === 0) {
       this.ViewStockData[index].allowAdd = false;
       this.clearReadonlyState();
+    } else {
+      if (parseFloat(this.ViewStockData[index].TransferQty) > this.ViewStockData[index].Stock) {
+        this.Error = 1
+        this.ViewStockData[index].TransferQty = ''
+        this.ErrorMsg = ''
+        this.ErrorMsg = 'You Cannot Enter More Than Stock'
+        const error = document.getElementById('Error')
+        error?.click()
+        return
+      } else {
+        this.clearReadonlyState();
+      }
     }
   }
 
-
+  StockchckClearence() {
+    for (let i = 0; i < this.ViewStockData.length; i++) {
+      this.ViewStockData[i].allowAdd = false;
+    }
+  }
 
   isAnyUnconfirmedTransferQty(currentIndex: number): boolean {
     return this.ViewStockData.some((item, index) => {
@@ -260,17 +276,18 @@ export class StoreToStoreMomentComponent implements OnInit {
     this.ViewStockData.forEach((rowData: any) => {
       rowData.readOnly = false;
     });
-    for (let i = 0; i < this.ViewStockData.length; i++) {
-      this.ViewStockData[i].readOnly
-    }
+    // for (let i = 0; i < this.ViewStockData.length; i++) {
+    //   this.ViewStockData[i].readOnly
+    // }
 
   }
   trQty: any
   transferqtydisable = [false, false]
   TransferQtyArr: any[] = new Array()
-  value: number = 0
+
   ViewtabelIndex: any
   TransferTotal: any
+  Error: number = 0
   confirmTransferQty(Index: number): void {
 
     if (this.ViewStockData[Index].TransferQty !== null && this.ViewStockData[Index].TransferQty > 0) {
@@ -279,6 +296,7 @@ export class StoreToStoreMomentComponent implements OnInit {
       this.ViewStockData[Index].allowAdd = false;
       if (this.TransferQtyArr.length === 0) {
         if (parseFloat(this.ViewStockData[Index].TransferQty) > parseFloat(this.StockData[0].Stock)) {
+          this.Error = 1
           this.ViewStockData[Index].TransferQty = ''
           this.ErrorMsg = ''
           this.ErrorMsg = 'You Cannot Enter More Than Stock'
@@ -286,30 +304,21 @@ export class StoreToStoreMomentComponent implements OnInit {
           error?.click()
           return
         } else {
-          if (parseFloat(this.ViewStockData[Index].TransferQty) > this.ViewStockData[Index].Stock) {
-            this.ViewStockData[Index].TransferQty = ''
-            this.ErrorMsg = ''
-            this.ErrorMsg = 'You Cannot Enter More Than GRN Qty '
-            const error = document.getElementById('Error')
-            error?.click()
-            return
-          } else {
-            this.TransferQtyArr.push({
-              TransferQty: this.ViewStockData[Index].TransferQty,
-              RamatId: this.RawmaterialId,
-              GRNId: this.ViewStockData[Index].GRNId,
-              GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
-              GRNDate: this.ViewStockData[Index].GRNDate,
-              Uom: this.ViewStockData[Index].Uom,
-              TransId: this.ViewStockData[Index].TransId,
-              GRNNo: this.ViewStockData[Index].GRNNo
-            })
-            console.log(this.TransferQtyArr);
+          this.TransferQtyArr.push({
+            TransferQty: this.ViewStockData[Index].TransferQty,
+            RamatId: this.RawmaterialId,
+            GRNId: this.ViewStockData[Index].GRNId,
+            GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
+            GRNDate: this.ViewStockData[Index].GRNDate,
+            Uom: this.ViewStockData[Index].Uom,
+            TransId: this.ViewStockData[Index].TransId,
+            GRNNo: this.ViewStockData[Index].GRNNo
+          })
+          console.log(this.TransferQtyArr);
 
-            this.transferqtydisable[Index] = true
-            for (let i = 0; i < this.ViewStockData.length; i++) {
-              this.ViewStockData[i].Add = 0
-            }
+          this.transferqtydisable[Index] = true
+          for (let i = 0; i < this.ViewStockData.length; i++) {
+            this.ViewStockData[i].Add = 0
           }
         }
       } else {
@@ -317,6 +326,7 @@ export class StoreToStoreMomentComponent implements OnInit {
         this.TransferTotal = this.ViewStockData[Index].TransferQty + this.TransferTotal
         console.log(this.TransferTotal);
         if (this.TransferTotal > parseFloat(this.StockData[0].Stock)) {
+          this.Error = 1
           this.ViewStockData[Index].TransferQty = ''
           this.ErrorMsg = ''
           this.ErrorMsg = 'You Cannot Enter More Than Stock'
@@ -324,30 +334,21 @@ export class StoreToStoreMomentComponent implements OnInit {
           error?.click()
           return
         } else {
-          if (parseFloat(this.ViewStockData[Index].TransferQty) > this.ViewStockData[Index].Stock) {
-            this.ViewStockData[Index].TransferQty = ''
-            this.ErrorMsg = ''
-            this.ErrorMsg = 'You Cannot Enter More Than GRN Qty'
-            const error = document.getElementById('Error')
-            error?.click()
-            return
-          } else {
-            this.TransferQtyArr.push({
-              TransferQty: this.ViewStockData[Index].TransferQty,
-              RamatId: this.RawmaterialId,
-              GRNId: this.ViewStockData[Index].GRNId,
-              GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
-              GRNDate: this.ViewStockData[Index].GRNDate,
-              Uom: this.ViewStockData[Index].Uom,
-              TransId: this.ViewStockData[Index].TransId,
-              GRNNo: this.ViewStockData[Index].GRNNo
-            })
-            console.log(this.TransferQtyArr);
-            this.transferqtydisable[Index] = true
+          this.TransferQtyArr.push({
+            TransferQty: this.ViewStockData[Index].TransferQty,
+            RamatId: this.RawmaterialId,
+            GRNId: this.ViewStockData[Index].GRNId,
+            GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
+            GRNDate: this.ViewStockData[Index].GRNDate,
+            Uom: this.ViewStockData[Index].Uom,
+            TransId: this.ViewStockData[Index].TransId,
+            GRNNo: this.ViewStockData[Index].GRNNo
+          })
+          console.log(this.TransferQtyArr);
+          this.transferqtydisable[Index] = true
 
-            for (let i = 0; i < this.ViewStockData.length; i++) {
-              this.ViewStockData[i].Add = 0
-            }
+          for (let i = 0; i < this.ViewStockData.length; i++) {
+            this.ViewStockData[i].Add = 0
           }
         }
       }
@@ -370,9 +371,7 @@ export class StoreToStoreMomentComponent implements OnInit {
   }
 
 
-  empty() {
 
-  }
   savevaildation() {
     for (let i = 0; i < this.ViewStockData.length; i++) {
       if (this.ViewStockData[i].allowAdd === true) {
@@ -394,8 +393,6 @@ export class StoreToStoreMomentComponent implements OnInit {
   status: string = ''
   save() {
     this.getpath1()
-    this.getpath2()
-    this.getpath3()
     this.storetostoreUpdateArr = []
     this.StoretostoreDet = []
     for (let i = 0; i < this.TransferQtyArr.length; i++) {
@@ -415,7 +412,7 @@ export class StoreToStoreMomentComponent implements OnInit {
 
     this.storetostoreUpdateArr.push({
       DeptId: this.Deptid,
-      Mindate:this.storetostoreform.controls['Trandate'].value,
+      Mindate: this.storetostoreform.controls['Trandate'].value,
       Min_ref_no: this.storetostoreform.controls['Min_ref_no'].value,
       LocationId: this.LoactionId,
       Empid: this.Empid,
@@ -444,6 +441,7 @@ export class StoreToStoreMomentComponent implements OnInit {
     })
   }
   finalSave() {
-
+    this.Viewbtn=false
+    this.storetostoreform.reset()
   }
 }
