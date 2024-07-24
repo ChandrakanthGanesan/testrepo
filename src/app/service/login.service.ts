@@ -14,12 +14,12 @@ export class LoginService {
 
 
   login(UserName: any, Password: any): Observable<any> {
-    const apiUrl = ("http://192.168.203.59:4000/login/loginDetail/?usern=" + UserName + '&psw=' + Password);
+    const apiUrl = ("http://103.21.76.94:6055/login/loginDetail/?usern=" + UserName + '&psw=' + Password);
     console.log(apiUrl);
     return this.http.get<any>(apiUrl);
   }
     companyDetail() {
-    return this.http.get("http://192.168.203.59:4000/login/Location")
+    return this.http.get("http://103.21.76.94:6055/login/Location")
   }
   CryptString(Strvar: any) {
     this.Chstr = "";
@@ -73,7 +73,7 @@ export class LoginService {
   };
 
   RighitsCheck(Empid: any, Locationid: any) {
-    return this.http.get('http://192.168.203.59:4000/login/rightscheck?Empid=' + Empid + '&Locationid=' + Locationid)
+    return this.http.get('http://103.21.76.94:6055/login/rightscheck?Empid=' + Empid + '&Locationid=' + Locationid)
   }
   menuname() {
     return this.http.get('http://103.21.76.94:6055/login/menurights')
