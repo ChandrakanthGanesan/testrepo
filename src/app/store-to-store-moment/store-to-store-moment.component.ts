@@ -19,16 +19,9 @@ export class StoreToStoreMomentComponent implements OnInit {
   Empid: number = 0
   cols: any
   currentDate = new Date()
+
   constructor(private date: DatePipe, private fb: FormBuilder, private service: StoretostoreService, private spinner: NgxSpinnerService) { }
   ngOnInit() {
-
-    this.cols = [
-      { header: 'GRN_Ref_No' },
-      { header: 'GRNDate' },
-      { header: 'Stock' },
-      { header: 'Transfer_Qty' },
-      { header: 'Uom' }
-    ];
 
     const data = JSON.parse(sessionStorage.getItem('location') || '{}');
     this.LoactionId = data[data.length - 1]
@@ -46,9 +39,8 @@ export class StoreToStoreMomentComponent implements OnInit {
       qty: new FormControl('', Validators.required)
     })
     this.storetostoreform.controls['Trandate'].setValue(this.date.transform(this.cuurendate, 'yyyy-MM-dd'))
-    this.getWarehouse()
     this.getpath1()
-    this.getpath2()
+    this.getDept()
     this.RawmaterialIdData = []
   }
   RefNo: string = 'STM/'
@@ -59,7 +51,16 @@ export class StoreToStoreMomentComponent implements OnInit {
         console.log(path);
         console.log(this.RefNo);
         this.RefNo = path[0].Compshort
-      }
+      },
+      error:(err) =>{
+        this.apiErrorMsg = err;
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
+      },
+      complete: () => {
+        this.getpath2()
+      },
     })
   }
   RefNo1: string = ''
@@ -68,13 +69,14 @@ export class StoreToStoreMomentComponent implements OnInit {
       next: (res: any) => {
         const path = res
         console.log(path, 't');
-        this.RefNo = 'STM/' + this.RefNo + '/' + path[0].Yearmonth
-        this.RefNo1 = '/' + path[0].Yearmonth + '/'
+        this.RefNo = 'STM/' + this.RefNo + '/' + path[0].Yearmonth + '/'
+
       },
       error: (err) => {
         this.apiErrorMsg = err;
         const Error = document.getElementById('apierror') as HTMLInputElement
         Error.click()
+        return
       },
       complete: () => {
         this.getpath3()
@@ -82,11 +84,20 @@ export class StoreToStoreMomentComponent implements OnInit {
     })
   }
   getpath3() {
-    this.service.Path3(this.RefNo, this.RefNo1).subscribe({
+    this.service.Path3(this.RefNo).subscribe({
       next: (res: any) => {
         const path = res
         console.log(path);
-        this.storetostoreform.controls['Min_ref_no'].setValue(this.RefNo + '/' + path[0].Trano)
+        this.storetostoreform.controls['Min_ref_no'].setValue(this.RefNo + path[0].Trano)
+      },
+      error: (err) => {
+        this.apiErrorMsg = err;
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
+      },
+      complete: () => {
+        this.getWarehouse()
       }
     })
   }
@@ -95,6 +106,7 @@ export class StoreToStoreMomentComponent implements OnInit {
     this.service.Deptid(this.Empid).subscribe((data: any) => {
       const deptid = data
       this.Deptid = deptid[0].Deptid
+      console.log(this.Deptid);
     })
   }
   apiErrorMsg: string = ''
@@ -109,14 +121,17 @@ export class StoreToStoreMomentComponent implements OnInit {
         this.apiErrorMsg = error;
         const Error = document.getElementById('apierror') as HTMLInputElement
         Error.click()
+        return
       }
     })
   }
+  TowarehouseData: any[] = new Array()
   FrmwarehouseEvent(e: any) {
-    const FrmwarehouseId = parseInt(e.target.value)
-    this.storetostoreform.controls['frmwarehouse'].setValue(FrmwarehouseId)
+    let FrmwarehouseId = e.target.value
+    this.storetostoreform.controls['frmwarehouse'].setValue(parseInt(FrmwarehouseId))
 
   }
+
   ErrorMsg: string = ''
   TowarehouseEvent(e: any) {
     const TowarehouseId = parseInt(e.target.value)
@@ -126,6 +141,8 @@ export class StoreToStoreMomentComponent implements OnInit {
       this.ErrorMsg = 'FromWareHouse and To WareHouse are Equal..Please Check...'
       const error = document.getElementById('Error')
       error?.click()
+      this.storetostoreform.controls['Towarehouse'].setValue('')
+      return
     } else {
 
     }
@@ -139,7 +156,6 @@ export class StoreToStoreMomentComponent implements OnInit {
   Rawmat(e: any) {
     this.RawmaterialName = e.target.value
     console.log(this.RawmaterialName, 'this.RawmaterialName');
-
     if (this.RawmaterialName.length >= 2) {
       if (this.RawmaterialName !== null && this.RawmaterialName !== undefined && this.RawmaterialName !== '') {
         this.getRawmaterial()
@@ -163,6 +179,7 @@ export class StoreToStoreMomentComponent implements OnInit {
         this.apiErrorMsg = error;
         const Error = document.getElementById('apierror') as HTMLInputElement
         Error.click()
+        return
       }
     })
   }
@@ -198,169 +215,206 @@ export class StoreToStoreMomentComponent implements OnInit {
   ViewStock: any[] = new Array()
   Viewclick: boolean = false
   ViewStockData: any[] = new Array()
+  ViewStockData2: any
   Total: any
-  TransferQtyToatl: any
   getView() {
-    this.spinner.show()
-    this.service.ViewStock(this.LoactionId, this.storetostoreform.controls['frmwarehouse'].value, this.RawmaterialId).subscribe({
-      next: (res: any) => {
-        this.spinner.hide()
-        this.ViewStockData = res
-        console.log(this.ViewStockData, ' this.ViewStockData');
-        if (this.ViewStockData.length > 0) {
-          this.Viewclick = true
-          this.Total = this.ViewStockData.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.Stock), 0);
-          // this.enabledIndex = 0
+    if(this.storetostoreform.controls['stock'].value >0){
+      this.spinner.show()
+      this.service.ViewStock(this.LoactionId, this.storetostoreform.controls['frmwarehouse'].value, this.RawmaterialId).subscribe({
+        next: (res: any) => {
+          this.spinner.hide()
+          this.ViewStockData = res
+          console.log(this.ViewStockData, ' this.ViewStockData');
+          if (this.ViewStockData.length > 0) {
+            const newarr = {
+              TransferQty: '',
+              readOnly: false,
+              allowAdd: false,
+            }
+            this.ViewStockData.forEach(obj => {
+              Object.assign(obj, newarr);
+            });
+            console.log(this.ViewStockData, ' this.ViewStockData');
+            this.Viewclick = true
+            this.Total = this.ViewStockData.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.Stock), 0);
+          }
+        },
+        error: (err) => {
+          this.apiErrorMsg = err;
+          const Error = document.getElementById('apierror') as HTMLInputElement
+          Error.click()
+          return
         }
-      },
-      error: (err) => {
-        this.apiErrorMsg = err;
-        const Error = document.getElementById('apierror') as HTMLInputElement
-        Error.click()
-      }
-    })
+      })
+    }else{
+      this.ErrorMsg = ''
+      this.ErrorMsg = 'Stock Is Not Avialable For This Material..Please Select Another Material'
+      const error = document.getElementById('Error')
+      error?.click()
+      return
+    }
+
   }
-  // enabledIndex: number = 0;
-  TranferqtyEvent(e: any, Index: number) {
-    debugger
-    this.trQty = e.target.value
-    if (this.TransferQtyArr.length === 0) {
-      console.log(this.count,'!');
-      if (this.count === 0) {
-        this.ErrorMsg = ''
-        this.ErrorMsg = 'Please Add the Transfer Qty By Click Add Button/Icon...'
-        const error = document.getElementById('Error')
-        this.transferqtydisable[this.ViewtabelIndex]=true
-        error?.click()
-        return
-      }
+  btnIndex: number = 0
+  onTransferQtyInput(index: number): void {
+    this.ViewStockData[index].allowAdd = this.ViewStockData[index].TransferQty !== null && this.ViewStockData[index].TransferQty > 0;
+    if (this.ViewStockData[index].TransferQty === '' || this.ViewStockData[index].TransferQty === 0) {
+      this.ViewStockData[index].allowAdd = false;
+      this.clearReadonlyState();
     } else {
-      if (this.count[Index] === 0) {
-        this.transferqtydisable[this.ViewtabelIndex]=true
+      if (parseFloat(this.ViewStockData[index].TransferQty) > this.ViewStockData[index].Stock) {
+        this.Error = 1
+        this.ViewStockData[index].TransferQty = ''
         this.ErrorMsg = ''
-        this.ErrorMsg = 'Please Add the Transfer Qty By Click Add Button/Icon...'
+        this.ErrorMsg = 'You Cannot Enter More Than Stock'
         const error = document.getElementById('Error')
         error?.click()
         return
+      } else {
+        this.clearReadonlyState();
       }
     }
   }
 
-  trQty: number = 0
+  StockchckClearence() {
+    for (let i = 0; i < this.ViewStockData.length; i++) {
+      this.ViewStockData[i].allowAdd = false;
+    }
+  }
+
+  isAnyUnconfirmedTransferQty(currentIndex: number): boolean {
+    return this.ViewStockData.some((item, index) => {
+      return index !== currentIndex && item.TransferQty !== null && item.TransferQty > 0 && !item.readOnly;
+    });
+  }
+  // Clear readonly state for all rows
+  clearReadonlyState(): void {
+    this.ViewStockData.forEach((rowData: any) => {
+      rowData.readOnly = false;
+    });
+    // for (let i = 0; i < this.ViewStockData.length; i++) {
+    //   this.ViewStockData[i].readOnly
+    // }
+
+  }
+  trQty: any
   transferqtydisable = [false, false]
   TransferQtyArr: any[] = new Array()
-  value: number = 0
+
   ViewtabelIndex: any
   TransferTotal: any
-  count: any = 0
-  Add(Index: number) {
-    this.ViewtabelIndex = Index
-    debugger
-    if (this.trQty > 0) {
-      this.count =1
-      console.log(this.count);
-      if (this.ViewStockData[Index].TransferQty > 0) {
-        if (this.TransferQtyArr.length === 0) {
-          if (parseFloat(this.ViewStockData[Index].TransferQty) > parseFloat(this.StockData[0].Stock)) {
-            this.ViewStockData[Index].TransferQty = ''
-            this.ErrorMsg = ''
-            this.ErrorMsg = 'You Cannot Transfer more than Stock'
-            const error = document.getElementById('Error')
-            error?.click()
-            return
-          } else {
-            this.TransferQtyArr.push({
-              TransferQty: this.ViewStockData[Index].TransferQty,
-              RamatId: this.RawmaterialId,
-              GRNId: this.ViewStockData[Index].GRNId,
-              GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
-              GRNDate: this.ViewStockData[Index].GRNDate,
-              Uom: this.ViewStockData[Index].Uom,
-              TransId: this.ViewStockData[Index].TransId,
-              GRNNo: this.ViewStockData[Index].GRNNo
-            })
-            console.log(this.TransferQtyArr);
-            // if (this.enabledIndex < this.ViewStockData.length - 1) {
-            //   this.enabledIndex++;
-            // }
-            this.count =0
-            this.transferqtydisable[Index] = true
-            console.log(this.TransferQtyArr[Index].TransferQty, '!');
-          }
+  Error: number = 0
+  confirmTransferQty(Index: number): void {
+
+    if (this.ViewStockData[Index].TransferQty !== null && this.ViewStockData[Index].TransferQty > 0) {
+      // Disable the current input field
+      this.ViewStockData[Index].readOnly = true;
+      this.ViewStockData[Index].allowAdd = false;
+      if (this.TransferQtyArr.length === 0) {
+        if (parseFloat(this.ViewStockData[Index].TransferQty) > parseFloat(this.StockData[0].Stock)) {
+          this.Error = 1
+          this.ViewStockData[Index].TransferQty = ''
+          this.ErrorMsg = ''
+          this.ErrorMsg = 'You Cannot Enter More Than Stock'
+          const error = document.getElementById('Error')
+          error?.click()
+          return
         } else {
-          this.count =1
-          this.TransferTotal = this.TransferQtyArr.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.TransferQty), 0);
-          this.TransferTotal = this.ViewStockData[Index].TransferQty + this.TransferTotal
-          console.log(this.TransferTotal);
-          if (this.TransferTotal > parseFloat(this.StockData[0].Stock)) {
-            this.ViewStockData[Index].TransferQty = ''
-            this.ErrorMsg = ''
-            this.ErrorMsg = 'You Cannot Transfer more than Stock'
-            const error = document.getElementById('Error')
-            error?.click()
-            return
-          } else {
-            this.TransferQtyArr.push({
-              TransferQty: this.ViewStockData[Index].TransferQty,
-              RamatId: this.RawmaterialId,
-              GRNId: this.ViewStockData[Index].GRNId,
-              GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
-              GRNDate: this.ViewStockData[Index].GRNDate,
-              Uom: this.ViewStockData[Index].Uom,
-              TransId: this.ViewStockData[Index].TransId,
-              GRNNo: this.ViewStockData[Index].GRNNo
-            })
-            console.log(this.TransferQtyArr);
-            this.transferqtydisable[Index] = true
-            // if (this.enabledIndex < this.ViewStockData.length - 1) {
-            //   this.enabledIndex++;
-            // }
-            this.count =0
+          this.TransferQtyArr.push({
+            TransferQty: this.ViewStockData[Index].TransferQty,
+            RamatId: this.RawmaterialId,
+            GRNId: this.ViewStockData[Index].GRNId,
+            GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
+            GRNDate: this.ViewStockData[Index].GRNDate,
+            Uom: this.ViewStockData[Index].Uom,
+            TransId: this.ViewStockData[Index].TransId,
+            GRNNo: this.ViewStockData[Index].GRNNo
+          })
+          console.log(this.TransferQtyArr);
+
+          this.transferqtydisable[Index] = true
+          for (let i = 0; i < this.ViewStockData.length; i++) {
+            this.ViewStockData[i].Add = 0
           }
         }
       } else {
-        this.count =0
-        this.ErrorMsg = ''
-        this.ErrorMsg = 'Transfer Quantity Should be Greater Than Zero..Please Check...'
-        const error = document.getElementById('Error')
-        error?.click()
-        return
+        this.TransferTotal = this.TransferQtyArr.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.TransferQty), 0);
+        this.TransferTotal = this.ViewStockData[Index].TransferQty + this.TransferTotal
+        console.log(this.TransferTotal);
+        if (this.TransferTotal > parseFloat(this.StockData[0].Stock)) {
+          this.Error = 1
+          this.ViewStockData[Index].TransferQty = ''
+          this.ErrorMsg = ''
+          this.ErrorMsg = 'You Cannot Enter More Than Stock'
+          const error = document.getElementById('Error')
+          error?.click()
+          return
+        } else {
+          this.TransferQtyArr.push({
+            TransferQty: this.ViewStockData[Index].TransferQty,
+            RamatId: this.RawmaterialId,
+            GRNId: this.ViewStockData[Index].GRNId,
+            GrnRefNo: this.ViewStockData[Index].GRN_Ref_No,
+            GRNDate: this.ViewStockData[Index].GRNDate,
+            Uom: this.ViewStockData[Index].Uom,
+            TransId: this.ViewStockData[Index].TransId,
+            GRNNo: this.ViewStockData[Index].GRNNo
+          })
+          console.log(this.TransferQtyArr);
+          this.transferqtydisable[Index] = true
+
+          for (let i = 0; i < this.ViewStockData.length; i++) {
+            this.ViewStockData[i].Add = 0
+          }
+        }
       }
     } else {
-      this.count =0
       this.ErrorMsg = ''
       this.ErrorMsg = 'Transfer Quantity Should be Greater Than Zero..Please Check...'
       const error = document.getElementById('Error')
       error?.click()
       return
     }
-
-
   }
-  Remove(Index: number) {
-    // if (Index <= this.enabledIndex) {
-    //   this.enabledIndex = Index;
-    // }
-    this.count =0
+  Remove(Index: number): void {
+
     this.transferqtydisable[Index] = false
     this.ViewStockData[Index].TransferQty = ''
     this.TransferQtyArr.splice(Index, 1)
+    if (Index < this.ViewStockData.length && Index > 0) {
+      this.ViewStockData[Index - 1].readOnly = false;
+    }
   }
-  empty() {
-    this.storetostoreform.controls['Towarehouse'].setValue('')
-  }
+
+
+
   savevaildation() {
-    const save = document.getElementById('savevaild') as HTMLInputElement
-    save?.click()
+    for (let i = 0; i < this.ViewStockData.length; i++) {
+      if (this.ViewStockData[i].allowAdd === true) {
+        this.ErrorMsg = ''
+        this.ErrorMsg = 'Please Add Transfer Quantity...'
+        const error = document.getElementById('Error')
+        error?.click()
+        return
+      } else {
+        const save = document.getElementById('savevaild') as HTMLInputElement
+        save?.click()
+      }
+    }
   }
   storetostoreUpdateArr: any[] = new Array()
   StoretostoreDet: any[] = new Array()
-  Min_ref_no: string = ''
+  StoreToStoreSave: any[] = new Array()
+  Msg: string = ''
+  status: string = ''
   save() {
+    this.getpath1()
+    this.storetostoreUpdateArr = []
+    this.StoretostoreDet = []
     for (let i = 0; i < this.TransferQtyArr.length; i++) {
       this.StoretostoreDet.push({
-        TransferQty: this.TransferQtyArr[i].TransferQty,
         Rawmatid: this.TransferQtyArr[i].RamatId,
+        Qty: this.TransferQtyArr[i].TransferQty,
         Uom: this.TransferQtyArr[i].Uom,
         Mindate: this.date.transform(this.cuurendate, 'yyyy-MM-dd'),
         GRNo: this.TransferQtyArr[i].GRNNo,
@@ -371,17 +425,40 @@ export class StoreToStoreMomentComponent implements OnInit {
         ToStoreId: this.storetostoreform.controls['Towarehouse'].value
       })
     }
-    this.storetostoreUpdateArr = []
+
     this.storetostoreUpdateArr.push({
-      Deptid: this.Deptid,
-      RamatId: this.RawmaterialId,
+      DeptId: this.Deptid,
+      Mindate: this.storetostoreform.controls['Trandate'].value,
+      Min_ref_no: this.storetostoreform.controls['Min_ref_no'].value,
       LocationId: this.LoactionId,
       Empid: this.Empid,
-      Min_ref_no: this.Min_ref_no,
-      StoretostoreDet: this.StoretostoreDet
+      StoreToStoreDet: this.StoretostoreDet
     })
     console.log(this.storetostoreUpdateArr);
-    console.log(this.storetostoreUpdateArr);
-    console.log(this.storetostoreUpdateArr);
+    this.service.save(this.storetostoreUpdateArr).subscribe({
+      next: (res: any) => {
+        this.StoreToStoreSave = res
+        console.log(this.StoreToStoreSave, 'save');
+        this.status = this.StoreToStoreSave[0].status
+        this.Msg = this.StoreToStoreSave[0].Msg
+        if (this.StoreToStoreSave[0].status === 'Y') {
+          const save = document.getElementById('Save') as HTMLInputElement
+          save?.click()
+        } else {
+          const save = document.getElementById('Save') as HTMLInputElement
+          save?.click()
+        }
+      },
+      error: (err) => {
+        this.apiErrorMsg = err;
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
+      },
+    })
+  }
+  finalSave() {
+    this.Viewbtn=false
+    this.storetostoreform.reset()
   }
 }

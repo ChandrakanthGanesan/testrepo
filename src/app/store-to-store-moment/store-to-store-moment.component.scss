@@ -2,6 +2,10 @@
   flex: 1 1 auto;
 }
 
+.container-fluid {
+  margin-top: 3%;
+}
+
 .heading {
   font-size: 30px;
 }
@@ -11,7 +15,8 @@
   font-weight: 550;
   color: brown;
 }
-.container{
+
+.container {
   margin: 1%;
   padding: 1.2%;
   background-color: white;
@@ -21,6 +26,7 @@
   font-family: 'Times New Roman', Times, serif;
 
 }
+
 mat-card-content {
   background-color: rgb(241, 246, 250);
   border-radius: 20px;
@@ -30,6 +36,7 @@ mat-card {
   -webkit-box-shadow: 0 2px 10px 10px rgb(55, 127, 194);
   box-shadow: 0 1px 2px 1px #4162b5;
 }
+
 span {
   color: #ff0000;
   font-size: 20px;
@@ -41,6 +48,7 @@ span {
   font-weight: 550;
   padding-left: 8px;
 }
+
 input {
 
   box-shadow: 0 1px 1px #d6d9e0;
@@ -62,6 +70,7 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
 .head {
   text-align: center;
   justify-content: center;
@@ -80,7 +89,170 @@ input::-webkit-inner-spin-button {
   border: 0.1px solid rgb(198, 226, 252);
   border-right: 0.1px solid rgb(198, 226, 252);
 }
-.btntabel{
+.row{
+margin-bottom: 0%;
 
+}
+
+.btntabel {
   border-color: #b4b4b4;
+}
+@media screen and  (max-width: 575px) {
+
+  .title {
+    font-size: medium;
+  }
+
+  .container-fluid {
+    margin-top: 1%;
+  }
+
+  span {
+    font-size: x-small;
+  }
+
+  .form-label {
+    font-size: x-small;
+    margin: .1%;
+  }
+
+  input {
+    font-size: x-small;
+    margin: .1%;
+  }
+
+  .form-select {
+    font-size: x-small;
+    margin: .1%;
+  }
+
+  .form-control {
+    font-size: x-small;
+    margin: .1%;
+  }
+
+  .head {
+    font-size: small;
+    padding: 6px;
+  }
+
+  .body {
+    font-size: small;
+    padding: 6px;
+  }
+
+  button {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: small;
+    width: fit-content;
+  }
+  .stckbtn{
+    margin-top: -6.5%;
+  }
+}
+@media screen and (min-width: 576px) and (max-width: 749px) {
+
+  .title {
+    font-size: x-large;
+  }
+
+  .container-fluid {
+    margin-top: 1%;
+  }
+
+  span {
+    font-size: small;
+  }
+
+  .form-label {
+    font-size: small;
+    margin: .1%;
+  }
+
+  input {
+    font-size: small;
+    margin: .1%;
+  }
+
+  .form-select {
+    font-size: small;
+    margin: .1%;
+  }
+
+  .form-control {
+    font-size: small;
+    margin: .1%;
+  }
+
+  .head {
+    font-size: smaller;
+    padding: 6px;
+  }
+
+  .body {
+    font-size: smaller;
+    padding: 6px;
+  }
+
+  button {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: smaller;
+    width: fit-content;
+  }
+  .stckbtn{
+    margin-top: -4.5%;
+  }
+}
+@media screen and (min-width: 749px) and (max-width: 992px) {
+
+  .title {
+    font-size: x-large;
+  }
+
+  .container-fluid {
+    margin-top: 1%;
+  }
+
+  span {
+    font-size: medium;
+  }
+
+  .form-label {
+    font-size: smaller;
+    margin: .1%;
+  }
+
+  input {
+    font-size: smaller;
+    margin: .1%;
+  }
+
+  .form-select {
+    font-size: smaller;
+    margin: .1%;
+  }
+
+  .form-control {
+    font-size: smaller;
+    margin: .1%;
+  }
+
+  .head {
+    font-size: medium;
+    padding: 6px;
+  }
+
+  .body {
+    font-size: medium;
+    padding: 6px;
+  }
+
+  button {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: smaller;
+    width: fit-content;
+  }
+  .stckbtn{
+    margin-top: -2%;
+  }
 }
