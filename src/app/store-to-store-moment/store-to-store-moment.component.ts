@@ -56,6 +56,7 @@ export class StoreToStoreMomentComponent implements OnInit {
         this.apiErrorMsg = err;
         const Error = document.getElementById('apierror') as HTMLInputElement
         Error.click()
+        return
       },
       complete: () => {
         this.getpath2()
@@ -75,6 +76,7 @@ export class StoreToStoreMomentComponent implements OnInit {
         this.apiErrorMsg = err;
         const Error = document.getElementById('apierror') as HTMLInputElement
         Error.click()
+        return
       },
       complete: () => {
         this.getpath3()
@@ -92,6 +94,7 @@ export class StoreToStoreMomentComponent implements OnInit {
         this.apiErrorMsg = err;
         const Error = document.getElementById('apierror') as HTMLInputElement
         Error.click()
+        return
       },
       complete: () => {
         this.getWarehouse()
@@ -118,6 +121,7 @@ export class StoreToStoreMomentComponent implements OnInit {
         this.apiErrorMsg = error;
         const Error = document.getElementById('apierror') as HTMLInputElement
         Error.click()
+        return
       }
     })
   }
@@ -138,6 +142,7 @@ export class StoreToStoreMomentComponent implements OnInit {
       const error = document.getElementById('Error')
       error?.click()
       this.storetostoreform.controls['Towarehouse'].setValue('')
+      return
     } else {
 
     }
@@ -174,6 +179,7 @@ export class StoreToStoreMomentComponent implements OnInit {
         this.apiErrorMsg = error;
         const Error = document.getElementById('apierror') as HTMLInputElement
         Error.click()
+        return
       }
     })
   }
@@ -212,32 +218,42 @@ export class StoreToStoreMomentComponent implements OnInit {
   ViewStockData2: any
   Total: any
   getView() {
-    this.spinner.show()
-    this.service.ViewStock(this.LoactionId, this.storetostoreform.controls['frmwarehouse'].value, this.RawmaterialId).subscribe({
-      next: (res: any) => {
-        this.spinner.hide()
-        this.ViewStockData = res
-        console.log(this.ViewStockData, ' this.ViewStockData');
-        if (this.ViewStockData.length > 0) {
-          const newarr = {
-            TransferQty: '',
-            readOnly: false,
-            allowAdd: false,
-          }
-          this.ViewStockData.forEach(obj => {
-            Object.assign(obj, newarr);
-          });
+    if(this.storetostoreform.controls['stock'].value >0){
+      this.spinner.show()
+      this.service.ViewStock(this.LoactionId, this.storetostoreform.controls['frmwarehouse'].value, this.RawmaterialId).subscribe({
+        next: (res: any) => {
+          this.spinner.hide()
+          this.ViewStockData = res
           console.log(this.ViewStockData, ' this.ViewStockData');
-          this.Viewclick = true
-          this.Total = this.ViewStockData.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.Stock), 0);
+          if (this.ViewStockData.length > 0) {
+            const newarr = {
+              TransferQty: '',
+              readOnly: false,
+              allowAdd: false,
+            }
+            this.ViewStockData.forEach(obj => {
+              Object.assign(obj, newarr);
+            });
+            console.log(this.ViewStockData, ' this.ViewStockData');
+            this.Viewclick = true
+            this.Total = this.ViewStockData.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.Stock), 0);
+          }
+        },
+        error: (err) => {
+          this.apiErrorMsg = err;
+          const Error = document.getElementById('apierror') as HTMLInputElement
+          Error.click()
+          return
         }
-      },
-      error: (err) => {
-        this.apiErrorMsg = err;
-        const Error = document.getElementById('apierror') as HTMLInputElement
-        Error.click()
-      }
-    })
+      })
+    }else{
+      this.ErrorMsg = ''
+      this.ErrorMsg = 'Stock Is Not Avialable For This Material..Please Select Another Material'
+      const error = document.getElementById('Error')
+      error?.click()
+      return
+    }
+
   }
   btnIndex: number = 0
   onTransferQtyInput(index: number): void {
@@ -437,6 +453,7 @@ export class StoreToStoreMomentComponent implements OnInit {
         this.apiErrorMsg = err;
         const Error = document.getElementById('apierror') as HTMLInputElement
         Error.click()
+        return
       },
     })
   }

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { StoretostoreService } from '../service/storetostore.service';
+
 declare var $: any;
 @Component({
   selector: 'app-demo',
@@ -122,5 +123,6 @@ Commanvaluein2array(){
   console.log(c);
 
 }
+
 
 }

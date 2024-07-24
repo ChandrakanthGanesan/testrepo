@@ -11,7 +11,7 @@
   <mat-card>
     <mat-card-content>
       <form [formGroup]="storetostoreform">
-        <div class="row mt-0 p-0 mb-0">
+        <div class="row mt-0 p-0 mb-0" >
           <div class="col-sm-6 col-6 col-md-6 col-lg-6">
             <label class="form-label">Trano <span>*</span></label>
             <input type="text" class="form-control" formControlName="Min_ref_no">
@@ -34,7 +34,7 @@
             <label class="form-label">To Warehouse<span>*</span></label>
             <select class="form-select" formControlName="Towarehouse"  (change)="TowarehouseEvent($event)">
               <option selected disabled hidden value="">-Select--</option>
-              <option *ngFor="let item of TowarehouseData" [value]="item.WareHouse_Id">{{item.Warehouse_Name}}</option>
+              <option *ngFor="let item of WarehouseData" [value]="item.WareHouse_Id">{{item.Warehouse_Name}}</option>
             </select>
           </div>
         </div>
@@ -55,7 +55,7 @@
           </div>
           <div class="col  mt-4">
             <button mat-raised-button class="stckbtn" style="margin-right: 2%;" type="button" color="primary"
-              (click)=" getView()">View</button>
+              (click)=" getView()" >View</button>
           </div>
         </div>
       </form>

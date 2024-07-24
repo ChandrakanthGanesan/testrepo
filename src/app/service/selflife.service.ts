@@ -20,18 +20,18 @@ export class SelflifeService {
     return throwError(errorMessage);
   }
   GrnNo(LocationId:any): Observable<any>{
-    return this.http.get('http://192.168.203.59:4000/Grn/SelfLife-GRNo?LocationId='+LocationId).pipe(
+    return this.http.get('http://103.21.76.94:6055/Grn/SelfLife-GRNo?LocationId='+LocationId).pipe(
       catchError(this.handleError)
     );
   }
   Supplier(Grnno:any): Observable<any>{
-    return this.http.get('http://192.168.203.59:4000/Grn/SelfLife-Supplier?Grnno='+Grnno)
+    return this.http.get('http://103.21.76.94:6055/Grn/SelfLife-Supplier?Grnno='+Grnno)
   }
   Viewbtn(Grnno:any): Observable<any>{
-    return this.http.get('http://192.168.203.59:4000/Grn/Selflife-ViewItemDetails?Grnno='+Grnno)
+    return this.http.get('http://103.21.76.94:6055/Grn/Selflife-ViewItemDetails?Grnno='+Grnno)
   }
   BatchQtyVaildation(GrnId:any): Observable<any>{
-    return this.http.get('http://192.168.203.59:4000/Grn/Selflife-batchqty?GrnId='+GrnId)
+    return this.http.get('http://103.21.76.94:6055/Grn/Selflife-batchqty?GrnId='+GrnId)
   }
   Save(SelflifeUpdate:any): Observable<any>{
     return this.http.get('http://192.168.203.59:4000/Grn/Post_SleflifeHrd',SelflifeUpdate)
