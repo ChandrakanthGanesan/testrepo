@@ -46,7 +46,7 @@
         <div class="row">
           <div class="col">
             <label class="form-label">Material <span>*</span></label>
-            <ng-select  (change)="RawmaterialChangeEvent($event)" (input)="Rawmat($event)"
+            <ng-select appendTo="body" (change)="RawmaterialChangeEvent($event)" (input)="Rawmat($event)"
               formControlName="RawmaterialId"  [items]="RawmaterialIdData" class="form-control"
               bindLabel="RawmatName"  bindValue="RawmatId"
               [searchFn]="customSearchFn">

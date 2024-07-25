@@ -371,15 +371,18 @@
 <div class="modal" id="Savedialog" data-bs-backdrop='static'>
   <div class=" modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header"></div>
-      <div class="modal-body" style="margin-left: 1%;">
-        <div style="font-size: medium;font-weight: 600;color: rgb(140, 232, 140);">
+      <div class="modal-header">SAVE:</div>
+      <div class="modal-body" style="margin-left: 1%;" >
+        <div style="font-size: medium;font-weight: 600;color: rgb(140, 232, 140);" *ngIf="this.Sts == 'Y'">
+          {{Msg}}
+        </div>
+        <div style="font-size: medium;font-weight: 600;color: lightcoral" *ngIf="this.Sts == 'N'">
           {{Msg}}
         </div>
       </div>
       <div class="modal-footer">
         <div *ngIf="this.Sts == 'Y'">
-          <button mat-raised-button style="background-color: #92d87e;" type="button" data-bs-dismiss="modGeral"
+          <button mat-raised-button style="background-color: #92d87e;" type="button" data-bs-dismiss="modal"
             (click)="finalSave()">OK</button>
         </div>
         <div *ngIf="this.Sts == 'N'">

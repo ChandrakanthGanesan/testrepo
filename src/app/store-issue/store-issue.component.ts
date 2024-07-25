@@ -337,7 +337,10 @@ export class StoreIssueComponent implements OnInit {
   }
   Clear(){
     this.viewbtn=false
-    this.StoreIssueForm.reset()
+    this.StoreIssueForm.controls['Department'].setValue('')
+    this.StoreIssueForm.controls['Refno'].setValue('')
+    this.StoreIssueForm.controls['material'].setValue('')
+    this.StoreIssueForm.controls['Warehouse'].setValue('')
     this.StoreIssueForm.enable()
     this.MaterilaDetalis=[]
     this.Issuedetalisarr=[]
@@ -729,7 +732,9 @@ export class StoreIssueComponent implements OnInit {
         InventMinQty: this.Issuedetalisarr[i].IssueQty,
         WarehouseLocationId: this.warehouseno,
         CurrencyId: 1,
-        Exrate: this.Issuedetalisarr[i].ExRate
+        Exrate: this.Issuedetalisarr[i].ExRate,
+        LocationId:this.LoactionId,
+        StrIssRef_no:this.StoreIssuePath
       })
     }
     console.log(this.StoreIssue_Invent_MinMaterial, '1');
@@ -801,6 +806,11 @@ export class StoreIssueComponent implements OnInit {
     this.Issuedetalisarr = []
     this.Batcharr = []
     this.BatchData = []
+    this.StoreIssueForm.enable()
+    this.Viewmat = false
+    this.MaterialAddbtn = true
+    this.savebtn = false
+    this.MaterilaDetalis=[]
   }
   ViewMaterilaDetalis: any[] = new Array()
   View(Index: number) {
