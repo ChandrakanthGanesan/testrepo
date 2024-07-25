@@ -22,14 +22,14 @@ export class InventoryMainModuleComponent implements OnInit {
   ReworkIssue:boolean= false
   StorageQtyAlloc:boolean= false
   Shelflife:boolean= false
-  StoretoStore:boolean=true 
+  StoretoStore:boolean=true
   PurchaseReqId: number = 363
   IssueRequestId: number = 236
   DirectIndentId: number = 141
   StoreIssueId: number = 460
   MatlReturnFrmDeptId:number=272
   ReworkIssueId:number=385
-  StorageQtyAllocId:number=0
+  StorageQtyAllocId:number=458
   ShelflifeId:number=429
   StoretoStoreId:number=459
   Poweruser: string = ''

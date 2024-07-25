@@ -5,7 +5,7 @@
 </ngx-spinner>
 <app-navigation></app-navigation>
 <mat-card-header class="justify-content-center mt-1">
-  <mat-card-title class="title"  style="text-transform: uppercase;font-weight: 600;">Purchase Request</mat-card-title>
+  <mat-card-title class="title" style="text-transform: uppercase;font-weight: 600;">Purchase Request</mat-card-title>
 </mat-card-header>
 <div class="main content mt-3">
   <mat-card>
@@ -162,6 +162,7 @@
             <th class="head">Rawmaterial</th>
             <th class="head">Sch_Date</th>
             <th class="head">Qty</th>
+            <th class="head">Edit_Qty</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-IntendSch let-i="rowIndex">
@@ -170,6 +171,7 @@
             <td class="body">{{IntendSch.Rawmaterial}}</td>
             <td class="body" style="text-align: center;">{{IntendSch.Sch_Dt}} </td>
             <td class="body right">{{IntendSch.Qty}} </td>
+            <td class="body"><button mat-raised-button class="button" type="button" color="primary" (click)="EditQty()">Edit Qty</button></td>
           </tr>
         </ng-template>
       </p-table>
@@ -192,8 +194,8 @@
           aria-label="Close"></button>
       </div>
       <div class="modal-body termsfrm">
-        <form [formGroup]="StockRequestmaterialForm">
-          <div class="container-fluid" >
+        <form [formGroup]="StockRequestmaterialForm" id="formId" appInvalidControlScroll>
+          <div class="container-fluid">
             <div class="row no-gutters">
               <div class="col-10">
                 <label for="exampleFormControlInput3" class="form-label">Material <span>* </span><span
@@ -215,7 +217,7 @@
               </div>
             </div>
             <div class="row no-gutters">
-              <div class="col-6 col-md-3 col-lg-3" >
+              <div class="col-6 col-md-3 col-lg-3">
                 <label for="exampleFormControlInput3" class="form-label">In. Pending </label>
                 <input type="text" class="form-control" formControlName="IntentPendingNo" readonly>
               </div>
@@ -232,153 +234,153 @@
                 <input type="text" class="form-control" formControlName="StoreRePending" readonly>
               </div>
             </div>
-          <div class="row no-gutters">
-            <div class="col-6 col-md-3 col-lg-3">
-              <label for="exampleFormControlInput3" class="form-label">Quantity <span>*</span></label>
-              <input type="number" class="form-control" formControlName="MaterialQty"
-                [ngClass]="{ 'is-invalid':Materialupdatebtn && mat['MaterialQty'].errors}" (input)="RequestQty($event)">
-              <div *ngIf="Materialupdatebtn && mat['MaterialQty'].errors" class="invalid-feedback">
-                <div *ngIf="mat['MaterialQty'].errors['required']"> Field must be entered-Quantity</div>
+            <div class="row no-gutters">
+              <div class="col-6 col-md-3 col-lg-3">
+                <label for="exampleFormControlInput3" class="form-label">Quantity <span>*</span></label>
+                <input type="number" class="form-control" formControlName="MaterialQty"
+                  [ngClass]="{ 'is-invalid':Materialupdatebtn && mat['MaterialQty'].errors}"
+                  (input)="RequestQty($event)">
+                <div *ngIf="Materialupdatebtn && mat['MaterialQty'].errors" class="invalid-feedback">
+                  <div *ngIf="mat['MaterialQty'].errors['required']"> Field must be entered-Quantity</div>
+                </div>
+              </div>
+              <div class="col-6 col-md-3 col-lg-3">
+                <button mat-stroked-button type="button" class="de" (click)="GetMatQtyPending()">Detail</button>
+              </div>
+              <div class="col txtQty" style="display: none;">
+                <input type="text" class="form-control avlqty" [value]="txtQty" readonly>
+              </div>
+              <div class="col-6 col-md-3 col-lg-3">
+                <label for="exampleFormControlInput3" class="form-label stklabel">Allocated Qty </label>
+                <input type="text" class="form-control" formControlName="AllowQty" readonly>
+              </div>
+              <div class="col-6 col-md-3 col-lg-3">
+                <label for="exampleFormControlInput3" class="form-label">Planned Quantity <span>*</span></label>
+                <input type="text" class="form-control" [value]="plannedQty" readonly>
               </div>
             </div>
-            <div class="col-6 col-md-3 col-lg-3">
-              <button mat-stroked-button type="button" class="de" (click)="GetMatQtyPending()">Detail</button>
-            </div>
-            <div class="col txtQty" style="display: none;">
-              <input type="text" class="form-control avlqty" [value]="txtQty" readonly>
-            </div>
-            <div class="col-6 col-md-3 col-lg-3">
-              <label for="exampleFormControlInput3" class="form-label stklabel">Allocated Qty </label>
-              <input type="text" class="form-control" formControlName="AllowQty" readonly>
-            </div>
-            <div class="col-6 col-md-3 col-lg-3">
-              <label for="exampleFormControlInput3" class="form-label">Planned Quantity <span>*</span></label>
-              <input type="text" class="form-control" [value]="plannedQty" readonly>
-            </div>
-          </div>
-          <div class="row no-gutters">
-            <div class="col-6 col-md-4 col-lg-4">
-              <label for="exampleFormControlInput3" class="form-label">Balance Quantity</label>
-              <input type="text" class="form-control" [value]="BalanceQty" readonly>
-            </div>
-            <div class="col-6 col-md-4 col-lg-4">
-              <label for="exampleFormControlInput3" class="form-label">Priority <span>*</span></label>
-              <select class="form-select" formControlName="Priority"
-                [ngClass]="{ 'is-invalid':Materialupdatebtn && mat['Priority'].errors}">
-                <option value="" disabled selected hidden>--Select--</option>
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-              </select>
-              <div *ngIf="Materialupdatebtn && mat['Priority'].errors" class="invalid-feedback">
-                <div *ngIf="mat['Priority'].errors['required']"> Field must be entered-Priority</div>
+            <div class="row no-gutters">
+              <div class="col-6 col-md-4 col-lg-4">
+                <label for="exampleFormControlInput3" class="form-label">Balance Quantity</label>
+                <input type="text" class="form-control" [value]="BalanceQty" readonly>
+              </div>
+              <div class="col-6 col-md-4 col-lg-4">
+                <label for="exampleFormControlInput3" class="form-label">Priority <span>*</span></label>
+                <select class="form-select" formControlName="Priority"
+                  [ngClass]="{ 'is-invalid':Materialupdatebtn && mat['Priority'].errors}">
+                  <option value="" disabled selected hidden>--Select--</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+                <div *ngIf="Materialupdatebtn && mat['Priority'].errors" class="invalid-feedback">
+                  <div *ngIf="mat['Priority'].errors['required']"> Field must be entered-Priority</div>
+                </div>
+              </div>
+              <div class="col-6 col-md-4 col-lg-4">
+                <label for="exampleFormControlInput3" class="form-label">Location <span>*</span> </label>
+                <ng-select class="form-select" (change)="LocationstoreEvent($event)" formControlName="storelocation">
+                  <ng-option *ngFor="let item of LocationstoreData" [value]="item.id">{{item.locname}}</ng-option>
+                </ng-select>
               </div>
             </div>
-            <div class="col-6 col-md-4 col-lg-4">
-              <label for="exampleFormControlInput3" class="form-label">Location <span>*</span> </label>
-              <ng-select class="form-select" (change)="LocationstoreEvent($event)" formControlName="storelocation">
-                <ng-option *ngFor="let item of LocationstoreData" [value]="item.id">{{item.locname}}</ng-option>
-              </ng-select>
+            <!--  -->
+            <div class="card mt-1" style="border-radius: 10px;">
+              <p-table [value]="IndentDetalisData" dataKey="code" [scrollable]="true" [resizableColumns]="true">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th class="head">Min_Qty</th>
+                    <th class="head">Max_Qty</th>
+                    <th class="head">ReOrder</th>
+                    <th class="head">Plan_Tol</th>
+                    <th class="head">Issue_Qty</th>
+                    <th class="head">Pack_Qty</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-Material>
+                  <tr>
+                    <td class="body right">{{Material.Min_level}}</td>
+                    <td class="body right">{{Material.Max_level}}</td>
+                    <td class="body right">{{Material.Reorder_level}}</td>
+                    <td class="body right">{{Material.Tolr_Plan_Qty}}</td>
+                    <td class="body right">{{Material.Issue_Qty}}</td>
+                    <td class="body right">{{Material.Pack_Qty}}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
             </div>
-          </div>
-          <!--  -->
-          <div class="card mt-1" style="border-radius: 10px;">
-            <p-table [value]="IndentDetalisData" dataKey="code" [scrollable]="true" [resizableColumns]="true">
-              <ng-template pTemplate="header">
-                <tr>
-                  <th class="head">Min_Qty</th>
-                  <th class="head">Max_Qty</th>
-                  <th class="head">ReOrder</th>
-                  <th class="head">Plan_Tol</th>
-                  <th class="head">Issue_Qty</th>
-                  <th class="head">Pack_Qty</th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-Material>
-                <tr>
-                  <td class="body right">{{Material.Min_level}}</td>
-                  <td class="body right">{{Material.Max_level}}</td>
-                  <td class="body right">{{Material.Reorder_level}}</td>
-                  <td class="body right">{{Material.Tolr_Plan_Qty}}</td>
-                  <td class="body right">{{Material.Issue_Qty}}</td>
-                  <td class="body right">{{Material.Pack_Qty}}</td>
-                </tr>
-              </ng-template>
-            </p-table>
-          </div>
-          <div class="card mt-1">
-            <p-table [value]="IndentDetalisData" dataKey="code" [scrollable]="true" [resizableColumns]="true">
-              <ng-template pTemplate="header">
-                <tr>
-                  <th class="head">Dept_Stock</th>
-                  <th class="head">Max_Stock </th>
-                  <th class="head">Allow_Stock</th>
-                  <th class="head">Dept_Pck_Qty </th>
-                  <th class="head">Allow_Pck_Qty </th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-Material>
-                <tr>
-                  <td class="body right">{{Material.Dept_Stk_Qty}}</td>
-                  <td class="body right">{{Material.Max_Stk_Qty}}</td>
-                  <td class="body right">{{Material.Alloc_Stk_Qty}}</td>
-                  <td class="body right">{{Material.Dept_Pack_Qty}}</td>
-                  <td class="body right">{{Material.Allow_Pack_Qty}}</td>
-                </tr>
-              </ng-template>
-            </p-table>
-          </div>
-          <div class="row no-gutters">
-            <div class="col-6 col-md-6 col-lg-6">
-              <label for="exampleFormControlInput3" class="form-label">Machine <span>*</span> </label>
-              <select class="form-select" (change)="machineEvent($event)">
-                <option value="" disabled selected hidden>--Select--</option>
-                <option *ngFor="let item of Machines" [value]="item.machid">{{item.machname}}</option>
-              </select>
+            <div class="card mt-1">
+              <p-table [value]="IndentDetalisData" dataKey="code" [scrollable]="true" [resizableColumns]="true">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th class="head">Dept_Stock</th>
+                    <th class="head">Max_Stock </th>
+                    <th class="head">Allow_Stock</th>
+                    <th class="head">Dept_Pck_Qty </th>
+                    <th class="head">Allow_Pck_Qty </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-Material>
+                  <tr>
+                    <td class="body right">{{Material.Dept_Stk_Qty}}</td>
+                    <td class="body right">{{Material.Max_Stk_Qty}}</td>
+                    <td class="body right">{{Material.Alloc_Stk_Qty}}</td>
+                    <td class="body right">{{Material.Dept_Pack_Qty}}</td>
+                    <td class="body right">{{Material.Allow_Pack_Qty}}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
             </div>
-            <div class="col-6 col-md-6 col-lg-6">
-              <label for="exampleFormControlInput3" class="form-label">Warehouse <span>*</span> </label>
-              <select class="form-select" (change)="WarehouseEvent($event)">
-                <option value="" disabled selected hidden>--Select--</option>
-                <option *ngFor="let item of warehouses" [value]="item.location_id">{{item.locationname}}</option>
-              </select>
+            <div class="row no-gutters">
+              <div class="col-6 col-md-6 col-lg-6">
+                <label for="exampleFormControlInput3" class="form-label">Machine <span>*</span> </label>
+                <select class="form-select" (change)="machineEvent($event)">
+                  <option value="" disabled selected hidden>--Select--</option>
+                  <option *ngFor="let item of Machines" [value]="item.machid">{{item.machname}}</option>
+                </select>
+              </div>
+              <div class="col-6 col-md-6 col-lg-6">
+                <label for="exampleFormControlInput3" class="form-label">Warehouse <span>*</span> </label>
+                <select class="form-select" (change)="WarehouseEvent($event)">
+                  <option value="" disabled selected hidden>--Select--</option>
+                  <option *ngFor="let item of warehouses" [value]="item.location_id">{{item.locationname}}</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="row ">
-            <div class="col-md-6">
-              <label for="exampleFormControlInput3" class="form-label">Specification</label>
-              <textarea class="form-control" name="" id="" cols="10" [value]="Specification"
-                formControlName="Specification" rows="3" readonly></textarea>
-            </div>
-            <!-- </div>
+            <div class="row ">
+              <div class="col-md-6">
+                <label for="exampleFormControlInput3" class="form-label">Specification</label>
+                <textarea class="form-control" name="" id="" cols="10" [value]="Specification"
+                  formControlName="Specification" rows="3" readonly></textarea>
+              </div>
+              <!-- </div>
             <div class="row mt-1"> -->
-            <div class="col-md-6">
-              <label for="exampleFormControlInput3" class="form-label">Description <span>*</span></label>
-              <textarea class="form-control" cols="10" rows="3" formControlName="Descripation"
-                [ngClass]="{ 'is-invalid':Materialupdatebtn && mat['Descripation'].errors}"></textarea>
-              <div *ngIf="Materialupdatebtn && mat['Descripation'].errors" class="invalid-feedback">
-                <div *ngIf="mat['Descripation'].errors['required']">Please fill the description. without Description
-                  you
-                  cannot save</div>
-                <mat-hint *ngIf="Descripation.length < 10">Please fill the clear description. without
-                  clear Description you cannot save, It should be atleast 10 character</mat-hint>
+              <div class="col-md-6">
+                <label for="exampleFormControlInput3" class="form-label">Description <span>*</span></label>
+                <textarea class="form-control" cols="10" rows="3" formControlName="Descripation"
+                  [ngClass]="{ 'is-invalid':Materialupdatebtn && mat['Descripation'].errors}"></textarea>
+                <div *ngIf="Materialupdatebtn && mat['Descripation'].errors" class="invalid-feedback">
+                  <div *ngIf="mat['Descripation'].errors['required']">Please fill the description. without Description
+                    you
+                    cannot save</div>
+                  <mat-hint *ngIf="Descripation.length < 10">Please fill the clear description. without
+                    clear Description you cannot save, It should be atleast 10 character</mat-hint>
+                </div>
               </div>
             </div>
           </div>
+        </form>
       </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button mat-raised-button color="primary" type="button" aria-label="Close" (click)="MaterialUpdate()"
-        [disabled]="MatlUpdatedisable">Update</button>
-        <button  class="btn btn-info" type="button" aria-label="Close"  data-bs-dismiss="modal">Back</button>
-      <button mat-raised-button type="button" aria-label="Close" color="warn"
-        (click)="clearRawmat()">Clear</button>
-      <!-- <button #Termsbtnupdate mat-raised-button id="Terms" color="primary" type="button" class="button termbtn btn"
+      <div class="modal-footer">
+        <button mat-raised-button color="primary" type="button" aria-label="Close" (click)="MaterialUpdate()"
+          [disabled]="MatlUpdatedisable">Update</button>
+        <button class="btn btn-info" type="button" aria-label="Close" data-bs-dismiss="modal">Back</button>
+        <button mat-raised-button type="button" aria-label="Close" color="warn" (click)="clearRawmat()">Clear</button>
+        <!-- <button #Termsbtnupdate mat-raised-button id="Terms" color="primary" type="button" class="button termbtn btn"
           data-bs-dismiss="modal" aria-label="Close" style="display: none;">Update</button> -->
+      </div>
     </div>
   </div>
-</div>
 </div>
 
 <button style="display: none;" id="indentscheduledialog" data-bs-toggle="modal" data-bs-target="#IndentsModal"></button>
@@ -481,35 +483,21 @@
     <div class="modal-content">
       <div class="modal-header" style="font-size: medium;color: rgb(252, 83, 83);font-weight: bold;">Warning</div>
       <div class="modal-body">
-        <h4 *ngIf="this.Error===1">Please fix the Issue Location ID in Store Master entry !</h4>
-        <h4 *ngIf="this.Error===2">Already this transactions No exists in Store Requisition Table. Please contact your
-          Systemadmin !</h4>
-        <h4 *ngIf="this.Error===3">Please set the Location Name in location Master. Shall I continue ? </h4>
-        <h4 *ngIf="this.Error===4">If You Want to Delete Material... !</h4>
-        <h4 *ngIf="this.Error===6">Please fill the full schedule</h4>
-        <h4 *ngIf="this.Error===7"> Material already selected ,Please Select a Correct Material !</h4>
+        <p>{{ErrorMsg}}</p>
       </div>
-      <div *ngIf="this.Error===5">
-        <h3>Do You Want To Change The Quantity ?</h3>
-        <h4>If You Change..Indent Schdeule Will be Delete</h4>
-      </div>
-      <div class="modal-footer" *ngIf="this.Error !==4 && this.Error !==5 && this.Error !==6">
+      <div class="modal-footer" *ngIf="this.error===1">
         <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
-          data-bs-target="#Material" data-bs-toggle="modal">OK</button>
+          data-bs-toggle="modal" data-bs-target="#Material">Yes</button>
+        <button mat-raised-button type="button" class="btn  m-2" style="background-color:lightcoral"
+          data-bs-dismiss="modal">No</button>
       </div>
-      <div class="modal-footer" *ngIf="this.Error===4">
+      <div class="modal-footer" *ngIf="this.error===2">
         <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
           (click)="deleteMat()" data-bs-dismiss="modal">Yes</button>
         <button mat-raised-button type="button" class="btn  m-2" style="background-color:lightcoral"
           data-bs-dismiss="modal">No</button>
       </div>
-      <div class="modal-footer" *ngIf="this.Error===5">
-        <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
-          (click)="changeQty()" data-bs-dismiss="modal">Yes</button>
-        <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightcoral"
-          data-bs-dismiss="modal">No</button>
-      </div>
-      <div class="modal-footer" *ngIf="this.Error===6">
+      <div class="modal-footer" *ngIf="this.error===3">
         <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
           data-bs-target="#IndentsModal" data-bs-toggle="modal">OK</button>
       </div>

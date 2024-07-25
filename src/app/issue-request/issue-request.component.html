@@ -119,7 +119,7 @@
           aria-label="Close"></button>
       </div>
       <div class="modal-body termsfrm">
-        <form [formGroup]="IssueRequestmaterialForm">
+        <form [formGroup]="IssueRequestmaterialForm" #invalidfocus>
           <div class="container-fluid">
             <div class="row no-gutters">
               <div class="col-10 col-md-10 col-lg-10">
@@ -128,8 +128,8 @@
                 </label>
                 <ng-select [(ngModel)]="Rawmatid"  (change)="getMaterialDetails()"
                   (input)="Rawmat($event)" formControlName="material" placeholder="--Select--" [items]="RawmaterilData"
-                  class="form-control" bindLabel="gstrmatdisp"
-                  [ngClass]="{ 'is-invalid':Materialupdatebtn && mat['material'].errors}" bindValue="rawmatid"
+                  class="form-control" bindLabel="RawmatName"
+                  [ngClass]="{ 'is-invalid':Materialupdatebtn && mat['material'].errors}" bindValue="RawmatId"
                   [searchFn]="customSearchFn">
                 </ng-select>
                 <div *ngIf="Materialupdatebtn && mat['material'].errors" class="invalid-feedback">

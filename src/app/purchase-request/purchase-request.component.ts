@@ -26,7 +26,7 @@ export class PurchaseRequestComponent implements OnInit {
   loactionId: number = 0
 
   @ViewChild('Termsbtnupdate') Termsbtnupdate!: ElementRef;
-  constructor(private router: Router, private date: DatePipe, private toastr: ToastrService,private spinnerService: NgxSpinnerService,  private formBuilder: FormBuilder, private service: PurchaseRequestService) { }
+  constructor(private router: Router, private date: DatePipe, private toastr: ToastrService, private spinnerService: NgxSpinnerService, private formBuilder: FormBuilder, private service: PurchaseRequestService) { }
   ngOnInit(): void {
     this.frmdate = this.date.transform(this.currentDate, 'yyyy-MM-dd');
     this.planmonth = this.date.transform(this.currentDate, 'yyyy-MM');
@@ -84,7 +84,8 @@ export class PurchaseRequestComponent implements OnInit {
     })
   }
   companyname: string = ''
-  Error:number=0
+
+  ErrorMsg: string = ''
   GetCompanyName() {
     this.service.CompName(this.loactionId).subscribe((data: any) => {
       const compnamedettalis = data
@@ -100,7 +101,8 @@ export class PurchaseRequestComponent implements OnInit {
             this.Issuelocaid = IssuelocidData[0].Isslocid
             console.log(this.Issuelocaid);
             if (this.Issuelocaid == 0) {
-              this.Error=1
+              this.ErrorMsg = ''
+              this.ErrorMsg = 'Please fix the Issue Location ID in Store Master entry...'
               const Company = document.getElementById('Error') as HTMLInputElement
               Company.click()
               return
@@ -191,9 +193,10 @@ export class PurchaseRequestComponent implements OnInit {
       const StockReNoValidationData = res
       console.log(StockReNoValidationData, 'StockReNoValidation Check');
       if (StockReNoValidationData.length > 0) {
-        this.Error=2
-        document.getElementById('Error')?.click()
-        // this.toastr.error('Already this transactions No exists in Store Requisition Table. Please contact your Systemadmin !"')
+        this.ErrorMsg = ''
+        this.ErrorMsg = 'Already this transactions No exists in Store Requisition Table. Please contact your Systemadmin '
+        let Error = document.getElementById('Error')?.click()
+
         return;
       } else {
         return;
@@ -203,6 +206,12 @@ export class PurchaseRequestComponent implements OnInit {
   get go(): { [key: string]: AbstractControl } {
     return this.Purchaseindenttypeform.controls;
   }
+  scrollToFirstInvalidControl() {
+    let form = document.getElementById('formId') as HTMLFormElement
+    let firstInvalidControl = form.getElementsByClassName('ng-invalid')[0];
+    firstInvalidControl.scrollIntoView();
+    (firstInvalidControl as HTMLElement).focus();
+  }
   gobtn: any
   StockMaterialDeatlis: boolean = false
   IntentPending: number = 0
@@ -211,6 +220,7 @@ export class PurchaseRequestComponent implements OnInit {
     this.GetStockReNochck()
     this.gobtn = true
     if (this.Purchaseindenttypeform.invalid) {
+      this.scrollToFirstInvalidControl()
       return;
     }
     else {
@@ -296,7 +306,8 @@ export class PurchaseRequestComponent implements OnInit {
     if (this.Rawmatid !== null && this.Rawmatid !== undefined && this.Rawmatid !== 0) {
       for (let i = 0; i < this.Material.length; i++) {
         if (this.Material[i].MaterialName === this.materialname) {
-          this.Error=7
+          this.ErrorMsg = ''
+          this.ErrorMsg = 'Material already selected..Please Select a Another Material...'
           this.StockRequestmaterialForm.controls['material'].setValue('')
           const material = document.getElementById('Error') as HTMLInputElement
           material.click()
@@ -369,7 +380,7 @@ export class PurchaseRequestComponent implements OnInit {
         this.minlevel = this.IndentDetalisData[0].Min_level
         this.StockRequestmaterialForm.controls['StockAvl'].setValue(this.IndentDetalisData[0].Store_Stk_Qty)
         console.log(this.StockAvl);
-        this.StockAvl=this.IndentDetalisData[0].Store_Stk_Qty
+        this.StockAvl = this.IndentDetalisData[0].Store_Stk_Qty
       }
     })
     // this.GetStockAvl()
@@ -422,13 +433,17 @@ export class PurchaseRequestComponent implements OnInit {
 
   LocationstoreData: any[] = new Array()
   Locationdata: any[] = new Array()
+  error: number = 0
+
   GetLoactionStore() {
     this.service.StoreLoaction(this.loactionId, this.Rawmatid).subscribe((res: any) => {
       this.LocationstoreData = res
       console.log(this.LocationstoreData, 'LocationstoreData');
       this.Locationdata = this.LocationstoreData
       if (this.LocationstoreData.length == 0) {
-        this.Error=3
+        this.error = 1
+        this.ErrorMsg = ''
+        this.ErrorMsg = 'Please set the Location Name in location Master. Shall I continue ? '
         const loc = document.getElementById('Error') as HTMLInputElement
         loc.click()
       }
@@ -492,7 +507,7 @@ export class PurchaseRequestComponent implements OnInit {
       }
     })
   }
-  priorityvalue:number=0
+  priorityvalue: number = 0
 
   Materialupdatebtn: any
   Quantity: any = 0
@@ -518,14 +533,14 @@ export class PurchaseRequestComponent implements OnInit {
       console.log(this.AvlQty);
       const minimumlevelReach = this.AvlQty - this.minlevel
       console.log(this.AvlQty, this.minlevel);
-      if(this.StockRequestmaterialForm.controls['Priority'].value === 'Low'){
-        this.priorityvalue=0
+      if (this.StockRequestmaterialForm.controls['Priority'].value === 'Low') {
+        this.priorityvalue = 0
       }
-      else if(this.StockRequestmaterialForm.controls['Priority'].value === 'Medium'){
-        this.priorityvalue=1
+      else if (this.StockRequestmaterialForm.controls['Priority'].value === 'Medium') {
+        this.priorityvalue = 1
       }
-      else{
-        this.priorityvalue=2
+      else {
+        this.priorityvalue = 2
       }
       if (minimumlevelReach > 0) {
         this.toastr.warning('Please raise Issue Indent. Already Stock is available', "Warning")
@@ -546,7 +561,7 @@ export class PurchaseRequestComponent implements OnInit {
           Priority: this.StockRequestmaterialForm.controls['Priority'].value,
           Stock: this.StockAvl,
           Specification: this.Specification,
-          PriorityNo:this.priorityvalue,
+          PriorityNo: this.priorityvalue,
           color: 'Tomato'
         })
         console.log(this.Material, 'material');
@@ -618,7 +633,9 @@ export class PurchaseRequestComponent implements OnInit {
   }
   schInd: number = 0
   RemoveIntentMaterial(Index: any) {
-    this.Error=4
+    this.error = 2
+    this.ErrorMsg = ''
+    this.ErrorMsg = 'If You Want to Delete Material... !'
     const delte = document.getElementById('Error') as HTMLInputElement
     delte.click()
     this.schInd = Index
@@ -630,9 +647,13 @@ export class PurchaseRequestComponent implements OnInit {
   Qtycorrection(Index: any) {
     this.IndemtremoveIndex = Index
     debugger
+   }
+  EditQty(){
     if (this.IntendScheduleSave.length > 0) {
       if (this.click == 'Y') {
-        this.Error=5
+        this.ErrorMsg = ''
+        this.ErrorMsg = "Do You Want  Change The Quantity ?" +
+          "If You Change,Indent Schdeule Will be Delete"
         const value = document.getElementById('Error') as HTMLInputElement
         value.click()
       }
@@ -824,7 +845,9 @@ export class PurchaseRequestComponent implements OnInit {
       this.BalQty = []
     }
     else {
-      this.Error=6
+      this.error = 3
+      this.ErrorMsg = ''
+      this.ErrorMsg = 'Please fill the full schedule'
       this.POIntentDisablebtn[this.IndentdisIndex] = false
       const TotalIndetSChQtydialog = document.getElementById('Error')
       TotalIndetSChQtydialog?.click()
@@ -900,7 +923,7 @@ export class PurchaseRequestComponent implements OnInit {
       }
       for (let i = 0; i < this.Material.length; i++) {
         this.SchMatrlIndentDetail.push({
-          Rawmatid:this.Material[i].MaterialId,
+          Rawmatid: this.Material[i].MaterialId,
           Srqty: this.Material[i].Quantity,
           Uom: this.Material[i].UOM,
           Materialspec: this.Material[i].Specification,
@@ -949,23 +972,23 @@ export class PurchaseRequestComponent implements OnInit {
   }
   finalSave() {
     this.getStockReqno()
-    this.CapexNodata =[]
-    this.indentype=''
+    this.CapexNodata = []
+    this.indentype = ''
     this.StockRequestmaterialForm.reset()
-    this.Materialupdatebtn=false
+    this.Materialupdatebtn = false
     this.Purchaseindenttypeform.reset()
     this.gobtn = false
-    this.Material=[]
-    this.IntendScheduleSave=[]
-    this.IndentDetalisData=[]
-    this.IntendScheduleInsertArr=[]
-    this.OldPOData=[]
-    this.IntendPendingViewData=[]
-    this.MaterialPending=[]
-    this.PurchaseReqSave=[]
-    this.SchIndentDetail=[]
-    this.SchMatrlIndentDetail=[]
-    this.PurchaseReqUpdate=[]
+    this.Material = []
+    this.IntendScheduleSave = []
+    this.IndentDetalisData = []
+    this.IntendScheduleInsertArr = []
+    this.OldPOData = []
+    this.IntendPendingViewData = []
+    this.MaterialPending = []
+    this.PurchaseReqSave = []
+    this.SchIndentDetail = []
+    this.SchMatrlIndentDetail = []
+    this.PurchaseReqUpdate = []
     this.Rawmateriladata = []
   }
   Logout() {

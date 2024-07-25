@@ -17,6 +17,7 @@ export class ShelfLifeBatchQtyComponent implements OnInit {
   selflife!: FormGroup
   Empid: string = ''
   @ViewChild('updatebtncheck') updatebtncheck!: ElementRef
+  @ViewChild('invalidfocus') invalidfocus!: ElementRef
   constructor(private date: DatePipe, private service: SelflifeService, private fb: FormBuilder, private spinnerService: NgxSpinnerService,) { }
   ngOnInit() {
 
@@ -113,17 +114,24 @@ export class ShelfLifeBatchQtyComponent implements OnInit {
   ViewItem: any[] = new Array()
   Viewclick: boolean = false
   View() {
-    this.service.Viewbtn(this.selflife.controls['Grnno'].value).subscribe({next:(data: any) => {
-      this.ViewItem = data
-      this.Viewclick = true
-      console.log(this.ViewItem);
-    },
-    error: (error) => {
-      this.errorMessage = error;
-      const Error=document.getElementById('apierror')as HTMLInputElement
-      Error.click()
+    this.Viewbtn=true
+    if(this.selflife.invalid){
+      this.invalidfocus.nativeElement.focus();
+      return
     }
-    })
+    else{
+      this.service.Viewbtn(this.selflife.controls['Grnno'].value).subscribe({next:(data: any) => {
+        this.ViewItem = data
+        this.Viewclick = true
+        console.log(this.ViewItem);
+      },
+      error: (error) => {
+        this.errorMessage = error;
+        const Error=document.getElementById('apierror')as HTMLInputElement
+        Error.click()
+      }
+      })
+    }
   }
   SplitBtachwiseArr: any[] = new Array()
   GrnQty: any

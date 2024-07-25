@@ -98,7 +98,9 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
-
+.Error{
+  color: red;
+}
 @media screen and  (max-width: 575px) {
 
   .title {

@@ -1,7 +1,7 @@
 
 import { Component } from '@angular/core';
 import { fromEvent } from 'rxjs';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, NgForm } from '@angular/forms';
 declare var $: any;
 @Component({
   selector: 'app-demo',
@@ -13,20 +13,29 @@ export class DemoComponent  {
 
 
 
-  savebtn:boolean=false
+  registrationModel:any
+  submitted = false;
 
-  constructor(private fb: FormBuilder) { }
+  constructor() {}
+
   ngOnInit() {
-
-    const save =document.getElementById('submit')as HTMLInputElement
-
-    fromEvent(save, 'click').subscribe(event => {
-      console.log('Button clicked', event);
-      this.savebtn=true
-    });
+    this.registrationModel = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      streetAddressLine1: '',
+      streetAddressLine2: '',
+      city: '',
+      state: '',
+      country: '',
+      pincode: ''
+    };
   }
 
-
+  onSubmit(registationForm: NgForm) {
+    if (registationForm.valid) this.submitted = true;
+  }
 
 
 

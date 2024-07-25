@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -25,8 +25,8 @@ export class IssueRequestComponent implements OnInit {
   items: any[] = new Array()
   LoactionId: number = 0
   EditMaterialForm!: FormGroup;
-
-  constructor(private router: Router, private date: DatePipe,private spinnerService: NgxSpinnerService, private toastr: ToastrService, private formBuilder: FormBuilder, private service: IssueRequestService) { }
+  @ViewChild('invalidfocus') invalidfocus!: ElementRef;
+  constructor(private router: Router, private date: DatePipe, private spinnerService: NgxSpinnerService, private toastr: ToastrService, private formBuilder: FormBuilder, private service: IssueRequestService) { }
   ngOnInit(): void {
     this.frmdate = this.date.transform(this.currentDate, 'yyyy-MM-dd');
     this.planmonth = this.date.transform(this.currentDate, 'yyyy-MM');
@@ -40,14 +40,14 @@ export class IssueRequestComponent implements OnInit {
     // this.spinnerService.show();
     this.IssueRequestForm = this.formBuilder.group({
       indentype: new FormControl('', Validators.required),
-      SrDesc:new FormControl('')
+      SrDesc: new FormControl('')
     })
 
     this.IssueRequestmaterialForm = this.formBuilder.group({
       material: new FormControl('', Validators.required),
       MaterialQty: new FormControl('', Validators.required),
       Descripation: new FormControl('', [Validators.required, Validators.minLength(10)]),
-      machine:new FormControl(''),
+      machine: new FormControl(''),
       // Priority: new FormControl('', Validators.required),
       Specification: new FormControl(''),
       IntentPendingNo: new FormControl(''),
@@ -59,7 +59,7 @@ export class IssueRequestComponent implements OnInit {
       // storelocation: new FormControl(''),
     })
     this.EditMaterialForm = this.formBuilder.group({
-      EditMaterial : new FormControl('', Validators.required),
+      EditMaterial: new FormControl('', Validators.required),
       EditQty: new FormControl('', Validators.required)
     })
     this.GetIssueReNoPath()
@@ -93,7 +93,7 @@ export class IssueRequestComponent implements OnInit {
       }
     })
   }
-Error:number=0
+  Error: number = 0
   GetStockReqNoVaildation() {
     this.service.StockReNoVaildation(this.StockReqNo).subscribe((data: any) => {
       const StockReNoVaildation = data
@@ -126,9 +126,9 @@ Error:number=0
     })
   }
 
-  IndentType(event:any) {
+  IndentType(event: any) {
     const indentype = this.IssueRequestForm.controls['indentype'].value
-    this.srnewtype=parseFloat(event.value)
+    this.srnewtype = parseFloat(event.value)
     console.log(this.srnewtype);
 
     // console.log(indentype);
@@ -150,7 +150,7 @@ Error:number=0
       console.log(this.CapexNodata, 'this.CapexNodata');
     })
   }
-  capexno: any=0
+  capexno: any = 0
   capexdescripation: string = ''
   capexnoEvent(event: any) {
     this.capexno = parseFloat(event.target.value)
@@ -163,6 +163,7 @@ Error:number=0
   Go() {
     this.gobtn = true
     if (this.IssueRequestForm.invalid) {
+      this.invalidfocus.nativeElement.focus();
       return;
     }
     else {
@@ -189,12 +190,12 @@ Error:number=0
   }
   searchFn: any;
   customSearchFn(term: string, item: any) {
-    return item.gstrmatdisp.toLowerCase().startsWith(term.toLowerCase())
+    return item.RawmatName.toLowerCase().startsWith(term.toLowerCase())
   }
   RawmaterilData: any[] = new Array()
   GetMaterial() {
-    this.RawmatId=0
-    this.service.RawMat(this.RawMatName,this.RawmatId).subscribe((data: any) => {
+    this.RawmatId = 0
+    this.service.RawMat(this.RawMatName).subscribe((data: any) => {
       this.RawmaterilData = data
       console.log(this.RawmaterilData);
     })
@@ -203,8 +204,8 @@ Error:number=0
   getMaterialDetails() {
     console.log(this.Rawmatid, 'Rawmatid');
     const rawmatname = this.RawmaterilData.filter((res: any) => {
-      if (this.Rawmatid === res.rawmatid) {
-        this.materialname = res.gstrmatdisp
+      if (this.Rawmatid === res.RawmatId) {
+        this.materialname = res.RawmatName
         console.log(this.materialname, 'material');
       }
     })
@@ -247,20 +248,20 @@ Error:number=0
       })
       if (this.StoreRePending > 0 && parseFloat(this.Qty) > 0) {
         event.target.value = 0
-        this.Error=2
+        this.Error = 2
         const itemavialble = document.getElementById('Error')
         itemavialble?.click()
         this.Updatebtn = true
         return;
       }
-      else{
+      else {
         this.Updatebtn = false
       }
       if (this.tolltt > 0) {
-        this.BalanceQty=200
+        this.BalanceQty = 200
         if (parseFloat(this.Qty) > this.BalanceQty) {
           this.Qty = 0
-          this.Error=3
+          this.Error = 3
           const Toleranceqty = document.getElementById('Error')
           Toleranceqty?.click()
           this.Updatebtn = true
@@ -270,7 +271,7 @@ Error:number=0
           const chck = parseFloat(this.Qty) % this.PackQty
           if (chck > 0) {
             this.Qty = 0
-            this.Error=4
+            this.Error = 4
             const Reqpackqty = document.getElementById('Error')
             Reqpackqty?.click()
             this.Updatebtn = true
@@ -298,10 +299,10 @@ Error:number=0
         this.StockCheckArray.push(this.IndentDetalisData[0].Store_Stk_Qty, this.BalanceQty, this.AllowPackQty)
         let samlest = Math.min(...this.StockCheckArray)
         console.log(samlest);
-        samlest =500
+        samlest = 500
         if (parseFloat(this.Qty) > samlest) {
           this.Qty = ''
-          this.Error=5
+          this.Error = 5
           const StockChck = document.getElementById('Error')
           StockChck?.click()
           this.Updatebtn = true
@@ -325,7 +326,7 @@ Error:number=0
   txtQty: any = 0
   minlevel: number = 0
   AllowPackQty: number = 0
-  StockAvl:number=0
+  StockAvl: number = 0
   getIndentDet() {
     this.spinnerService.show()
     this.service.IndentDet(this.LoactionId, this.frmdate, this.Rawmatid, this.Deptid).subscribe((res: any) => {
@@ -346,13 +347,13 @@ Error:number=0
         this.AllowQty = this.IndentDetalisData[0].Allow_Qty
         this.Specification = this.IndentDetalisData[0].RawMatrial
         // this.plannedQty = this.IndentDetalisData[0].MRP_Plan_Qty
-         this.BalanceQty = this.IndentDetalisData[0].Balance_Qty
+        this.BalanceQty = this.IndentDetalisData[0].Balance_Qty
         console.log(this.plannedQty);
         this.txtQty = this.IndentDetalisData[0].Store_Stk_Qty - this.IndentDetalisData[0].Alloc_Stk_Qty
         this.minlevel = this.IndentDetalisData[0].Min_level
         this.AllowPackQty = this.IndentDetalisData[0].Allow_Pack_Qty
         this.IssueRequestmaterialForm.controls['StockAvl'].setValue(this.IndentDetalisData[0].Store_Stk_Qty)
-        this.StockAvl=this.IndentDetalisData[0].Store_Stk_Qty
+        this.StockAvl = this.IndentDetalisData[0].Store_Stk_Qty
       }
     })
   }
@@ -395,7 +396,7 @@ Error:number=0
 
   }
   Machines: any[] = new Array()
-  mtype:string=''
+  mtype: string = ''
   GetMachine() {
     this.service.Machine(this.LoactionId).subscribe((res: any) => {
       this.Machines = res;
@@ -404,18 +405,18 @@ Error:number=0
     })
   }
   machid: number = 0
-  machname:string=''
+  machname: string = ''
   machineEvent(event: any) {
     this.machid = parseInt(event.target.value)
     console.log(this.machid, 'MACH ID');
-    const machinetype=this.Machines.forEach((data:any)=>{
-      if(data.machid==this.machid){
-        this.mtype=data.mtype
-        console.log(this.mtype,'this.mtype');
+    const machinetype = this.Machines.forEach((data: any) => {
+      if (data.machid == this.machid) {
+        this.mtype = data.mtype
+        console.log(this.mtype, 'this.mtype');
       }
-      if(data.machid==this.machid){
-        this.machname=data.machname
-        console.log(this.mtype,'this.mtype');
+      if (data.machid == this.machid) {
+        this.machname = data.machname
+        console.log(this.mtype, 'this.mtype');
       }
 
     })
@@ -451,7 +452,7 @@ Error:number=0
     this.RawmaterilData = []
     this.txtQty = ''
     this.Machines = []
-    this.Machines=[]
+    this.Machines = []
   }
 
   Materialupdatebtn: any
@@ -498,8 +499,8 @@ Error:number=0
         MaxStock: this.Maxstock,
         ReOrder: this.ReOrder,
         IndentNo: this.IndentNo,
-        Machineid:this.machid,
-        Mtype:this.mtype,
+        Machineid: this.machid,
+        Mtype: this.mtype,
         Specification: this.Specification,
         Stock: this.StockAvl,
         // MachineName: this.machname
@@ -517,9 +518,9 @@ Error:number=0
     this.Materialupdatebtn = false
     this.IssueRequestmaterialForm.reset()
     this.IssueRequestmaterialForm.reset()
-    this.Materialupdatebtn=false
-    this.Machines=[]
-    this.UOM=''
+    this.Materialupdatebtn = false
+    this.Machines = []
+    this.UOM = ''
 
     // this.IssueRequestmaterialForm.controls['Priority'].setValue('')
   }
@@ -552,7 +553,7 @@ Error:number=0
   }
   schInd: number = 0
   RemoveIntentMaterial(Index: any) {
-    this.Error=6
+    this.Error = 6
     const delte = document.getElementById('Error') as HTMLInputElement
     delte.click()
     this.schInd = Index
@@ -563,14 +564,14 @@ Error:number=0
       console.log(this.Material.splice(this.schInd, 1));
     }
   }
-  EditschInd:any
-  EditIntentMaterial(Index:any){
+  EditschInd: any
+  EditIntentMaterial(Index: any) {
     const Edit = document.getElementById('Editmaterial') as HTMLInputElement
     Edit.click()
     this.EditschInd = Index
   }
 
-  GetEditQty(){
+  GetEditQty() {
     const Edit = document.getElementById('mater') as HTMLInputElement
     Edit.click()
 
@@ -578,12 +579,12 @@ Error:number=0
   get edit(): { [key: string]: AbstractControl } {
     return this.EditMaterialForm.controls;
   }
-  EditMaterialBtn:any
-  EditQtySave(){
+  EditMaterialBtn: any
+  EditQtySave() {
     debugger
-    if(this.EditMaterialForm.invalid){
+    if (this.EditMaterialForm.invalid) {
       return
-    }else{
+    } else {
       this.Material.push({
         MaterialName: this.materialname,
         Quantity: this.Quantity,
@@ -602,17 +603,17 @@ Error:number=0
     const Save = document.getElementById('Savemenu') as HTMLInputElement
     Save.click()
   }
-  IssueSchMatrlIndentDetail:any[]=new Array()
-  IssueReqSave:any[]=new Array()
-  IssueReqUpdate:any[]=new Array()
-  Sts:string=''
-  Msg:string=''
-  srnewtype:number=0
-  Status:string='Approved'
+  IssueSchMatrlIndentDetail: any[] = new Array()
+  IssueReqSave: any[] = new Array()
+  IssueReqUpdate: any[] = new Array()
+  Sts: string = ''
+  Msg: string = ''
+  srnewtype: number = 0
+  Status: string = 'Approved'
   GetSave() {
     this.GetStockRenoTrano()
     if (this.Deptid === 15) {
-      if(this.capexno === ''){
+      if (this.capexno === '') {
       } else {
         this.toastr.error('You cannot update without Capex Detail.... ');
         return
@@ -622,7 +623,7 @@ Error:number=0
     this.IssueSchMatrlIndentDetail = []
     for (let i = 0; i < this.Material.length; i++) {
       this.IssueSchMatrlIndentDetail.push({
-        Rawmatid:this.Material[i].MaterialId,
+        Rawmatid: this.Material[i].MaterialId,
         Srqty: this.Material[i].Quantity,
         Uom: this.Material[i].Uom,
         MaterialSpec: this.Material[i].MaterialName,
@@ -663,19 +664,19 @@ Error:number=0
   }
   finalSave() {
     this.GetStockRenoTrano()
-    this.CapexNodata =[]
-    this.indentype=''
+    this.CapexNodata = []
+    this.indentype = ''
     this.IssueRequestmaterialForm.reset()
-    this.Materialupdatebtn=false
+    this.Materialupdatebtn = false
     this.IssueRequestForm.reset()
     this.gobtn = false
-    this.Material=[]
-    this.IndentDetalisData=[]
-    this.IntendPendingViewData=[]
-    this.MaterialPending=[]
-    this.IssueReqSave=[]
-    this.IssueReqUpdate=[]
-    this.IssueSchMatrlIndentDetail=[]
+    this.Material = []
+    this.IndentDetalisData = []
+    this.IntendPendingViewData = []
+    this.MaterialPending = []
+    this.IssueReqSave = []
+    this.IssueReqUpdate = []
+    this.IssueSchMatrlIndentDetail = []
     this.RawmaterilData = []
   }
   Logout() {

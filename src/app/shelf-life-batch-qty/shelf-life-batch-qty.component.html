@@ -11,13 +11,14 @@
   <mat-card>
     <mat-card-content>
       <div class="container-fluid">
-        <form [formGroup]="selflife">
+        <form [formGroup]="selflife" #invalidfocus>
           <div class="row">
             <div class="col ">
               <label for="exampleFormControlInput3" class="form-label">GRN No <span>*</span> </label>
               <ng-select placeholder="--Select--" formControlName="GrnRefno" (change)="GRNo($event)">
                 <ng-option *ngFor="let item of this.GrnnoData" [value]="item.GRN_NO">{{item.GRN_Ref_No}}</ng-option>
               </ng-select>
+              <p class="Error" *ngIf="Viewbtn &&selflife.controls['GrnRefno'].invalid"> Please Select  GRNO - Field</p>
             </div>
             <div class="col">
               <label for="exampleFormControlInput3" class="form-label">Supplier Name<span>*</span> </label>
@@ -25,12 +26,14 @@
                 (change)="supplierEvent($event)">
                 <ng-option *ngFor="let item of this.SupplierData" [value]="item.PartyId">{{item.PartyName}}</ng-option>
               </ng-select>
+              <p class="Error" *ngIf="Viewbtn && selflife.controls['party'].invalid">Please Select Supplier Name - Field</p>
             </div>
           </div>
           <div class="row">
             <div class="col ">
               <label for="exampleFormControlInput3" class="form-label">DC No <span>*</span> </label>
               <input type="text" class="form-control" readonly formControlName="dcno">
+              <p class="Error" *ngIf="Viewbtn && selflife.controls['dcno'].invalid">Please Select DcNo - Field</p>
             </div>
             <div class="col">
               <button mat-raised-button class="button viewbtn" type="button" color="primary"

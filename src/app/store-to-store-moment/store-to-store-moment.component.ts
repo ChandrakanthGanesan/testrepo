@@ -2,9 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { StoretostoreService } from '../service/storetostore.service';
-import { data, event } from 'jquery';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-store-to-store-moment',
@@ -12,7 +10,7 @@ import { MatButtonToggleGroup } from '@angular/material/button-toggle';
   styleUrls: ['./store-to-store-moment.component.scss']
 })
 export class StoreToStoreMomentComponent implements OnInit {
-  storetostoreform!: FormGroup;
+  storetostoreform!:FormGroup
   Trandate: any
   cuurendate = new Date()
   LoactionId: number = 0
@@ -214,7 +212,12 @@ export class StoreToStoreMomentComponent implements OnInit {
   get View(): { [key: string]: AbstractControl } {
     return this.storetostoreform.controls;
   }
-
+  scrollToFirstInvalidControl() {
+    let form = document.getElementById('formId')as HTMLFormElement
+    let firstInvalidControl = form.getElementsByClassName('ng-invalid')[0];
+    firstInvalidControl.scrollIntoView();
+    (firstInvalidControl as HTMLElement).focus();
+  }
   Viewbtn: any
   ViewStock: any[] = new Array()
   Viewclick: boolean = false
@@ -224,6 +227,7 @@ export class StoreToStoreMomentComponent implements OnInit {
   getView() {
     this.Viewbtn = true
     if (this.storetostoreform.invalid) {
+      this.scrollToFirstInvalidControl()
       return
     }
     else {

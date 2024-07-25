@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -23,6 +23,7 @@ export class ReworkissueComponent implements OnInit {
   ReworkIssueForm!: FormGroup;
   LoactionId: number = 0
   Empid: number = 0
+  @ViewChild('invalidfocus')invalidfocus!:ElementRef
   constructor(private router: Router, private date: DatePipe, private toastr: ToastrService,private spinnerService: NgxSpinnerService, private formBuilder: FormBuilder, private service: ReworkissueService) { }
   ngOnInit(): void {
     this.Issuedate = this.date.transform(this.currentDate, 'yyyy-MM-dd');
@@ -137,6 +138,7 @@ export class ReworkissueComponent implements OnInit {
   View() {
     this.viewbtn = true
     if (this.ReworkIssueForm.invalid) {
+      this.invalidfocus.nativeElement.focus();
       return
     } else {
       this.service.View(this.LoactionId, this.Issuedate, parseInt(this.ReworkIssueForm.controls['Department'].value), parseInt(this.ReworkIssueForm.controls['Refno'].value), this.ReworkIssueForm.controls['material'].value, this.fromdt, this.Todate).subscribe((data: any) => {

@@ -1,0 +1,205 @@
+<div class="container">
+  <div>
+    <h1>Registration Form</h1>
+
+    <form
+      (ngSubmit)="onSubmit(registationForm)"
+      appInvalidElmFocus
+      #registationForm="ngForm"
+    >
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="firstName"
+          required
+          [(ngModel)]="registrationModel.firstName"
+          name="firstName"
+          #firstName="ngModel"
+        />
+        <div
+          [hidden]="firstName.valid || firstName.untouched"
+          class="alert alert-danger"
+        >
+          First Name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="lastName"
+          required
+          [(ngModel)]="registrationModel.lastName"
+          name="lastName"
+          #lastName="ngModel"
+        />
+        <div
+          [hidden]="lastName.valid || lastName.untouched"
+          class="alert alert-danger"
+        >
+          Last Name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="text"
+          class="form-control"
+          id="email"
+          required
+          [(ngModel)]="registrationModel.email"
+          name="email"
+          #email="ngModel"
+        />
+        <div
+          [hidden]="email.valid || email.untouched"
+          class="alert alert-danger"
+        >
+          Email is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          required
+          [(ngModel)]="registrationModel.password"
+          name="password"
+          #password="ngModel"
+        />
+        <div
+          [hidden]="password.valid || password.untouched"
+          class="alert alert-danger"
+        >
+          Password is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="streetAddressLine1">Street Address Line1</label>
+        <input
+          type="text"
+          class="form-control"
+          id="streetAddressLine1"
+          required
+          [(ngModel)]="registrationModel.streetAddressLine1"
+          name="streetAddressLine1"
+          #streetAddressLine1="ngModel"
+        />
+        <div
+          [hidden]="streetAddressLine1.valid || streetAddressLine1.untouched"
+          class="alert alert-danger"
+        >
+          Street Address Line1 is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="streetAddressLine2">Street Address Line2</label>
+        <input
+          type="text"
+          class="form-control"
+          id="streetAddressLine2"
+          required
+          [(ngModel)]="registrationModel.streetAddressLine2"
+          name="streetAddressLine2"
+          #streetAddressLine2="ngModel"
+        />
+        <div
+          [hidden]="streetAddressLine2.valid || streetAddressLine2.untouched"
+          class="alert alert-danger"
+        >
+          Street Address Line2 is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="city">City</label>
+        <input
+          type="text"
+          class="form-control"
+          id="city"
+          required
+          [(ngModel)]="registrationModel.city"
+          name="city"
+          #city="ngModel"
+        />
+        <div [hidden]="city.valid || city.untouched" class="alert alert-danger">
+          City is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="state">State</label>
+        <input
+          type="text"
+          class="form-control"
+          id="state"
+          required
+          [(ngModel)]="registrationModel.state"
+          name="state"
+          #state="ngModel"
+        />
+        <div
+          [hidden]="state.valid || state.untouched"
+          class="alert alert-danger"
+        >
+          State is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input
+          type="text"
+          class="form-control"
+          id="country"
+          required
+          [(ngModel)]="registrationModel.country"
+          name="country"
+          #country="ngModel"
+        />
+        <div
+          [hidden]="country.valid || country.untouched"
+          class="alert alert-danger"
+        >
+          Country is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="pincode">Pincode</label>
+        <input
+          type="text"
+          class="form-control"
+          id="pincode"
+          required
+          [(ngModel)]="registrationModel.pincode"
+          name="pincode"
+          #pincode="ngModel"
+        />
+        <div
+          [hidden]="pincode.valid || pincode.untouched"
+          class="alert alert-danger"
+        >
+          Pincode is required
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+  </div>
+
+  <div *ngIf="submitted">
+    <h3>Submitted values</h3>
+    <p>{{registrationModel | json}}</p>
+  </div>
+</div>

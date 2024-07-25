@@ -25,8 +25,8 @@ export class IssueRequestService {
   Department(Empid: any) {
     return this.http.get('http://103.21.76.94:6055/Request/Department?Empid=' + Empid)
   }
-  RawMat(Rawmatname: any, Rawmatid: any) {
-    return this.http.get("http://103.21.76.94:6055/Indent/RawMaterial?Rawmatname=" + Rawmatname + '&Rawmatid=' + Rawmatid)
+  RawMat(Rawmatname: any) {
+    return this.http.get('http://103.21.76.94:6055/Indent/storetostore_Material?Rawmatname=' + Rawmatname)
   }
   Uom(RawMatId: any) {
     return this.http.get('http://103.21.76.94:6055/Request/ProductUom?RawMatId=' + RawMatId)
