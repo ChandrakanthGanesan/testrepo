@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { catchError, pipe, throwError } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
@@ -12,14 +13,25 @@ export class LoginService {
   CrStr: any = "";
   constructor(private http: HttpClient) { }
 
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side or network error
+      errorMessage = `An error occurred:  ${error.error.message}`
+    } else {
+      // Backend error
+      errorMessage = `Server Returned: "  ${error.status}", Error : ${error.message}`;
+    }
+    return throwError(errorMessage);
+  }
 
   login(UserName: any, Password: any): Observable<any> {
-    const apiUrl = ("http://103.21.76.94:6055/login/loginDetail/?usern=" + UserName + '&psw=' + Password);
-    console.log(apiUrl);
-    return this.http.get<any>(apiUrl);
+
+    return this.http.get("http://192.168.203.59:4000/login/loginDetail/?usern=" + UserName + '&psw=' + Password).pipe(
+      catchError(this.handleError))
   }
     companyDetail() {
-    return this.http.get("http://103.21.76.94:6055/login/Location")
+    return this.http.get("http://192.168.203.59:4000/login/Location")
   }
   CryptString(Strvar: any) {
     this.Chstr = "";
@@ -73,35 +85,35 @@ export class LoginService {
   };
 
   RighitsCheck(Empid: any, Locationid: any) {
-    return this.http.get('http://103.21.76.94:6055/login/rightscheck?Empid=' + Empid + '&Locationid=' + Locationid)
+    return this.http.get('http://192.168.203.59:4000/login/rightscheck?Empid=' + Empid + '&Locationid=' + Locationid)
   }
   menuname() {
-    return this.http.get('http://103.21.76.94:6055/login/menurights')
+    return this.http.get('http://192.168.203.59:4000/login/menurights')
   }
   Emailotp(fmail:any,tmail:any,shtml:any){
-    return this.http.get('http://103.21.76.94:6055/login/sendmail?fmail='+fmail+'&tmail='+tmail+'&shtml='+shtml)
+    return this.http.get('http://192.168.203.59:4000/login/sendmail?fmail='+fmail+'&tmail='+tmail+'&shtml='+shtml)
   }
   Mailuserlist(LocationId:any){
-    return this.http.get('http://103.21.76.94:6055/login/mailuserlist?LocationId='+LocationId)
+    return this.http.get('http://192.168.203.59:4000/login/mailuserlist?LocationId='+LocationId)
   }
   Loginattempt(Empid:any){
-    return this.http.get('http://103.21.76.94:6055/login/LoginAttempt?Empid='+Empid)
+    return this.http.get('http://192.168.203.59:4000/login/LoginAttempt?Empid='+Empid)
   }
   OTPInsert(Empid:any,LocationId:any,Otp:any,FrmDate:any,TOdate:any,CreatedSystem:any,OtpValid:any){
-    return this.http.get('http://103.21.76.94:6055/login/OtpInsert?Empid='+Empid+'&LocationId='+LocationId+'&Otp='+Otp+'&FrmDate='+FrmDate+'&TOdate='+TOdate+
+    return this.http.get('http://192.168.203.59:4000/login/OtpInsert?Empid='+Empid+'&LocationId='+LocationId+'&Otp='+Otp+'&FrmDate='+FrmDate+'&TOdate='+TOdate+
     '&CreatedSystem='+CreatedSystem+'&OtpValid='+OtpValid)
-  }
+    }
   Otpvaild(Empid:any,LocationId:any,Frmdate:any){
-    return this.http.get('http://103.21.76.94:6055/login/OtpVaildation?Empid='+Empid+'&LocationId='+LocationId+'&Frmdate='+Frmdate)
+    return this.http.get('http://192.168.203.59:4000/login/OtpVaildation?Empid='+Empid+'&LocationId='+LocationId+'&Frmdate='+Frmdate)
   }
   OtpforgetUpdate(LocationId:any,Otp:any,Frmdate:any,Todate:any,CreatedSystem:any,OtpValidation:any,Empid:any){
     return this.http.get('http://103.21.76.94:6054/login/OtpforgetUpdate?LocationId='+LocationId+'&Otp='+Otp+'&Frmdate='+Frmdate+'&Todate='+Todate+'&CreatedSystem='+CreatedSystem+
      ' &OtpValidation='+OtpValidation+'&Empid='+ Empid)
   }
   UpdateOtpValidation(OtpVaildation:any,Empid:any,LocationId:any,Otp:any,EntryDate:any){
-    return this.http.get('http://103.21.76.94:6055/login/OtpVaildationUpdate?OtpVaildation='+OtpVaildation+'&Empid='+Empid+'&LocationId='+LocationId+'&Otp='+Otp+'&EntryDate='+EntryDate )
+    return this.http.get('http://192.168.203.59:4000/login/OtpVaildationUpdate?OtpVaildation='+OtpVaildation+'&Empid='+Empid+'&LocationId='+LocationId+'&Otp='+Otp+'&EntryDate='+EntryDate )
   }
   InsertOtpDet(LoginUserName:any,UserId:any,Date_Time:any,Otp:any){
-    return this.http.get('http://103.21.76.94:6055/login/InsertOtpDetalis?LoginUserName='+LoginUserName+'&UserId='+UserId+'&Date_Time='+Date_Time+'&Otp='+Otp)
+    return this.http.get('http://192.168.203.59:4000/login/InsertOtpDetalis?LoginUserName='+LoginUserName+'&UserId='+UserId+'&Date_Time='+Date_Time+'&Otp='+Otp)
   }
 }

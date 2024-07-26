@@ -7,16 +7,16 @@
         <!-- <img class="object-fit-cover border rounded" src="assets/PurchaseRequest.png"> -->
         <h1 class="link_name" routerLink="/approval">Inventory</h1>
       </a>
-      <ul class="sub-menu blank" *ngIf="PurchaseRequest || IssueRequest || DirectIndent || StoreIssue || ReworkIssue || MatlReturnFrmDept||StorageQtyAlloc||Shelflife">
-        <li><a  routerLink="/PurchaseReq" id="menu" [ngClass]="{'disable-link':!PurchaseRequest}"  class="subhead">Purchase Request</a></li>
-        <li><a  routerLink="/issueReq" id="menu" [ngClass]="{'disable-link':!IssueRequest}"  class="subhead">Issue Request</a></li>
-        <li><a class="subhead" id="menu" [ngClass]="{'disable-link':!DirectIndent}"   routerLink="/directIndent">Direct Indent</a></li>
-        <li><a class="subhead" id="menu"  [ngClass]="{'disable-link':!StoreIssue}"  routerLink="/storeissue">Store Issue</a></li>
-        <li><a class="subhead" id="menu"  [ngClass]="{'disable-link':!ReworkIssue}"  routerLink="/reworkissue">Rework Issue</a></li>
-        <li><a class="subhead" id="menu"  [ngClass]="{'disable-link':!MatlReturnFrmDept}" routerLink="/MatlReceiveFrmDept">Material Return From Department</a></li>
-        <li><a class="subhead" id="menu"  [ngClass]="{'disable-link':!StorageQtyAlloc}" routerLink="/StorageQtyAlloc"  >Storage Quantity Allocation</a></li>
-        <li><a class="subhead" id="menu"  [ngClass]="{'disable-link':!Shelflife}" routerLink="/Shelflife"  >Self-Life Batch Quantity Entry</a></li>
-        <li><a class="subhead" id="menu"  [ngClass]="{'disable-link':!StoretoStore}" routerLink="/StoretoStore"  >Store To Store</a></li>
+      <ul class="sub-menu blank" *ngIf="PurchaseRequest || IssueRequest || DirectIndent || StoreIssue || ReworkIssue || MatlReturnFrmDept||StorageQtyAlloc||Shelflife ||StoretoStore">
+        <li [ngClass]="{'disable-link':!PurchaseRequest}"><a routerLink="/PurchaseReq" id="menu"  class="subhead">Purchase Request</a></li>
+        <li [ngClass]="{'disable-link':!IssueRequest}"><a routerLink="/issueReq" id="menu" class="subhead">Issue Request</a></li>
+        <li [ngClass]="{'disable-link':!DirectIndent}"><a class="subhead" id="menu" routerLink="/directIndent">Direct Indent</a></li>
+        <li [ngClass]="{'disable-link':!StoreIssue}"><a class="subhead" id="menu" routerLink="/storeissue">Store Issue</a></li>
+        <li [ngClass]="{'disable-link':!ReworkIssue}"><a class="subhead" id="menu" routerLink="/reworkissue">Rework Issue</a></li>
+        <li [ngClass]="{'disable-link':!MatlReturnFrmDept}"><a class="subhead" id="menu" routerLink="/MatlReceiveFrmDept">Material Return From Department</a></li>
+        <li [ngClass]="{'disable-link':!StorageQtyAlloc}" ><a class="subhead" id="menu" routerLink="/StorageQtyAlloc"  >Storage Quantity Allocation</a></li>
+        <li [ngClass]="{'disable-link':!Shelflife}"><a class="subhead" id="menu" routerLink="/Shelflife"  >Self-Life Batch Quantity Entry</a></li>
+        <li [ngClass]="{'disable-link':!StoretoStore}"><a class="subhead" id="menu" routerLink="/StoretoStore"  >Store To Store</a></li>
       </ul>
     </li>
     <li>

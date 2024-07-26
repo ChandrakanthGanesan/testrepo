@@ -20,9 +20,9 @@
   transition: all 0.4s ease;
 }
 
-// .sidebar .nav-links li ul li {
-//   padding:5px 0px 3px 5px;
-// }
+.sidebar .nav-links li ul li {
+  padding: 5px 0px 3px 5px;
+}
 
 .sidebar .nav-links li a {
   text-decoration: none;
@@ -32,13 +32,14 @@
 .sidebar .nav-links li:hover a .link_name {
   background-color: #000000e7;
   color: rgb(255, 255, 255);
-  border-radius:5%;
+  border-radius: 5%;
 
 }
-#menu:hover{
+
+#menu:hover {
   background-color: #000000e7;
   color: rgb(255, 255, 255);
-  border-radius:5%;
+  border-radius: 5%;
 }
 
 .sidebar .nav-links li .sub-menu a {
@@ -89,7 +90,8 @@ h1 {
 
 
 .disable-link {
-  display: none;
+display: none;
+
 }
 
 @media only screen and (max-width: 759px) {

@@ -336,6 +336,7 @@ export class StoreIssueComponent implements OnInit {
 
   }
   Clear(){
+    this.Viewmat=false
     this.viewbtn=false
     this.StoreIssueForm.controls['Department'].setValue('')
     this.StoreIssueForm.controls['Refno'].setValue('')

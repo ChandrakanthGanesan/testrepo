@@ -104,7 +104,7 @@ export class LoginComponent implements OnInit {
     this.LoactionId.push(LoactionId)
     sessionStorage.setItem('location', JSON.stringify(this.LoactionId));
 
-    
+
 
   }
   get go(): { [key: string]: AbstractControl } {
@@ -121,7 +121,7 @@ export class LoginComponent implements OnInit {
     if (this.loginform.invalid) {
       return
     } else {
-      this.service.login(this.loginform.controls['UserName'].value, this.loginform.controls['Pwd'].value).subscribe((res: any) => {
+      this.service.login(this.loginform.controls['UserName'].value, this.loginform.controls['Pwd'].value).subscribe({next:(res: any) => {
         this.logindata = res
         // console.log(this.logindata, 'login');
         if (this.logindata[0].password === this.service.CryptString(this.loginform.controls['Pwd'].value)) {
@@ -148,10 +148,18 @@ export class LoginComponent implements OnInit {
         } else {
           this.toastr.error('Please Check Username and Password', 'Error')
         }
+      },
+      error: (err: any) => {
+        this.apiErrorMsg=err
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
+      }
       })
 
     }
   }
+  apiErrorMsg:string=''
   Empname: string = ''
   Poweruser: string = ''
   Mpinlogin() {

@@ -52,10 +52,10 @@ export class DashboardComponent implements OnInit {
   Admin: boolean = false
   userRighitsData: any[] = new Array()
   ngOnInit(): void {
-    const data = JSON.parse(localStorage.getItem('location') || '{}');
+    const data = JSON.parse(sessionStorage.getItem('location') || '{}');
     this.LoactionId = data[data.length - 1]
     console.log(this.LoactionId);
-    const user = JSON.parse(localStorage.getItem('session') || '{}');
+    const user = JSON.parse(sessionStorage.getItem('session') || '{}');
     this.Empid = user[0].empid
     console.log(this.Empid);
 
