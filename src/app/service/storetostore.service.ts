@@ -20,47 +20,47 @@ export class StoretostoreService {
     return throwError(errorMessage);
   }
   Path1(LocationId: any) {
-    return this.http.get("http://103.21.76.94:6055/Indent/Path1?LocationId=" + LocationId).pipe(
+    return this.http.get("http://192.168.203.59:3000/Indent/Path1?LocationId=" + LocationId).pipe(
       catchError(this.handleError)
     );
   }
   Path2(Date: any) {
-    return this.http.get("http://103.21.76.94:6055/Indent/Path2?Date=" + Date).pipe(
+    return this.http.get("http://192.168.203.59:3000/Indent/Path2?Date=" + Date).pipe(
       catchError(this.handleError)
     );
   }
   Path3(Path: any) {
-    return this.http.get("http://103.21.76.94:6055/Indent/Path3?Path=" + Path ).pipe(
+    return this.http.get("http://192.168.203.59:3000/Indent/Path3?Path=" + Path ).pipe(
       catchError(this.handleError)
     );
   }
   Warehouse(LocationId: any): Observable<any> {
-    return this.http.get("http://103.21.76.94:6055/Indent/storetostore-Warehouse?LocationId=" + LocationId).pipe(
+    return this.http.get("http://192.168.203.59:3000/Indent/storetostore-Warehouse?LocationId=" + LocationId).pipe(
       catchError(this.handleError)
     );
   }
   Rawmaterial(Rawmatname: any) {
-    return this.http.get('http://103.21.76.94:6055/Indent/storetostore_Material?Rawmatname=' + Rawmatname).pipe(
+    return this.http.get('http://192.168.203.59:3000/Indent/storetostore_Material?Rawmatname=' + Rawmatname).pipe(
       catchError(this.handleError)
     );
   }
   Deptid(Empid: any) {
-    return this.http.get('http://103.21.76.94:6055/Indent/dept?Empid=' + Empid).pipe(
+    return this.http.get('http://192.168.203.59:3000/Indent/dept?Empid=' + Empid).pipe(
       catchError(this.handleError)
     );
   }
   Stockchck(RawmatId: any, LocationId: any, FrmstoreId: any) {
-    return this.http.get('http://192.168.203.59:4000/Indent/storetostore-Stockchck?RawmatId=' + RawmatId + '&LocationId=' + LocationId + '&FrmstoreId=' + FrmstoreId).pipe(
+    return this.http.get('http://192.168.203.59:3000/Indent/storetostore-Stockchck?RawmatId=' + RawmatId + '&LocationId=' + LocationId + '&FrmstoreId=' + FrmstoreId).pipe(
       catchError(this.handleError)
     );
   }
   ViewStock(LocationId: any, WarehouseId: any, RawmatId: any) {
-    return this.http.get('http://103.21.76.94:6055/Indent/storetostore-View?LocationId=' + LocationId + '&WarehouseId=' + WarehouseId + '&RawmatId=' + RawmatId).pipe(
+    return this.http.get('http://192.168.203.59:3000/Indent/storetostore-View?LocationId=' + LocationId + '&WarehouseId=' + WarehouseId + '&RawmatId=' + RawmatId).pipe(
       catchError(this.handleError)
     );
   }
   save(StoreToStoreUpdate:any) {
-    return this.http.post('http://192.168.203.59:4000/Indent/StoreToStoreUpdate',StoreToStoreUpdate).pipe(
+    return this.http.post('http://192.168.203.59:3000/Indent/StoreToStoreUpdate',StoreToStoreUpdate).pipe(
       catchError(this.handleError)
     );
   }

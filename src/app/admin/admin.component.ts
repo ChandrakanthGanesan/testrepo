@@ -19,12 +19,12 @@ import { data } from 'jquery';
 export class AdminComponent implements OnInit {
   Menuform!: FormGroup;
   LoactionId: number = 0
-  displayedColumns: string[] = ['S.No','Empid','Menuname', 'MenuId', 'LocationId', 'DeptId','Status','ApprovedBy'];
-i: any;
+  displayedColumns: string[] = ['S.No', 'Empid', 'Menuname', 'MenuId', 'LocationId', 'DeptId', 'Status', 'ApprovedBy'];
+  i: any;
   constructor(private service: AdminService, private formBuilder: FormBuilder, private loginservice: LoginService, private toastr: ToastrService) {
 
-   }
-   isSticky(buttonToggleGroup: MatButtonToggleGroup, id: string) {
+  }
+  isSticky(buttonToggleGroup: MatButtonToggleGroup, id: string) {
     return (buttonToggleGroup.value || []).indexOf(id) !== -1;
   }
 
@@ -45,12 +45,20 @@ i: any;
     this.GetMenu()
     this.getview()
   }
-
+  apiErrorMsg: string = ''
   MenuNameData: any[] = new Array()
   GetMenu() {
-    this.service.menuname().subscribe((res: any) => {
-      this.MenuNameData = res
-      console.log(this.MenuNameData);
+    this.service.menuname().subscribe({
+      next: (res: any) => {
+        this.MenuNameData = res
+        console.log(this.MenuNameData);
+      },
+      error: (err: any) => {
+        this.apiErrorMsg = err
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
+      }
     })
   }
   menuid: number = 0
@@ -66,9 +74,17 @@ i: any;
 
   Department: any[] = new Array()
   GetDept() {
-    this.service.dept().subscribe((data: any) => {
-      this.Department = data
-      console.log(this.Department, 'dept');
+    this.service.dept().subscribe({
+      next: (data: any) => {
+        this.Department = data
+        console.log(this.Department, 'dept');
+      },
+      error: (err: any) => {
+        this.apiErrorMsg = err
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
+      }
     })
   }
   DeptEvent(event: any) {
@@ -79,21 +95,37 @@ i: any;
   Deptid: number = 0
   Employee: any[] = new Array()
   GetEmp() {
-    this.service.Emp(this.Deptid).subscribe((data: any) => {
-      this.Employee = data
-      console.log(this.Employee, 'dept');
+    this.service.Emp(this.Deptid).subscribe({
+      next: (data: any) => {
+        this.Employee = data
+        console.log(this.Employee, 'dept');
+      },
+      error: (err: any) => {
+        this.apiErrorMsg = err
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
+      }
     })
   }
   Empid: any
   EmpEvent(event: any) {
     this.Empid = parseInt(event.target.value)
     this.Location()
-    this. Getpoweruser()
+    this.Getpoweruser()
   }
   Location() {
-    this.service.Location().subscribe((data: any) => {
-      this.LocationData = data
-      console.log(this.LocationData, 'location');
+    this.service.Location().subscribe({
+      next: (data: any) => {
+        this.LocationData = data
+        console.log(this.LocationData, 'location');
+      },
+      error: (err: any) => {
+        this.apiErrorMsg = err
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
+      }
     })
 
   }
@@ -118,9 +150,17 @@ i: any;
   LocationData: any[] = new Array()
   AppovedData: any[] = new Array()
   Approverd() {
-    this.service.Approved().subscribe((data: any) => {
-      this.AppovedData = data
-      console.log(this.AppovedData, 'approve');
+    this.service.Approved().subscribe({
+      next: (data: any) => {
+        this.AppovedData = data
+        console.log(this.AppovedData, 'approve');
+      },
+      error: (err: any) => {
+        this.apiErrorMsg = err
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
+      }
     })
   }
   get Menu(): { [key: string]: AbstractControl } {
@@ -140,20 +180,28 @@ i: any;
         console.log(this.UserLocationidArr, 'sd');
       }
       for (let i = 0; i < this.UserLocationidArr.length; i++) {
-        this.service.RighitsCheck(this.Empid, this.UserLocationidArr[i], this.menuid).subscribe((data: any) => {
-          this.userRighitsData = data
-          console.log(this.userRighitsData);
-          if (this.userRighitsData.length !== 0) {
-            for (let i = 0; i < this.userRighitsData.length; i++) {
-              if (this.userRighitsData[i].Locationid === this.UserLocationidArr[i]) {
-                this.toastr.warning('You cannot give the Rights for Same Location. Please Check...')
-                this.UserLocationid = ''
-                return
+        this.service.RighitsCheck(this.Empid, this.UserLocationidArr[i], this.menuid).subscribe({
+          next: (data: any) => {
+            this.userRighitsData = data
+            console.log(this.userRighitsData);
+            if (this.userRighitsData.length !== 0) {
+              for (let i = 0; i < this.userRighitsData.length; i++) {
+                if (this.userRighitsData[i].Locationid === this.UserLocationidArr[i]) {
+                  this.toastr.warning('You cannot give the Rights for Same Location. Please Check...')
+                  this.UserLocationid = ''
+                  return
+                }
               }
+            } else {
+              const saveacess = document.getElementById('saveaccess') as HTMLElement;
+              saveacess.click()
             }
-          } else {
-            const saveacess = document.getElementById('saveaccess') as HTMLElement;
-            saveacess.click()
+          },
+          error: (err: any) => {
+            this.apiErrorMsg = err
+            const Error = document.getElementById('apierror') as HTMLInputElement
+            Error.click()
+            return
           }
         })
       }
@@ -164,12 +212,20 @@ i: any;
 
   }
 
-  poweruser:any[]=[]
-  Getpoweruser(){
-    this.service.poweruser(this.Empid).subscribe((data:any)=>{
-      this.poweruser=data
-      console.log(this.poweruser);
-      })
+  poweruser: any[] = []
+  Getpoweruser() {
+    this.service.poweruser(this.Empid).subscribe({
+      next: (data: any) => {
+        this.poweruser = data
+        console.log(this.poweruser);
+      },
+      error: (err: any) => {
+        this.apiErrorMsg = err
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
+      }
+    })
   }
   RightsUpdate: any = new Array()
   appprovedBy: string = ''
@@ -199,7 +255,7 @@ i: any;
       })
     }
     console.log(this.RightsUpdate, 'save');
-    this.service.Save(this.RightsUpdate).subscribe((data: any) => {
+    this.service.Save(this.RightsUpdate).subscribe({next:(data: any) => {
       this.RightsDet = data
       console.log(this.RightsDet);
       this.Success = this.RightsDet[0].status
@@ -211,6 +267,13 @@ i: any;
         const success = document.getElementById('RightsSave') as HTMLInputElement
         success.click()
       }
+      },
+      error: (err: any) => {
+        this.apiErrorMsg=err
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
+      }
     })
   }
   Tab1 = 0;
@@ -219,57 +282,57 @@ i: any;
     this.Tab1 = e.index;
     this.tablabelname = e.tab.textLabel
     console.log(this.tablabelname);
-    if(this.tablabelname === 'VIEW'){
+    if (this.tablabelname === 'VIEW') {
       this.GetDept()
       this.Location()
     }
   }
-  RightsDetView:any[]=new Array()
-  UserRightsCheck:boolean=false
-  view(){
-    this.service.View(this.Empid,this.Deptid,this.UserLocationid).subscribe((data:any)=>{
-      this.RightsDetView=data
+  RightsDetView: any[] = new Array()
+  UserRightsCheck: boolean = false
+  view() {
+    this.service.View(this.Empid, this.Deptid, this.UserLocationid).subscribe((data: any) => {
+      this.RightsDetView = data
       console.log(this.RightsDetView);
-      if(this.RightsDetView.length > 0){
-        this.UserRightsCheck=true
-      }else{
+      if (this.RightsDetView.length > 0) {
+        this.UserRightsCheck = true
+      } else {
         this.toastr.warning('No Records To Found...')
       }
     })
   }
-  unapprove(){
+  unapprove() {
     this.Menubtn = true
     if (this.Menuform.invalid) {
       return
     } else {
-    this.service.Unapprove(this.menuid,this.Empid,this.Deptid,this.LoactionId).subscribe((data:any)=>{
-      const unapprove=data
-      console.log(unapprove);
-      this.Success = unapprove[0].status
-      this.Success_Error = unapprove[0].Msg
-      if (this.Success === 'Y') {
-        const success = document.getElementById('RightsSave') as HTMLInputElement
-        success.click()
-      } else {
-        const success = document.getElementById('RightsSave') as HTMLInputElement
-        success.click()
-      }
-    })
+      this.service.Unapprove(this.menuid, this.Empid, this.Deptid, this.LoactionId).subscribe((data: any) => {
+        const unapprove = data
+        console.log(unapprove);
+        this.Success = unapprove[0].status
+        this.Success_Error = unapprove[0].Msg
+        if (this.Success === 'Y') {
+          const success = document.getElementById('RightsSave') as HTMLInputElement
+          success.click()
+        } else {
+          const success = document.getElementById('RightsSave') as HTMLInputElement
+          success.click()
+        }
+      })
+    }
   }
-}
   FinalSave() {
-    this.RightsUpdate=[]
+    this.RightsUpdate = []
     setTimeout(() => {
       window.location.reload();
     });
   }
-  data:any
-  errorMessage: string=''
-  getview(){
+  data: any
+  errorMessage: string = ''
+  getview() {
     this.service.View1().subscribe({
       next: (response) => {
         this.data = response;
-       console.log( this.data);
+        console.log(this.data);
 
       },
       error: (error) => {

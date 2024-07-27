@@ -128,19 +128,27 @@ export class PurchaseRequestComponent implements OnInit {
 
     })
   }
+  apiErrorMsg:string=''
   capexDeptid: number = 0
   GetDeptCapex() {
-    this.Empid = 18
+debugger
     this.service.CapexValidationDept(this.Empid).subscribe((data: any) => {
       const capexDeptdata = data
       console.log("capexDeptdata", capexDeptdata)
-      if (capexDeptdata.length !== 0) {
-        this.capexDeptid = capexDeptdata[0].deptid
-        console.log(this.capexDeptid, 'capexDeptid');
-
-      } else {
-        return;
+      debugger
+      if(capexDeptdata[0].status ==='N'){
+        this.apiErrorMsg=capexDeptdata[0].Msg
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
       }
+        if (capexDeptdata.length !== 0) {
+          this.capexDeptid = capexDeptdata[0].deptid
+          console.log(this.capexDeptid, 'capexDeptid');
+        } else {
+          return;
+        }
+
       if (this.capexDeptid == 15) {
         this.indentype == 'Capex'
       }
@@ -993,5 +1001,8 @@ export class PurchaseRequestComponent implements OnInit {
   }
   Logout() {
     this.router.navigate(['/login'], {});
+  }
+  Spinnercall(){
+    this.spinnerService.show()
   }
 }

@@ -171,7 +171,8 @@
             <td class="body">{{IntendSch.Rawmaterial}}</td>
             <td class="body" style="text-align: center;">{{IntendSch.Sch_Dt}} </td>
             <td class="body right">{{IntendSch.Qty}} </td>
-            <td class="body"><button mat-raised-button class="button" type="button" color="primary" (click)="EditQty()">Edit Qty</button></td>
+            <td class="body"><button mat-raised-button class="button" type="button" color="primary"
+                (click)="EditQty()">Edit Qty</button></td>
           </tr>
         </ng-template>
       </p-table>
@@ -457,8 +458,8 @@
                   <td class="body" style="text-align: center;justify-content: center;">{{IntendSch.Sch_Commitment_Dt}}
                   </td>
                   <td class="body">
-                    <button mat-raised-button type="button" id="remove" class="Insertbtn"
-                      style="background-color:lightcoral" (click)="RemoveIndent(i)">Remove</button>
+                    <button mat-raised-button type="button" id="remove" class="Insertbtn" color="warn"
+                      (click)="RemoveIndent(i)">Remove</button>
                   </td>
                 </tr>
               </ng-template>
@@ -477,25 +478,22 @@
 </div>
 
 <button style="display: none;" id="Error" data-bs-toggle="modal" data-bs-target="#ErrorDialog"></button>
-
 <div class="modal" id="ErrorDialog" data-bs-backdrop='static'>
   <div class=" modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header" style="font-size: medium;color: rgb(252, 83, 83);font-weight: bold;">Warning</div>
+      <div class="modal-header" style="font-size: medium;color: rgb(5, 5, 5);font-weight: bold;">Warning</div>
       <div class="modal-body">
         <p>{{ErrorMsg}}</p>
       </div>
       <div class="modal-footer" *ngIf="this.error===1">
         <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
           data-bs-toggle="modal" data-bs-target="#Material">Yes</button>
-        <button mat-raised-button type="button" class="btn  m-2" style="background-color:lightcoral"
-          data-bs-dismiss="modal">No</button>
+        <button mat-raised-button type="button" class="btn  m-2" color="warn" data-bs-dismiss="modal">No</button>
       </div>
       <div class="modal-footer" *ngIf="this.error===2">
         <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
           (click)="deleteMat()" data-bs-dismiss="modal">Yes</button>
-        <button mat-raised-button type="button" class="btn  m-2" style="background-color:lightcoral"
-          data-bs-dismiss="modal">No</button>
+        <button mat-raised-button type="button" class="btn  m-2" color="warn" data-bs-dismiss="modal">No</button>
       </div>
       <div class="modal-footer" *ngIf="this.error===3">
         <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
@@ -505,8 +503,28 @@
   </div>
 </div>
 
-<button style="display: none;" id="OldPo" data-bs-toggle="modal" data-bs-target="#OldPodialog"></button>
+<button style="display: none;" id="apierror" data-bs-toggle="modal" data-bs-target="#apierrorDialog"></button>
+<div class="modal" id="apierrorDialog" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;color: rgb(14, 13, 13);font-weight: bold;">Error!!!</div>
+      <div class="modal-body">
+        <h3>
+          <p class="errorptag">
+            {{this.apiErrorMsg}}</p>
+          <h2>Please Wait Few Minutes and Check The Internet Connection</h2>
+          <h2> Contact Admin...</h2>
+        </h3>
+      </div>
+      <div class="modal-footer">
+        <button mat-raised-button type="button" class="btn m-2" color="warn" data-bs-dismiss="modal"
+          (click)="Spinnercall()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<button style="display: none;" id="OldPo" data-bs-toggle="modal" data-bs-target="#OldPodialog"></button>
 <div class="modal" id="OldPodialog" data-bs-backdrop='static'>
   <div class=" modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">

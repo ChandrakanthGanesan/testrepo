@@ -232,4 +232,22 @@
 </div>
 
 
+<button style="display: none;" id="apierror" data-bs-toggle="modal" data-bs-target="#apierrorDialog"></button>
+<div class="modal" id="apierrorDialog" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;color: rgb(248, 89, 89);font-weight: bold;">Warning!!!</div>
+      <div class="modal-body">
+        <h3>
+          <p style="font-family: 'Times New Roman', Times, serif;font-weight:550;font-size: large;color: rgb(0, 0, 0);">
+            {{this.apiErrorMsg}}</p><br>
+          <h2>Please Contact Admin...</h2>
+        </h3>
+      </div>
+      <div class="modal-footer">
+        <button mat-raised-button class="button" type="button" color="primary" data-bs-dismiss="modal">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
 

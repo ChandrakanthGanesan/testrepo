@@ -183,8 +183,16 @@ mat-card {
 p{
   font-family: 'Times New Roman', Times, serif;
   font-weight: 550;
-  color: rgb(12, 12, 12);
+  color: #ff0000;
   font-size: medium;
+
+}
+.errorptag{
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: 550;
+  font-size: medium;
+  text-transform: uppercase;
+  color: #ff0000;
 }
 @media only screen and (min-width: 575px) and (max-width: 759px) {
   .content {

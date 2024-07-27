@@ -64,46 +64,84 @@ export class StoreIssueComponent implements OnInit {
     this.GetRefno()
   }
   IssueNopath: string = ''
+  apiErrorMsg: string = ''
   GetIssueNopath() {
     //this.spinnerService.show()
-    this.service.Issuenopath(this.LoactionId).subscribe((data: any) => {
-      //this.spinnerService.hide()
-      const IssuenopathData = data
-      console.log(IssuenopathData, 'IssuenopathData');
-      if (IssuenopathData.length !== 0) {
-        this.IssueNopath = IssuenopathData[0].Prefix + IssuenopathData[0].PrefixSeperator + 'U' + IssuenopathData[0].LocationId + IssuenopathData[0].PrefixSeperator + IssuenopathData[0].YearDisplay + IssuenopathData[0].PrefixSeperator
-        console.log(this.IssueNopath, 'IssueNopath');
-        this.GetIssue()
-      } else {
-        return;
+    this.service.Issuenopath(this.LoactionId).subscribe({
+      next: (data: any) => {
+        //this.spinnerService.hide()
+        const IssuenopathData = data
+        console.log(IssuenopathData, 'IssuenopathData');
+        if (IssuenopathData[0].status === 'N') {
+          this.apiErrorMsg = IssuenopathData[0].Msg
+          const Error = document.getElementById('apierror') as HTMLInputElement
+          Error.click()
+          return
+        }
+        if (IssuenopathData.length !== 0) {
+          this.IssueNopath = IssuenopathData[0].Prefix + IssuenopathData[0].PrefixSeperator + 'U' + IssuenopathData[0].LocationId + IssuenopathData[0].PrefixSeperator + IssuenopathData[0].YearDisplay + IssuenopathData[0].PrefixSeperator
+          console.log(this.IssueNopath, 'IssueNopath');
+          this.GetIssue()
+        } else {
+          return;
+        }
+      },
+      error: (error: any) => {
+        this.apiErrorMsg = error;
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
       }
     })
   }
   StoreIssuePath: string = ''
   GetIssue() {
-    //this.spinnerService.show()
-    this.service.StoteissueNo(this.IssueNopath).subscribe((data: any) => {
-      //this.spinnerService.hide()
-      const IssueNo = data
-      console.log(IssueNo, 'IssueNo');
-      if (IssueNo.length != 0) {
-        const trno = this.IssueNopath + IssueNo[0].trno
-        this.StoreIssuePath = this.IssueNopath + IssueNo[0].trno
-        this.StoreIssueForm.controls['IssueNo'].setValue(trno)
-        this.GetDepartment()
-        // console.log(     this.StoreIssueForm.controls['IssueNo'].setValue(IssueNo[0].trno),'IssueNo');
-      } else {
-        return;
+    this.service.StoteissueNo(this.IssueNopath).subscribe({
+      next: (data: any) => {
+        const IssueNo = data
+        console.log(IssueNo, 'IssueNo');
+        if (IssueNo[0].status === 'N') {
+          this.apiErrorMsg = IssueNo[0].Msg
+          const Error = document.getElementById('apierror') as HTMLInputElement
+          Error.click()
+          return
+        }
+        if (IssueNo.length != 0) {
+          const trno = this.IssueNopath + IssueNo[0].trno
+          this.StoreIssuePath = this.IssueNopath + IssueNo[0].trno
+          this.StoreIssueForm.controls['IssueNo'].setValue(trno)
+          this.GetDepartment()
+        } else {
+          return;
+        }
+      },
+      error: (error: any) => {
+        this.apiErrorMsg = error;
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
       }
     })
   }
   Depatment: any[] = new Array()
   GetDepartment() {
-    //this.spinnerService.show()
-    this.service.Department(this.LoactionId).subscribe((data: any) => {
-      //this.spinnerService.hide()
-      this.Depatment = data
-      console.log(this.Depatment, 'Dept');
+    this.service.Department(this.LoactionId).subscribe({
+      next: (data: any) => {
+        this.Depatment = data
+        console.log(this.Depatment, 'Dept');
+        if (this.Depatment[0].status === 'N') {
+          this.apiErrorMsg = this.Depatment[0].Msg
+          const Error = document.getElementById('apierror') as HTMLInputElement
+          Error.click()
+          return
+        }
+      },
+      error: (error: any) => {
+        this.apiErrorMsg = error;
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
+      }
     })
 
   }
@@ -121,12 +159,23 @@ export class StoreIssueComponent implements OnInit {
 
   RefnoData: any[] = new Array()
   GetRefno() {
-    //this.spinnerService.show()
-    this.service.Refno(this.LoactionId, this.Issuedate, this.fromdt, this.Todate, this.Deptid).subscribe((data: any) => {
-      //this.spinnerService.hide()
-      this.RefnoData = data
-      console.log(this.RefnoData, 'Refno');
-
+    this.service.Refno(this.LoactionId, this.Issuedate, this.fromdt, this.Todate, this.Deptid).subscribe({
+      next: (data: any) => {
+        this.RefnoData = data
+        console.log(this.RefnoData, 'Refno');
+        if (this.RefnoData[0].status === 'N') {
+          this.apiErrorMsg = this.RefnoData[0].Msg
+          const Error = document.getElementById('apierror') as HTMLInputElement
+          Error.click()
+          return
+        }
+      },
+      error: (error: any) => {
+        this.apiErrorMsg = error;
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
+      }
     })
   }
   RefSrno: string = ''
@@ -147,12 +196,15 @@ export class StoreIssueComponent implements OnInit {
   }
   warehousedata: any[] = new Array()
   GetWarehouse() {
-    //this.spinnerService.show()
     this.service.Warehouse(this.LoactionId).subscribe((data: any) => {
-      //this.spinnerService.hide()
       this.warehousedata = data
       console.log(this.warehousedata, 'this.warehousedata');
-
+      if (this.warehousedata[0].status === 'N') {
+        this.apiErrorMsg = this.warehousedata[0].Msg
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
+      }
     })
   }
   warehouseno: number = -0
@@ -167,22 +219,36 @@ export class StoreIssueComponent implements OnInit {
   Rawmateriladata: any[] = new Array()
   RawmaterialValid: any[] = new Array()
   GetMaterial() {
-    this.service.Rawmaterial(this.LoactionId, this.Deptid, this.fromdt, this.Todate, this.RefSrno).subscribe((data: any) => {
-      this.Rawmateriladata = data
-      console.log(this.Rawmateriladata, 'material');
-      if (this.Rawmateriladata.length == 0) {
-        this.toastr.warning('No Records To Found.Please Fill Correct Detalis');
-        return
-      } else {
-        this.RawmaterialValid = []
-        for (let i = 0; i < this.Rawmateriladata.length; i++) {
-          this.MaterialAddbtn = false
-          this.MaterilaDetalis = []
-          this.RawmaterialValid.push({
-            RawMatName: this.Rawmateriladata[i].RawMatName,
-            RawMatID: this.Rawmateriladata[i].RawMatID
-          })
+    this.service.Rawmaterial(this.LoactionId, this.Deptid, this.fromdt, this.Todate, this.RefSrno).subscribe({
+      next: (data: any) => {
+        this.Rawmateriladata = data
+        if (this.Rawmateriladata[0].status === 'N') {
+          this.apiErrorMsg = this.Rawmateriladata[0].Msg
+          const Error = document.getElementById('apierror') as HTMLInputElement
+          Error.click()
+          return
         }
+        console.log(this.Rawmateriladata, 'material');
+        if (this.Rawmateriladata.length == 0) {
+          this.toastr.warning('No Records To Found.Please Fill Correct Detalis');
+          return
+        } else {
+          this.RawmaterialValid = []
+          for (let i = 0; i < this.Rawmateriladata.length; i++) {
+            this.MaterialAddbtn = false
+            this.MaterilaDetalis = []
+            this.RawmaterialValid.push({
+              RawMatName: this.Rawmateriladata[i].RawMatName,
+              RawMatID: this.Rawmateriladata[i].RawMatID
+            })
+          }
+        }
+      },
+      error: (error: any) => {
+        this.apiErrorMsg = error;
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
       }
     })
   }
@@ -194,7 +260,6 @@ export class StoreIssueComponent implements OnInit {
     const Rawmaterial = this.Rawmateriladata.forEach((data: any) => {
       if (this.Rawmatid === data.rawmatid) {
         this.RawMaterialName = data.rawmatname
-
       }
       console.log(this.RawMaterialName, 'MaterialName');
     })
@@ -236,92 +301,111 @@ export class StoreIssueComponent implements OnInit {
       // debugger
       if (this.Rawmatid !== 0) {
         this.spinnerService.show()
-
         this.service.IssueMaterialViewbtn(this.LoactionId, this.Issuedate, this.warehouseno, this.Deptid, this.srno,
-          this.Rawmatid, this.fromdt, this.Todate).subscribe((data: any) => {
-            this.spinnerService.hide()
-            this.Tab1 = 0
-            this.MaterialRealase = data
-            if (this.MaterialRealase.length !== 0) {
-              this.PendingQty = this.MaterialRealase[0].srqty - this.MaterialRealase[0].minqty
-              this.deptname = this.MaterialRealase[0].deptname
-              console.log(this.Rawmatid);
-              this.spinnerService.show()
-              this.service.IndentDet(this.LoactionId, this.Issuedate, this.Rawmatid, this.Deptid).subscribe((res: any) => {
-                this.spinnerService.hide()
-                this.IndentDetalisData = res
-                console.log(this.MaterialRealase, 'MaterialRequest To Realese');
-                console.log(this.IndentDetalisData, 'IndentDetalisData');
-                if (this.IndentDetalisData.length !== 0) {
-                  this.StockAvl = this.IndentDetalisData[0].Store_Stk_Qty
-                  if (this.IndentDetalisData[0].Store_Stk_Qty === 0) {
-                    for (let i = 0; i < this.MaterialRealase.length; i++) {
-                      this.NostockMaterial.push({
-                        gStrMatDisp: this.MaterialRealase[i].gStrMatDisp,
-                        RawMatID: this.MaterialRealase[i].RawMatID,
-                      })
-                      console.log(this.NostockMaterial, 'NOSTOCK ARRAY');
-                    }
-                    // this.Error = 5
-                    this.ErrorMsg = ''
-                    this.ErrorMsg = 'Stock Is Not Available For This Material...'
-                    const stock = document.getElementById('Error') as HTMLInputElement
-                    stock.click()
+          this.Rawmatid, this.fromdt, this.Todate).subscribe({
+            next: (data: any) => {
+              this.spinnerService.hide()
+              this.MaterialRealase = data
+              if (this.MaterialRealase[0].status === 'N') {
+                this.apiErrorMsg = this.MaterialRealase[0].Msg
+                const Error = document.getElementById('apierror') as HTMLInputElement
+                Error.click()
+                return
+              }
+              this.Tab1 = 0
+              if (this.MaterialRealase.length !== 0) {
+                this.PendingQty = this.MaterialRealase[0].srqty - this.MaterialRealase[0].minqty
+                this.deptname = this.MaterialRealase[0].deptname
+                console.log(this.Rawmatid);
+                this.spinnerService.show()
+                this.service.IndentDet(this.LoactionId, this.Issuedate, this.Rawmatid, this.Deptid).subscribe((res: any) => {
+                  this.spinnerService.hide()
+                  this.IndentDetalisData = res
+                  if (this.IndentDetalisData[0].status === 'N') {
+                    this.apiErrorMsg = this.IndentDetalisData[0].Msg
+                    const Error = document.getElementById('apierror') as HTMLInputElement
+                    Error.click()
                     return
-                  } else {
-                    this.Viewmat = true
-                    console.log(this.StockAvl);
-                    for (let i = 0; i < this.MaterialRealase.length; i++) {
-                      console.log(this.MaterialRealase[i].SRId, 'srid');
-                      console.log(this.MaterialRealase[i].RawMatID, '22');
-                      this.StockMinimumcheck = this.StockAvl < this.MaterialRealase[0].min_level
-                      this.MaterilaDetalis.push({
-                        Sr_Ref_No: this.MaterialRealase[i].Sr_Ref_No,
-                        SRDate: this.MaterialRealase[i].SRDate,
-                        gStrMatDisp: this.MaterialRealase[i].gStrMatDisp,
-                        RawMatID: this.MaterialRealase[i].RawMatID,
-                        SRId: this.MaterialRealase[i].SRId,
-                        SRUom: this.MaterialRealase[i].SRUom,
-                        srqty: this.MaterialRealase[i].srqty,
-                        loc_id: this.MaterialRealase[i].loc_id,
-                        Pendingqty: this.MaterialRealase[i].srqty - this.MaterialRealase[i].minqty,
-                        stock: this.StockAvl,
-                        min_level: this.MaterialRealase[i].min_level,
-                        max_level: this.MaterialRealase[i].max_level,
-                        reorder_level: this.MaterialRealase[i].reorder_level,
-                        deptname: this.MaterialRealase[i].deptname,
-                        popend: this.MaterialRealase[i].popend,
-                        color: this.StockMinimumcheck
-                      })
-                      this.MaterialAddbtn = true
-                      this.StoreIssueForm.disable()
-                      console.log(this.RawmaterialValid.length === this.MaterilaDetalis.length);
-                      this.Rawmateriladata.length === this.MaterilaDetalis.length
-                      if (this.Rawmateriladata.length === this.MaterilaDetalis.length) {
-                        this.viewbtn = false
-                      } else {
-                        this.viewbtn = true
-                      }
-                      console.log(this.MaterilaDetalis, 'this.MaterilaDetalis');
-                    }
-                    if (this.Rawmatid === parseInt(this.MaterialRealase[0].RawMatID)) {
-                      const RawMaterialiD = [parseInt(this.MaterialRealase[0].RawMatID)]
-                      this.RawmaterialValid = this.RawmaterialValid.filter(item => !RawMaterialiD.includes(item.RawMatID));
-                      console.log(this.RawmaterialValid);
-                      // this.Rawmatid=0
-                      this.StoreIssueForm.controls['material'].setValue(this.RawmaterialValid)
-                    }
                   }
+                  console.log(this.MaterialRealase, 'MaterialRequest To Realese');
+                  console.log(this.IndentDetalisData, 'IndentDetalisData');
+                  if (this.IndentDetalisData.length !== 0) {
+                    this.StockAvl = this.IndentDetalisData[0].Store_Stk_Qty
+                    if (this.IndentDetalisData[0].Store_Stk_Qty === 0) {
+                      for (let i = 0; i < this.MaterialRealase.length; i++) {
+                        this.NostockMaterial.push({
+                          gStrMatDisp: this.MaterialRealase[i].gStrMatDisp,
+                          RawMatID: this.MaterialRealase[i].RawMatID,
+                        })
+                        console.log(this.NostockMaterial, 'NOSTOCK ARRAY');
+                      }
+                      // this.Error = 5
+                      this.ErrorMsg = ''
+                      this.ErrorMsg = 'Stock Is Not Available For This Material...'
+                      const stock = document.getElementById('Error') as HTMLInputElement
+                      stock.click()
+                      return
+                    } else {
+                      this.Viewmat = true
+                      console.log(this.StockAvl);
+                      for (let i = 0; i < this.MaterialRealase.length; i++) {
+                        console.log(this.MaterialRealase[i].SRId, 'srid');
+                        console.log(this.MaterialRealase[i].RawMatID, '22');
+                        this.StockMinimumcheck = this.StockAvl < this.MaterialRealase[0].min_level
+                        this.MaterilaDetalis.push({
+                          Sr_Ref_No: this.MaterialRealase[i].Sr_Ref_No,
+                          SRDate: this.MaterialRealase[i].SRDate,
+                          gStrMatDisp: this.MaterialRealase[i].gStrMatDisp,
+                          RawMatID: this.MaterialRealase[i].RawMatID,
+                          SRId: this.MaterialRealase[i].SRId,
+                          SRUom: this.MaterialRealase[i].SRUom,
+                          srqty: this.MaterialRealase[i].srqty,
+                          loc_id: this.MaterialRealase[i].loc_id,
+                          Pendingqty: this.MaterialRealase[i].srqty - this.MaterialRealase[i].minqty,
+                          stock: this.StockAvl,
+                          min_level: this.MaterialRealase[i].min_level,
+                          max_level: this.MaterialRealase[i].max_level,
+                          reorder_level: this.MaterialRealase[i].reorder_level,
+                          deptname: this.MaterialRealase[i].deptname,
+                          popend: this.MaterialRealase[i].popend,
+                          color: this.StockMinimumcheck
+                        })
+                        this.MaterialAddbtn = true
+                        this.StoreIssueForm.disable()
+                        console.log(this.RawmaterialValid.length === this.MaterilaDetalis.length);
+                        this.Rawmateriladata.length === this.MaterilaDetalis.length
+                        if (this.Rawmateriladata.length === this.MaterilaDetalis.length) {
+                          this.viewbtn = false
+                        } else {
+                          this.viewbtn = true
+                        }
+                        console.log(this.MaterilaDetalis, 'this.MaterilaDetalis');
+                      }
+                      if (this.Rawmatid === parseInt(this.MaterialRealase[0].RawMatID)) {
+                        const RawMaterialiD = [parseInt(this.MaterialRealase[0].RawMatID)]
+                        this.RawmaterialValid = this.RawmaterialValid.filter(item => !RawMaterialiD.includes(item.RawMatID));
+                        console.log(this.RawmaterialValid);
+                        // this.Rawmatid=0
+                        this.StoreIssueForm.controls['material'].setValue(this.RawmaterialValid)
+                      }
+                    }
 
-                }
-              })
-            }
-            else {
-              this.ErrorMsg = ''
-              this.ErrorMsg = 'No Records To Found...'
-              const view = document.getElementById('Error') as HTMLInputElement
-              view.click()
-              return;
+                  }
+                })
+              }
+              else {
+                this.ErrorMsg = ''
+                this.ErrorMsg = 'No Records To Found...'
+                const view = document.getElementById('Error') as HTMLInputElement
+                view.click()
+                return;
+              }
+            },
+            error: (error: any) => {
+              this.apiErrorMsg = error;
+              const Error = document.getElementById('apierror') as HTMLInputElement
+              Error.click()
+              return
             }
           })
       } else {
@@ -335,22 +419,22 @@ export class StoreIssueComponent implements OnInit {
     }
 
   }
-  Clear(){
-    this.Viewmat=false
-    this.viewbtn=false
+  Clear() {
+    this.Viewmat = false
+    this.viewbtn = false
     this.StoreIssueForm.controls['Department'].setValue('')
     this.StoreIssueForm.controls['Refno'].setValue('')
     this.StoreIssueForm.controls['material'].setValue('')
     this.StoreIssueForm.controls['Warehouse'].setValue('')
     this.StoreIssueForm.enable()
-    this.MaterilaDetalis=[]
-    this.Issuedetalisarr=[]
-    this.BatchData=[]
-    this.Batcharr=[]
-    this.NostockMaterial=[]
-    this.RawmaterialValid=[]
-    this.Batchwise=[]
-    this.ReleaseAllMaterial=[]
+    this.MaterilaDetalis = []
+    this.Issuedetalisarr = []
+    this.BatchData = []
+    this.Batcharr = []
+    this.NostockMaterial = []
+    this.RawmaterialValid = []
+    this.Batchwise = []
+    this.ReleaseAllMaterial = []
   }
   Tab1 = 0;
   tablabelname: string = '';
@@ -426,188 +510,235 @@ export class StoreIssueComponent implements OnInit {
   // valid: number = 0
   GrnQty: number = 0
   Release() {
-
-
+    debugger
     if (this.MaterilaDetalis[this.issuedetalisIndex].Issueqtymodal > 0) {
       this.Tab1 = 1
-      this.service.GmRefNo(this.warehouseno, this.Rawmatid, this.LoactionId).subscribe((data: any) => {
-        this.Batchwise = data
-        console.log(this.Batchwise, 'Batchwise');
-        if (this.warehouseno !== 32) {
-          if (this.Batchwise.length > 0) {
-            this.Releasebtndisable[this.issuedetalisIndex] = true
-            debugger
-            for (let j = 0; j < this.MaterilaDetalis.length; j++) {
-              for (let i = 0; i < this.Batchwise.length; i++) {
-                if (this.Batchwise[i].stocknew > 0) {
-                  if (this.issueQtyvalue > 0) {
-                    if (this.issueQtyvalue <= this.Batchwise[i].stocknew) {
-                      console.log(this.Batchwise[i].stocknew);
-                      this.GrnQty = Math.round(this.Batchwise[i].stocknew)
-                      this.Issuedetalisarr.push({
-                        Sr_Ref_No: this.Batchwise[i].Grn_Ref_no,
-                        SRDate: this.Batchwise[i].GrnDate,
-                        Material: this.Batchwise[i].RawMatName,
-                        MaterialID: this.Batchwise[i].Rawmatid,
-                        UOM: this.Batchwise[i].PUom,
-                        SrQty: this.PendingQty,
-                        IssueQty: this.issueQtyvalue,
-                        GrnRefNo: this.Batchwise[i].Grn_Ref_no,
-                        GrnQty: this.GrnQty,
-                        DeptName: this.deptname,
-                        Grnid: this.Batchwise[i].GRNID,
-                        GRnNO: this.Batchwise[i].GrnNo,
-                        ExRate: this.Batchwise[i].ExRate,
-                        StoreEntryId: this.Batchwise[i].StoreEntryId,
-                        Srid: this.MaterilaDetalis[j].SRId,
-                        Uom: this.MaterilaDetalis[j].SRUom
-                      })
-                      console.log(this.Issuedetalisarr, 'Issuedetalisarr-1');
-                      this.service.Batch(parseInt(this.Batchwise[i].GRNID)).subscribe((data: any) => {
-                        this.BatchData = data
-                        console.log(this.BatchData, 'this.BatchData');
-                        // debugger
-                        if (this.BatchData.length !== 0) {
-                          for (let j = 0; j < this.BatchData.length; j++) {
-                            this.balqty = this.BatchData[j].balqty
-                            if (this.BatchData[j].balqty > 0) {
-                              this.Batcharr.push({
-                                Grnno: this.Issuedetalisarr[i].GRnNO,
-                                GrnId: this.Issuedetalisarr[i].Grnid,
-                                GrnRefNo: this.BatchData[j].grn_ref_no,
-                                GrnDate: this.BatchData[j].grndate,
-                                Material: this.BatchData[j].rawmatname,
-                                MaterialID: this.BatchData[j].rawmatid,
-                                BatchNo: this.BatchData[j].batchno,
-                                ExpiryDate: this.BatchData[j].Batchdate,
-                                BatchQty: this.BatchData[j].batchqty,
-                                BalanceQty: this.BatchData[j].balqty,
-                                BatchId: this.BatchData[j].batch_id,
-                                IssueQty: this.Issuedetalisarr[i].IssueQty,
-                              })
-                              console.log(this.Batcharr, 'Batcharr tabel-1');
-                              this.ExpiryDateVailadCheck = this.Batcharr[j].ExpiryDate < this.Issuedate
-                              if (this.ExpiryDateVailadCheck === true) {
-                                console.log('yes');
-                                // this.Error = 4
-                                this.ErrorMsg = ''
-                                this.ErrorMsg = 'Already Expired this material. Please get the revalidation certificate otherwise you cannot issue'
-                                const Batchdate = document.getElementById('Error') as HTMLInputElement
-                                Batchdate.click()
-                                return
-                              } else {
-                                this.issueQtyvalue = 0
-                              }
-                              if (this.issueQtyvalue < this.BatchData[j].balqty) {
-                                this.issueQtyvalue = 0
-                              } else {
-                                this.issueQtyvalue = this.issueQtyvalue - this.BatchData[j].balqty
+      this.service.GmRefNo(this.warehouseno, this.Rawmatid, this.LoactionId).subscribe({
+        next: (data: any) => {
+          this.Batchwise = data
+          if (this.Batchwise[0].status === 'N') {
+            this.apiErrorMsg = this.Batchwise[0].Msg
+            const Error = document.getElementById('apierror') as HTMLInputElement
+            Error.click()
+            return
+          }
+          console.log(this.Batchwise, 'Batchwise');
+          if (this.warehouseno !== 32) {
+            if (this.Batchwise.length > 0) {
+              this.Releasebtndisable[this.issuedetalisIndex] = true
+              debugger
+              for (let j = 0; j < this.MaterilaDetalis.length; j++) {
+                for (let i = 0; i < this.Batchwise.length; i++) {
+                  if (this.Batchwise[i].stocknew > 0) {
+                    if (this.issueQtyvalue > 0) {
+                      if (this.issueQtyvalue <= this.Batchwise[i].stocknew) {
+                        console.log(this.Batchwise[i].stocknew);
+                        this.GrnQty = Math.round(this.Batchwise[i].stocknew)
+                        this.Issuedetalisarr.push({
+                          Sr_Ref_No: this.MaterilaDetalis[i].Sr_Ref_No,
+                          SRDate: this.Batchwise[i].GrnDate,
+                          Material: this.Batchwise[i].RawMatName,
+                          MaterialID: this.Batchwise[i].Rawmatid,
+                          UOM: this.Batchwise[i].PUom,
+                          SrQty: this.PendingQty,
+                          IssueQty: this.issueQtyvalue.toFixed(2),
+                          GrnRefNo: this.Batchwise[i].Grn_Ref_no,
+                          GrnQty: this.GrnQty.toFixed(2),
+                          DeptName: this.deptname,
+                          Grnid: this.Batchwise[i].GRNID,
+                          GRnNO: this.Batchwise[i].GrnNo,
+                          ExRate: this.Batchwise[i].ExRate,
+                          StoreEntryId: this.Batchwise[i].StoreEntryId,
+                          Srid: this.MaterilaDetalis[j].SRId,
+                          Uom: this.MaterilaDetalis[j].SRUom
+                        })
+                        console.log(this.Issuedetalisarr, 'Issuedetalisarr-1');
+                        this.service.Batch(parseInt(this.Batchwise[i].GRNID)).subscribe({
+                          next: (data: any) => {
+                            this.BatchData = data
+                            if (this.BatchData[0].status === 'N') {
+                              this.apiErrorMsg = this.BatchData[0].Msg
+                              const Error = document.getElementById('apierror') as HTMLInputElement
+                              Error.click()
+                              return
+                            }
+                            console.log(this.BatchData, 'this.BatchData');
+                            if (this.BatchData.length !== 0) {
+                              for (let k = 0; k < this.BatchData.length; k++) {
+                                this.balqty = this.BatchData[k].balqty
+                                if (this.BatchData[k].balqty > 0) {
+                                  this.Issuedetalisarr.forEach((res: any) => {
+                                    if (this.BatchData[k].grnid === res.Grnid) {
+                                      if (res.IssueQty <= this.BatchData[k].balqty) {
+                                        this.issueQtyvalue = res.IssueQty
+                                        console.log(this.issueQtyvalue, 'issueQtyvalue');
+                                      } else {
+                                        this.issueQtyvalue = res.IssueQty - this.BatchData[k].balqty
+                                        console.log(this.issueQtyvalue, 'issueQtyvalue');
+                                      }
+                                    }
+                                  })
+                                  this.Batcharr.push({
+                                    Grnno: this.Issuedetalisarr[i].GRnNO,
+                                    GrnId: this.Issuedetalisarr[i].Grnid,
+                                    GrnRefNo: this.BatchData[k].grn_ref_no,
+                                    GrnDate: this.BatchData[k].grndate,
+                                    Material: this.BatchData[k].rawmatname,
+                                    MaterialID: this.BatchData[k].rawmatid,
+                                    BatchNo: this.BatchData[k].batchno,
+                                    ExpiryDate: this.BatchData[k].Batchdate,
+                                    BatchQty: this.BatchData[k].batchqty,
+                                    BalanceQty: this.BatchData[k].balqty.toFixed(2),
+                                    BatchId: this.BatchData[k].batch_id,
+                                    IssueQty: this.issueQtyvalue.toFixed(2)
+                                  })
+                                  console.log(this.Batcharr, 'Batcharr tabel-1');
+                                  this.ExpiryDateVailadCheck = this.Batcharr[k].ExpiryDate < this.Issuedate
+                                  if (this.ExpiryDateVailadCheck === true) {
+                                    console.log('yes');
+                                    this.ErrorMsg = ''
+                                    this.ErrorMsg = 'Already Expired this material. Please get the revalidation certificate otherwise you cannot issue'
+                                    const Batchdate = document.getElementById('Error') as HTMLInputElement
+                                    Batchdate.click()
+                                    return
+                                  } else {
+                                    this.issueQtyvalue = 0
+                                  }
+                                }
                               }
                             }
+                          },
+                          error: (error: any) => {
+                            this.apiErrorMsg = error;
+                            const Error = document.getElementById('apierror') as HTMLInputElement
+                            Error.click()
+                            return
                           }
+                        })
+                        this.issueQtyvalue = 0
+
+                      } else {
+                        if (this.Batchwise[i].stocknew < this.issueQtyvalue) {
+                          this.issueQtyvalue = this.issueQtyvalue - this.Batchwise[i].stocknew
+                          console.log(this.issueQtyvalue, 'issue', this.GrnQty, 'this.GrnQty');
                         }
-                      })
-                      this.issueQtyvalue = 0
+                        else {
+                          this.issueQtyvalue = this.issueQtyvalue
+                        }
+                        this.Issuedetalisarr.push({
+                          Sr_Ref_No: this.MaterilaDetalis[i].Sr_Ref_No,
+                          SRDate: this.Batchwise[i].GrnDate,
+                          Material: this.Batchwise[i].RawMatName,
+                          MaterialID: this.Batchwise[i].Rawmatid,
+                          UOM: this.Batchwise[i].PUom,
+                          SrQty: this.PendingQty,
+                          IssueQty: this.Batchwise[i].stocknew.toFixed(2),
+                          GrnRefNo: this.Batchwise[i].Grn_Ref_no,
+                          GrnQty: this.Batchwise[i].stocknew.toFixed(2),
+                          DeptName: this.deptname,
+                          Grnid: this.Batchwise[i].GRNID,
+                          GRnNO: this.Batchwise[i].GrnNo,
+                          ExRate: this.Batchwise[i].ExRate,
+                          StoreEntryId: this.Batchwise[i].StoreEntryId,
+                          Srid: this.MaterilaDetalis[j].SRId,
+                          Uom: this.MaterilaDetalis[j].SRUom
+                        })
 
-                    } else {
-                      if (this.Batchwise[i].stocknew < this.issueQtyvalue) {
-                        this.issueQtyvalue = this.issueQtyvalue - this.Batchwise[i].stocknew
-                        console.log(this.issueQtyvalue, 'issue', this.GrnQty, 'this.GrnQty');
-                      }
-                      else {
-                        this.issueQtyvalue = this.issueQtyvalue
-                      }
-                      this.Issuedetalisarr.push({
-                        Sr_Ref_No: this.Batchwise[i].Grn_Ref_no,
-                        SRDate: this.Batchwise[i].GrnDate,
-                        Material: this.Batchwise[i].RawMatName,
-                        MaterialID: this.Batchwise[i].Rawmatid,
-                        UOM: this.Batchwise[i].PUom,
-                        SrQty: this.PendingQty,
-                        IssueQty: this.Batchwise[i].stocknew,
-                        GrnRefNo: this.Batchwise[i].Grn_Ref_no,
-                        GrnQty: this.Batchwise[i].stocknew,
-                        DeptName: this.deptname,
-                        Grnid: this.Batchwise[i].GRNID,
-                        GRnNO: this.Batchwise[i].GrnNo,
-                        ExRate: this.Batchwise[i].ExRate,
-                        StoreEntryId: this.Batchwise[i].StoreEntryId,
-                        Srid: this.MaterilaDetalis[j].SRId,
-                        Uom: this.MaterilaDetalis[j].SRUom
-                      })
-
-                      console.log(this.Issuedetalisarr, 'Issuedetalisarr-2');
-                      this.service.Batch(parseInt(this.Batchwise[i].GRNID)).subscribe((data: any) => {
-                        this.BatchData = data
-                        console.log(this.BatchData, 'this.BatchData');
-                        if (this.BatchData.length !== 0) {
-                          for (let j = 0; j < this.BatchData.length; j++) {
-                            this.balqty = this.BatchData[j].balqty
-                            if (this.BatchData[j].balqty > 0) {
-                              this.Batcharr.push({
-                                Grnno: this.Issuedetalisarr[i].GRnNO,
-                                GrnId: this.Issuedetalisarr[i].Grnid,
-                                GrnRefNo: this.BatchData[j].grn_ref_no,
-                                GrnDate: this.BatchData[j].grndate,
-                                Material: this.BatchData[j].rawmatname,
-                                MaterialID: this.BatchData[j].rawmatid,
-                                BatchNo: this.BatchData[j].batchno,
-                                ExpiryDate: this.BatchData[j].Batchdate,
-                                BatchQty: this.BatchData[j].batchqty,
-                                BalanceQty: this.BatchData[j].balqty,
-                                BatchId: this.BatchData[j].batch_id,
-                                IssueQty: this.Issuedetalisarr[i].IssueQty
-                              })
-                              console.log(this.Batcharr, 'Batcharr tabel-4');
-                              this.ExpiryDateVailadCheck = this.Batcharr[j].ExpiryDate < this.Issuedate
-                              if (this.ExpiryDateVailadCheck === true) {
-                                // this.Error = 4
-                                this.ErrorMsg = ''
-                                this.ErrorMsg = 'Already Expired this material. Please get the revalidation certificate otherwise you cannot issue'
-                                const Batchdate = document.getElementById('Error') as HTMLInputElement
-                                Batchdate.click()
-                                return
-                              } else {
-                                this.issueQtyvalue = 0
-
-                              }
-                              let issueqty = 0
-                              if (issueqty < this.BatchData[j].balqty) {
-                                issueqty = 0
-                              } else {
-                                issueqty = issueqty - this.BatchData[j].balqty
+                        console.log(this.Issuedetalisarr, 'Issuedetalisarr-2');
+                        this.service.Batch(parseInt(this.Batchwise[i].GRNID)).subscribe({
+                          next: (data: any) => {
+                            this.BatchData = data
+                            if (this.BatchData[0].status === 'N') {
+                              this.apiErrorMsg = this.BatchData[0].Msg
+                              const Error = document.getElementById('apierror') as HTMLInputElement
+                              Error.click()
+                              return
+                            }
+                            console.log(this.BatchData, 'this.BatchData');
+                            if (this.BatchData.length !== 0) {
+                              for (let k = 0; k < this.BatchData.length; k++) {
+                                this.balqty = this.BatchData[k].balqty
+                                if (this.BatchData[k].balqty > 0) {
+                                  debugger
+                                  this.Issuedetalisarr.forEach((res: any) => {
+                                    if (this.BatchData[k].grnid === res.Grnid) {
+                                      if (res.IssueQty <= this.BatchData[k].balqty) {
+                                        this.issueQtyvalue = res.IssueQty
+                                        console.log(this.issueQtyvalue, 'issueQtyvalue');
+                                      } else {
+                                        this.issueQtyvalue = res.IssueQty - this.BatchData[k].balqty
+                                        console.log(this.issueQtyvalue, 'issueQtyvalue');
+                                      }
+                                    }
+                                  })
+                                  this.Batcharr.push({
+                                    Grnno: this.Issuedetalisarr[i].GRnNO,
+                                    GrnId: this.Issuedetalisarr[i].Grnid,
+                                    GrnRefNo: this.BatchData[k].grn_ref_no,
+                                    GrnDate: this.BatchData[k].grndate,
+                                    Material: this.BatchData[k].rawmatname,
+                                    MaterialID: this.BatchData[k].rawmatid,
+                                    BatchNo: this.BatchData[k].batchno,
+                                    ExpiryDate: this.BatchData[k].Batchdate,
+                                    BatchQty: this.BatchData[k].batchqty,
+                                    BalanceQty: this.BatchData[k].balqty.toFixed(2),
+                                    BatchId: this.BatchData[k].batch_id,
+                                    IssueQty: this.issueQtyvalue.toFixed(2)
+                                  })
+                                  console.log(this.Batcharr, 'Batcharr tabel-4');
+                                  this.ExpiryDateVailadCheck = this.Batcharr[k].ExpiryDate < this.Issuedate
+                                  if (this.ExpiryDateVailadCheck === true) {
+                                    this.ErrorMsg = ''
+                                    this.ErrorMsg = 'Already Expired this material. Please get the revalidation certificate otherwise you cannot issue'
+                                    const Batchdate = document.getElementById('Error') as HTMLInputElement
+                                    Batchdate.click()
+                                    return
+                                  } else {
+                                    this.issueQtyvalue = 0
+                                  }
+                                }
                               }
                             }
+                          },
+                          error: (error: any) => {
+                            this.apiErrorMsg = error;
+                            const Error = document.getElementById('apierror') as HTMLInputElement
+                            Error.click()
+                            return
                           }
-                        }
-                      })
+                        })
+                      }
                     }
                   }
                 }
               }
+              this.Rawmatid = 0
+              this.MaterialAddbtn = false
+              this.MaterialAllReleasebtn = true
+              this.StoreIssueForm.controls['material'].enable()
+              if (this.MaterilaDetalis.length !== 0) {
+                this.savebtn = true
+              }
             }
-            this.Rawmatid = 0
-            //
-            this.MaterialAddbtn = false
-            this.MaterialAllReleasebtn = true
-            this.StoreIssueForm.controls['material'].enable()
-            //
+            else {
+              this.Tab1 = 0
+              this.ErrorMsg = ''
+              this.ErrorMsg = 'No Records Found In BatchWise Please Contact Admin...'
+              this.MaterialAddbtn = false
+              this.StoreIssueForm.controls['material'].enable()
+              const Error = document.getElementById('Error') as HTMLInputElement
+              Error.click()
+              return;
+            }
+          } else {
 
-            if (this.MaterilaDetalis.length !== 0) {
-              this.savebtn = true
-            }
           }
-          else {
-            this.Tab1 = 0
-            // this.Error = 7
-            this.ErrorMsg = ''
-            this.ErrorMsg = 'No Records Found In BatchWise Please Contact Admin...'
-            this.MaterialAddbtn = false
-            this.StoreIssueForm.controls['material'].enable()
-            const Error = document.getElementById('Error') as HTMLInputElement
-            Error.click()
-            return;
-          }
+        },
+        error: (error: any) => {
+          this.apiErrorMsg = error;
+          const Error = document.getElementById('apierror') as HTMLInputElement
+          Error.click()
+          return
         }
       })
     } else {
@@ -627,7 +758,7 @@ export class StoreIssueComponent implements OnInit {
   MaterialAddbtn: boolean = true
   savebtn: boolean = false
   MaterialAllReleasebtn: boolean = true
-  Issueqtymodaldisable =[false,false]
+  Issueqtymodaldisable = [false, false]
   empty() {
     if (this.MaterilaDetalis.length > 0) {
       this.MaterilaDetalis[this.issuedetalisIndex].Issueqtymodal = ''
@@ -640,9 +771,12 @@ export class StoreIssueComponent implements OnInit {
     })
     console.log(this.RawmaterialValid);
     this.MaterilaDetalis.splice(Index, 1);
+    this.Issuedetalisarr.splice(Index, 1);
+    this.Batcharr.splice(Index, 1);
     this.StoreIssueForm.controls['material'].enable()
-    this.Releasebtndisable[Index] = true
+    this.Releasebtndisable[Index] = false
     this.MaterialAddbtn = false
+    this.Issueqtymodaldisable[Index] = false
     if (this.Rawmateriladata.length === this.ReleaseAllMaterial.length) {
       this.MaterialAddbtn = true
       this.savebtn = true
@@ -663,6 +797,7 @@ export class StoreIssueComponent implements OnInit {
     this.Issuedetalisarr.splice(Index, 1);
     this.Batcharr.splice(Index, 1);
     this.Releasebtndisable[Index] = false
+    this.Issueqtymodaldisable[Index] = false
     this.StoreIssueForm.controls['material'].enable()
     if (this.Rawmateriladata.length === this.ReleaseAllMaterial.length) {
       // this.MaterialAllReleasebtn = true
@@ -684,10 +819,6 @@ export class StoreIssueComponent implements OnInit {
   ErrorMsg: string = ''
   releasebtn: any
   Savevaildation() {
-    debugger
-
-    console.log(this.issuedetalisIndex);
-
     if (this.MaterilaDetalis[this.issuedetalisIndex].Issueqtymodal === '' || this.MaterilaDetalis[this.issuedetalisIndex].Issueqtymodal === 0) {
       this.ErrorMsg = ''
       this.ErrorMsg = 'Please Enter Issue Quantity'
@@ -710,8 +841,6 @@ export class StoreIssueComponent implements OnInit {
   Sts: string = ''
   Msg: string = ''
   GetSave() {
-    debugger
-
     this.GetIssue()
     this.StoreIssue_invent_batchqtyissue = []
     this.StoreIssue_Invent_MinMaterial = []
@@ -734,8 +863,8 @@ export class StoreIssueComponent implements OnInit {
         WarehouseLocationId: this.warehouseno,
         CurrencyId: 1,
         Exrate: this.Issuedetalisarr[i].ExRate,
-        LocationId:this.LoactionId,
-        StrIssRef_no:this.StoreIssuePath
+        LocationId: this.LoactionId,
+        StrIssRef_no: this.StoreIssuePath
       })
     }
     console.log(this.StoreIssue_Invent_MinMaterial, '1');
@@ -780,18 +909,26 @@ export class StoreIssueComponent implements OnInit {
       console.log(this.UpdateStoreIssue, 'saveData');
     }
     this.spinnerService.show()
-    this.service.Save(this.UpdateStoreIssue).subscribe((data: any) => {
-      this.spinnerService.hide()
-      this.StoreIssueSave = data
-      console.log(this.StoreIssueSave, 'Save');
-      this.Sts = this.StoreIssueSave[0].status
-      this.Msg = this.StoreIssueSave[0].Msg
-      if (this.Sts === 'Y') {
-        const Save = document.getElementById('Save') as HTMLInputElement
-        Save.click()
-      } else {
-        const Save = document.getElementById('Save') as HTMLInputElement
-        Save.click()
+    this.service.Save(this.UpdateStoreIssue).subscribe({
+      next: (data: any) => {
+        this.spinnerService.hide()
+        this.StoreIssueSave = data
+        console.log(this.StoreIssueSave, 'Save');
+        this.Sts = this.StoreIssueSave[0].status
+        this.Msg = this.StoreIssueSave[0].Msg
+        if (this.Sts === 'Y') {
+          const Save = document.getElementById('Save') as HTMLInputElement
+          Save.click()
+        } else {
+          const Save = document.getElementById('Save') as HTMLInputElement
+          Save.click()
+        }
+      },
+      error: (error: any) => {
+        this.apiErrorMsg = error;
+        const Error = document.getElementById('apierror') as HTMLInputElement
+        Error.click()
+        return
       }
     })
 
@@ -811,7 +948,7 @@ export class StoreIssueComponent implements OnInit {
     this.Viewmat = false
     this.MaterialAddbtn = true
     this.savebtn = false
-    this.MaterilaDetalis=[]
+    this.MaterilaDetalis = []
   }
   ViewMaterilaDetalis: any[] = new Array()
   View(Index: number) {
@@ -828,6 +965,8 @@ export class StoreIssueComponent implements OnInit {
       popend: this.MaterilaDetalis[Index].popend,
     })
     console.log(this.ViewMaterilaDetalis, 'view');
-
+  }
+  Spinnercall() {
+    this.spinnerService.show()
   }
 }
