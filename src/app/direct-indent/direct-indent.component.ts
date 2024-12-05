@@ -158,7 +158,6 @@ export class DirectIndentComponent implements OnInit {
   GetDept() {
     this.DeptData = []
     this.LoactionId = 1
-
     this.service.Department(this.LoactionId, this.Empid).subscribe((data: any) => {
       this.DeptData = data
       console.log(this.DeptData, 'this.DeptData');
@@ -331,7 +330,7 @@ export class DirectIndentComponent implements OnInit {
   }
   searchFn: any;
   customSearchFn(term: string, item: any) {
-    return item.gstrmatdisp.toLowerCase().startsWith(term.toLowerCase())
+    return item.RawmatName.toLowerCase().startsWith(term.toLowerCase())
   }
   RawmaterilData: any[] = new Array()
   GetMaterial() {

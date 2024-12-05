@@ -1,0 +1,77 @@
+<app-navigation></app-navigation>
+<h1>PO Close</h1>
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-4 custom">
+        <label for="" class="form-label">PO Type</label>
+        <select (click)="PoType($event)" class="form-select" [(ngModel)]="type">
+          <option *ngFor="let load of LoadArray" [value]="load.typeid">{{load.typename}}</option>
+        </select>
+      </div>
+      <div class="col-4 custom">
+        <label for="" class="form-label">From Date</label>
+        <input id="from-date" type="date" class="form-control" [value]="today" (change)="frm($event)">
+      </div>
+      <div class="col-4 custom">
+        <label for="" class="form-label">To Date</label>
+        <input type="date" class="form-control" [value]="today" (change)="to($event)">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 custom" id="supplier">
+        <label for="" class="form-label">Supplier</label>
+        <ng-select [items]="SupplierArray" bindLabel="name" bindValue="supid" [(ngModel)]="selectedsupplier"
+          (ngModelChange)="onSupplierChange($event)">
+        </ng-select>
+      </div>
+      <div class="col-6 custom-col">
+        <!-- <button mat-raised-button style="background-color: rgb(88, 88, 163);color: white;" id="button"
+          (click)=" table()">View</button> -->
+        <button mat-raised-button style="margin-left:3px;background-color: green;color: white;" id="button"
+          (click)="  update() ">Update</button>
+        <button mat-raised-button style="margin-left:3px;background-color: orange;color: white;" id="button"
+          (click)="clear()">Clear</button>
+      </div>
+    </div>
+
+    <div class=" mt-3 table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>
+              <!-- <input type="checkbox" class="form-check-input" (change)="toggleSelectAll($event)"
+                [checked]="isAllSelected"> -->
+                
+              Select_All
+            </th>
+            <th>PONO</th>
+            <th>PO_Date</th>
+            <th>Raw_Material</th>
+            <th>Advance</th>
+            <th>PO_Qty</th>
+            <th>Recd_Qty</th>
+            <th>Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let table of TableArray; let i = index">
+            <td style="text-align: center;">
+              <input type="checkbox" [checked]="selectedRows.includes(table)"
+                (change)="toggleRowSelection($event, table)" class="form-check-input">
+            </td>
+            <td style="text-align: center;">{{ table.pono }}</td>
+            <td>{{ (table.podate).split('T')[0] }}</td>
+            <td>{{ table.rawmatname }}</td>
+            <td>0.00</td>
+            <td>{{ table.ord_qty }}</td>
+            <td>{{ table.billqty.toFixed(3) }}</td>
+            <td>
+              <textarea class="form-control" style="resize:none;" [(ngModel)]="table.reason"></textarea>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

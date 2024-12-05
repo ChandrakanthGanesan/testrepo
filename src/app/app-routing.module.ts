@@ -15,9 +15,21 @@ import { AdminComponent } from './admin/admin.component';
 import { MaterialReturnFrmDeptComponent } from './material-Recived-frm-dept/material-return-frm-dept.component';
 import { ReworkissueComponent } from './reworkissue/reworkissue.component';
 import { StorageQtyAllocationComponent } from './storage-qty-allocation/storage-qty-allocation.component';
-import { DashComponent } from './dash/dash.component';
 import { ShelfLifeBatchQtyComponent } from './shelf-life-batch-qty/shelf-life-batch-qty.component';
 import { StoreToStoreMomentComponent } from './store-to-store-moment/store-to-store-moment.component';
+import { StoreissuelogoutComponent } from './storeissuelogout/storeissuelogout.component';
+import { IndentEntryComponent } from './indent-entry/indent-entry.component';
+import { PurchaseMainModuleComponent } from './purchase-main-module/purchase-main-module.component';
+import { NewPurchaseOrderComponent } from './new-purchase-order/new-purchase-order.component';
+import { PoApprovalComponent } from './po-approval/po-approval.component';
+import { PocloseComponent } from './poclose/poclose.component';
+import { RejPOApprovalComponent } from './rej-poapproval/rej-poapproval.component';
+import { CODApproveComponent } from './cod-approve/cod-approve.component';
+import { CapitalporeviewComponent } from './capitalporeview/capitalporeview.component';
+import { Poshortclose2levelComponent } from './poshortclose2level/poshortclose2level.component';
+import { Poshortclose3levelComponent } from './poshortclose3level/poshortclose3level.component';
+import { CreditdaysApprovalComponent } from './creditdays-approval/creditdays-approval.component';
+
 // import { DashboardCommericaComponent } from './dashboard-commerica/dashboard-commerica.component';
 
 const routes: Routes = [
@@ -28,9 +40,9 @@ const routes: Routes = [
   { path: 'demo', component: DemoComponent },
   { path: 'examble', component: ExamblesComponent },
   { path: 'nav', component: NavigationComponent },
-  { path: 'dash', component:DashComponent },
   // ----------------------DashBoard--------------------------
   { path: 'Inventory', component: InventoryMainModuleComponent },
+  { path: 'Purchase', component: PurchaseMainModuleComponent },
 
   // ---------------------Inventory---------------------------
   { path: 'PurchaseReq', component: PurchaseRequestComponent },
@@ -43,6 +55,22 @@ const routes: Routes = [
   { path: 'StorageQtyAlloc', component: StorageQtyAllocationComponent },
   { path: 'Shelflife', component: ShelfLifeBatchQtyComponent },
   { path: 'StoretoStore', component: StoreToStoreMomentComponent },
+  { path: 'Storelogout', component: StoreissuelogoutComponent },
+
+
+  // ---------------------------Inventory End --------------------------
+
+  // ---------------------------Purchase------------------------------
+  { path: 'IndentEntry', component: IndentEntryComponent },
+  { path: 'rejPOApproval', component: RejPOApprovalComponent },
+  { path: 'COD_Approve', component: CODApproveComponent },
+  { path: 'newpurchaseorder', component: NewPurchaseOrderComponent },
+  { path: 'poapproval', component: PoApprovalComponent },
+  { path: 'poclose', component: PocloseComponent },
+  { path: 'capitalporeview', component: CapitalporeviewComponent },
+  { path: 'poshortclose2level', component: Poshortclose2levelComponent },
+  { path: 'poshortclose3level', component: Poshortclose3levelComponent },
+  { path: 'creditdaysapproval', component: CreditdaysApprovalComponent },
   //  ----------->>>>>>>>>>Admin<<<<<<-------------
   { path: 'admin', component: AdminComponent },
 ];

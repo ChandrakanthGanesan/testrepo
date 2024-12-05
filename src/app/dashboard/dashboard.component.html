@@ -4,7 +4,7 @@
       <span class="example-spacer"></span>
       <h1 class="heading">AIVA VENTURES</h1>
       <span class="example-spacer"></span>
-      <button mat-button class="example-icon" aria-label="Example icon-button with share icon" routerLink="/login">
+      <button mat-button class="example-icon" aria-label="Example icon-button with share icon" (click)="Logout()" >
         Logout
       </button>
     </mat-toolbar>
@@ -40,7 +40,7 @@
                 </div>
                 <div class="user-list">
                   <figure>
-                    <a class="linkname" [routerLink]="['/examble']">
+                    <a class="linkname" [routerLink]="['/Purchase']">
                       <img src="assets/purchase.png">
                       <figcaption>Purchase</figcaption>
                     </a>

@@ -1,0 +1,80 @@
+<h1>Credit Days Approval</h1>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <label for="" class="form-label">Approved By</label>
+                <select name="" id=""  (change)="approver($event)" class="form-select">
+                    <option *ngFor="let load of loadArray" [value]="load.empid" >{{load.empname}}</option>
+                </select>
+            </div>
+            <div class="col-6">
+                <button mat-raised-button
+                    style="background-color: grey;color:white;font-family:'Times New Roman', Times, serif;margin-top: 1.8rem;"
+                    (click)="table()">View</button>
+            </div>
+        </div>
+        <div class="table-responsive mt-3">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Approve</th>
+                        <th>Rej</th>
+                        <th>Supplier_Name</th>
+                        <th>Old_Days</th>
+                        <th>New_Days</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let table of tableArray; let i = index">
+                        <td>
+                            <input type="checkbox" class="form-check-input"
+                                [checked]="selectedRowApprove.includes(table)" (change)="ApproveCheck($event, table)" />
+                        </td>
+                        <td>
+                            <input type="checkbox" class="form-check-input" [checked]="selectedRowRej.includes(table)"
+                                (change)="rejectionCheck($event, table)" />
+                        </td>
+                        <td>{{ table.supname }}</td>
+                        <td>{{ table.oldcreditperiod.toFixed(2) }}</td>
+                        <td>{{ table.newcreditperiod.toFixed(2) }}</td>
+                        <td>{{ table.reason }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-12 text-right">
+                <button mat-raised-button
+                    style="background-color: rgb(86, 190, 86);font-family: 'Times New Roman', Times, serif;color: white;"
+                    (click)=" update()">Approve</button>
+                <button mat-raised-button
+                    style="background-color: red;font-family: 'Times New Roman', Times, serif;margin-left: 3px;color: white;">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--  -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to change your selection?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                    (click)="cancelChange()">No</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                    (click)="confirmChange()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>

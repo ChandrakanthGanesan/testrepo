@@ -3,10 +3,26 @@
     <span class="visually-hidden">Loading...</span>
   </div>
 </ngx-spinner>
-<app-navigation></app-navigation>
+<mat-sidenav-container class="sidenav-container ">
+  <mat-sidenav-content >
+    <mat-toolbar  class=" navbar  navbar-light bg-primary" >
+      <button mat-button class="Tool btn"  (click)="back()">Back
+      </button>
+      <button mat-button class="Tool"  (click)="home()">Home </button>
+      <span class="example-spacer"></span>
+      <h1 class="heading">AIVA VENTURES</h1>
+      <span class="example-spacer"></span>
+      <button mat-button class="example-icon btn" aria-label="Example icon-button with share icon" (click)="logout()" >
+        Logout
+      </button>
+    </mat-toolbar>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
 <mat-card-header class="justify-content-center mt-1">
   <mat-card-title class="title" style="text-transform: uppercase;font-weight: 600;">Store Issue</mat-card-title>
 </mat-card-header>
+
 <div class="main content mt-3">
   <mat-card>
     <mat-card-content>
@@ -31,10 +47,10 @@
               <label for="exampleFormControlInput3" class="form-label">To Date <span>*</span> </label>
               <input type="date" class="form-control" [value]="Todate" (change)="TodateEvent($event)" readonly>
             </div>
-            <div class="col-6 col-md-6">
+            <div class="col-sm-6 ">
               <label for="exampleFormControlInput3" class="form-label">Department <span>*</span> </label>
-              <ng-select class="form-control" formControlName='Department' (change)="DeptEvent($event)"
-                [ngClass]="{ 'is-invalid':viewbtn && view['Department'].errors}">
+              <ng-select class="form-control" formControlName='Department' (click)="GetDepartment()"
+                (change)="DeptEvent($event)" [ngClass]="{ 'is-invalid':viewbtn && view['Department'].errors}">
                 <ng-option value="" disabled hidden selected>--Select--</ng-option>
                 <ng-option *ngFor="let item of Depatment" [value]="item.Deptid">{{item.Deptname}}</ng-option>
               </ng-select>
@@ -42,7 +58,7 @@
                 <div *ngIf="view['Department'].errors['required']"> Field must be Selected-Department</div>
               </div>
             </div>
-            <div class="col-6 col-md-6">
+            <div class="col-sm-6 ">
               <label for="exampleFormControlInput3" class="form-label">Ref. No <span>*</span> </label>
               <select class="form-control" formControlName="Refno" (change)="RefnoEvent($event)"
                 [ngClass]="{ 'is-invalid':viewbtn && view['Refno'].errors}">
@@ -55,11 +71,15 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6" *ngIf="this.RawMatIDChckwarehouse === true">
+              <label class="form-label">To Warehouse<span>*</span></label>
+              <input type="text" class="form-control" value="{{this.warehouseInputbox}}" >
+            </div>
+            <div class="col-md-6" *ngIf="this.RawMatIDChckwarehouse === false">
               <label for="exampleFormControlInput3" class="form-label">Warehouse <span>*</span> </label>
-              <select class="form-control" formControlName="Warehouse" (change)="WarehouseEvent($event)"
+              <select class="form-control" formControlName="Warehouse" (change)="WarehouseEvent()"
                 [ngClass]="{ 'is-invalid':viewbtn && view['Warehouse'].errors}">
-                <option value="" disabled hidden selected>--Select--</option>
+                <option value=""   selected>--Select--</option>
                 <option *ngFor="let item of warehousedata" [value]="item.Location_ID">{{item.LocationName}}</option>
               </select>
               <div *ngIf="viewbtn && view['Warehouse'].errors" class="invalid-feedback">
@@ -86,7 +106,8 @@
             <div class="col model-footer viewbtn">
               <button mat-raised-button type="button" color="primary" (click)="Add()"
                 [disabled]="MaterialAddbtn">Add</button>
-                <button mat-raised-button type="button" color="warn" style="margin-left: 1%;" (click)="Clear()">Clear</button>
+              <button mat-raised-button type="button" color="warn" style="margin-left: 1%;"
+                (click)="Clear()">Clear</button>
             </div>
           </div>
         </form>
@@ -99,7 +120,7 @@
       <mat-tab-group mat-align-tabs="start" [selectedIndex]="Tab1" (selectedTabChange)="tabChangedRegular($event)"
         class="mattab mt-2">
         <mat-tab label="Material Detalis">
-          <p-table [value]="MaterilaDetalis" [scrollable]="true">
+          <p-table [value]="MaterilaDetalis" [scrollable]="true" scrollHeight="300px">
             <ng-template pTemplate="header">
               <tr>
                 <th class="head refno">Ref_No</th>
@@ -135,11 +156,11 @@
                 <td class="body Tabhide">{{material.loc_id}}</td>
                 <td class="body" style="text-align: right;">{{material.Pendingqty}}</td>
                 <td style="display: none;">{{material.SRId}}</td>
-                <td class="body"><input type="number" class="form-control" [(ngModel)]="material.Issueqtymodal"
+                <td class="body"><input type="number" class="form-control"  [(ngModel)]="material.Issueqtymodal"
                     (input)="issueQty($event)" [disabled]="Issueqtymodaldisable[i]">
                 </td>
                 <td class="body"><button mat-raised-button type="button" color="primary"
-                    [disabled]="Releasebtndisable[i]"  (click)="ReleaseVaildation(i)">Release</button></td>
+                    [disabled]="Releasebtndisable[i]" (click)="ReleaseVaildation(i)">Release</button></td>
                 <td class="body" style="text-align: right;" id="Avlstock"
                   [ngClass]="{'StockLess':material.color == true} ">{{material.stock}}</td>
                 <td class="body" style="text-align: right;">{{material.min_level }}</td>
@@ -154,11 +175,11 @@
           </p-table>
         </mat-tab>
         <mat-tab label="Issue Detalis">
-          <table style="width: 100%;">
-            <thead>
+          <p-table [value]="Issuedetalisarr" >
+            <ng-template pTemplate="header">
               <tr>
-                <th class="head" >Ref_No</th>
-                <th class="head" >Date</th>
+                <th class="head">Ref_No</th>
+                <th class="head">Date</th>
                 <th class="head">Material</th>
                 <th class="head">UOM</th>
                 <th class="head">SR_qty</th>
@@ -168,25 +189,27 @@
                 <th class="head">Dept.Name</th>
                 <td class="head">Actions</td>
               </tr>
-            </thead>
-            <tbody *ngFor="let material of Issuedetalisarr; let i =index;">
-              <td class="body" style="width: fit-content;">{{material.Sr_Ref_No}}</td>
-              <td class="body" style="width: fit-content;">{{material.SRDate | date : 'dd-MM-yyyy ' }}</td>
-              <td class="body">{{material.Material}}</td>
-              <td class="body">{{material.UOM}}</td>
-              <td class="body" style="text-align: right;">{{material.SrQty}}</td>
-              <td class="body" style="text-align: right;">{{material.IssueQty}}</td>
-              <td class="body">{{material.GrnRefNo}}</td>
-              <td class="body" style="text-align: right;">{{material.GrnQty }}</td>
-              <td class="body">{{material.DeptName}}</td>
-              <td class="body" style="text-align: center;"><i class="fa-regular fa-trash-can" style="color: #f91f4b;"
-                  (click)="DeleteBatchwise(i)"></i></td>
-            </tbody>
-          </table>
+            </ng-template>
+            <ng-template pTemplate="body" let-material let-i="rowIndex">
+              <tr>
+                <td class="body" style="width: fit-content;">{{material.Sr_Ref_No}}</td>
+                <td class="body" style="width: fit-content;">{{material.SRDate | date : 'dd-MM-yyyy ' }}</td>
+                <td class="body">{{material.Material}}</td>
+                <td class="body">{{material.UOM}}</td>
+                <td class="body" style="text-align: right;">{{material.SrQty}}</td>
+                <td class="body" style="text-align: right;">{{material.IssueQty | number : '1.2-2' }}</td>
+                <td class="body">{{material.GrnRefNo}}</td>
+                <td class="body" style="text-align: right;">{{material.GrnQty| number : '1.2-2' }}</td>
+                <td class="body">{{material.DeptName}}</td>
+                <td class="body" style="text-align: center;"><i class="fa-regular fa-trash-can" style="color: #f91f4b;"
+                    (click)="DeleteBatchwise(i)"></i></td>
+              </tr>
+            </ng-template>
+          </p-table>
         </mat-tab>
         <mat-tab label="Batchwise">
-          <table>
-            <thead>
+          <p-table [value]="Batcharr" >
+            <ng-template pTemplate="header">
               <tr>
                 <th class="head" style="width: 14%;">GRN No</th>
                 <th class="head" style="width: 8%;">Grn_Date</th>
@@ -198,29 +221,30 @@
                 <th class="head">Issue_Qty</th>
                 <td class="head">Actions</td>
               </tr>
-            </thead>
-            <tbody *ngFor="let material of Batcharr; let i =index;"
-              [ngClass]="{'ExpirayDateVaildation': this.ExpiryDateVailadCheck === true }">
-              <td class="body" style="width: fit-content;">{{material.GrnRefNo}}</td>
-              <td class="body" style="width: fit-content;">{{material.GrnDate | date : 'dd-MM-yyyy ' }}</td>
-              <td class="body" [pTooltip]="tooltipContent1" severity="secondary" tooltipPosition="right">
-                {{material.Material}}</td>
-              <td class="body" style="text-align: center;">{{material.BatchNo}}</td>
-              <td class="body" style="text-align: right;" [pTooltip]="tooltipContent1" severity="secondary"
-                tooltipPosition="right">{{material.ExpiryDate | date : 'dd-MM-yyyy ' }}</td>
-              <td class="body" style="text-align: right;">{{material.BatchQty | number : "1.3-3" }}</td>
-              <td class="body" style="text-align: right;">{{material.BalanceQty }}</td>
-              <td class="body" style="text-align: right;">{{material.IssueQty}}</td>
-              <td class="body" style="text-align: center;"><i class="fa-regular fa-trash-can" style="color: #f91f4b;"
-                  (click)="DeleteBatchwise(i)"></i></td>
-            </tbody>
+            </ng-template>
+            <ng-template pTemplate="body" let-material let-i="rowIndex">
+              <tr [ngClass]="{'ExpirayDateVaildation': this.ExpiryDateVailadCheck === true }">
+                <td class="body" style="width: fit-content;">{{material.GrnRefNo}}</td>
+                <td class="body" style="width: fit-content;">{{material.GrnDate | date : 'dd-MM-yyyy ' }}</td>
+                <td class="body" [pTooltip]="tooltipContent1" severity="secondary" tooltipPosition="right">
+                  {{material.Material}}</td>
+                <td class="body" style="text-align: center;">{{material.BatchNo}}</td>
+                <td class="body" style="text-align: right;" [pTooltip]="tooltipContent1" severity="secondary"
+                  tooltipPosition="right">{{material.ExpiryDate | date : 'dd-MM-yyyy ' }}</td>
+                <td class="body" style="text-align: right;">{{material.BatchQty }}</td>
+                <td class="body" style="text-align: right;">{{material.BalanceQty | number : "1.3-3" }}</td>
+                <td class="body" style="text-align: right;">{{material.IssueQty }}</td>
+                <td class="body" style="text-align: center;"><i class="fa-regular fa-trash-can" style="color: #f91f4b;"
+                    (click)="DeleteBatchwise(i)"></i></td>
+              </tr>
+            </ng-template>
             <ng-template #tooltipContent1>
               <div *ngIf="this.ExpiryDateVailadCheck === true">
                 <h1> <b>Already Expired this material. Please get the revalidation certificate otherwise you cannot
                     issue !</b> </h1>
               </div>
             </ng-template>
-          </table>
+          </p-table>
         </mat-tab>
       </mat-tab-group>
     </mat-card-content>
@@ -240,8 +264,6 @@
 
       <button mat-raised-button class="savebtn" style="background-color: #92d87e;" *ngIf="savebtn"
         (click)="Savevaildation()">Save</button>
-      <button mat-raised-button type="button" class="" style="background-color:lightcoral;"
-        (click)="MaterialReleaseClear()">Clear</button>
     </mat-card-footer>
   </mat-card>
 </div>
@@ -250,7 +272,7 @@
 <!-- TAB View -->
 <button style="display: none;" id="MaterailTabView" data-bs-toggle="modal"
   data-bs-target="#MaterailTabViewdialog"></button>
-<div class="modal" id="MaterailTabViewdialog" data-bs-backdrop='static'>
+<div class="modal fade" id="MaterailTabViewdialog" data-bs-backdrop='static'>
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header" style="font-size: medium;background-color: rgb(240, 255, 241);">Material Detalis</div>
@@ -313,65 +335,76 @@
 </div>
 
 <button style="display: none;" id="Error" data-bs-toggle="modal" data-bs-target="#ErrorDialog"></button>
-<div class="modal" id="ErrorDialog" data-bs-backdrop='static'>
+<div class="modal fade" id="ErrorDialog" data-bs-backdrop='static'>
   <div class=" modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header" style="font-size: medium;color: brown;font-weight: 550;text-transform: uppercase;">
         Warning!!!</div>
-      <div class="modal-body" >
+      <div class="modal-body">
         <p style="font-family: 'Times New Roman', Times, serif;font-weight: 550;color: rgb(3, 3, 3);font-size: large;">
           {{ErrorMsg}}
         </p>
       </div>
-
-      <div class="modal-footer"  >
+      <div class="modal-footer" *ngIf="Error!==1 && Error!==2">
         <button mat-raised-button type="button" class="btn" style="background-color: lightgreen;"
           data-bs-dismiss="modal" (click)="empty()">OK</button>
       </div>
+      <div class="modal-footer" *ngIf="Error===1">
+        <button mat-raised-button type="button" class="btn" style="background-color: lightgreen;"
+          data-bs-dismiss="modal" (click)="BatchEmptyClear()">OK</button>
+      </div>
+      <div class="modal-footer" *ngIf="Error===2">
+        <button mat-raised-button type="button" class="btn" style="background-color: lightgreen;"
+          data-bs-dismiss="modal" (click)="RemoveExpiryDateMatl()">OK</button>
+      </div>
     </div>
   </div>
 </div>
+
 <button style="display: none;" id="Error2" data-bs-toggle="modal" data-bs-target="#ErrorDialog2"></button>
-<div class="modal" id="ErrorDialog2" data-bs-backdrop='static'>
+<div class="modal fade" id="ErrorDialog2" data-bs-backdrop='static'>
   <div class=" modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header" style="font-size: medium;color: brown;font-weight: 550;text-transform: uppercase;">
         Warning!!!</div>
-      <div class="modal-body" >
+      <div class="modal-body">
         <p style="font-family: 'Times New Roman', Times, serif;font-weight: 550;color: rgb(3, 3, 3);font-size: large;">
           {{ErrorMsg}}
         </p>
       </div>
-      <div class="modal-footer" >
-          <button mat-raised-button type="button" style="background-color: #92d87e;" data-bs-dismiss="modal"
+      <div class="modal-footer">
+        <button mat-raised-button type="button" style="background-color: #92d87e;" data-bs-dismiss="modal"
           (click)="Release()">Yes</button>
-        <button mat-raised-button type="button" style="background-color: #f57c7c;margin-right: 2%;" data-bs-dismiss="modal" (click)="empty()">No</button>
+        <button mat-raised-button type="button" style="background-color: #f57c7c;margin-right: 2%;"
+          data-bs-dismiss="modal" (click)="empty()">No</button>
       </div>
     </div>
   </div>
 </div>
+
 <button style="display: none;" id="apierror" data-bs-toggle="modal" data-bs-target="#apierrorDialog"></button>
-<div class="modal" id="apierrorDialog" data-bs-backdrop='static'>
+<div class="modal fade" id="apierrorDialog" data-bs-backdrop='static'>
   <div class=" modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header" style="font-size: medium;color: rgb(14, 13, 13);font-weight: bold;">Error!!!</div>
       <div class="modal-body">
         <h3>
-          <p class="errorptag" >
+          <p class="errorptag">
             {{this.apiErrorMsg}}</p>
-            <h2>Please Wait Few Minutes and Check The Internet Connection</h2>
-            <h2> Contact Admin...</h2>
+          <h2>Please Wait Few Minutes and Check The Internet Connection</h2>
+          <h2> Contact Admin...</h2>
         </h3>
       </div>
       <div class="modal-footer">
-        <button mat-raised-button type="button" class="btn m-2" color="warn" data-bs-dismiss="modal" (click)="Spinnercall()">OK</button>
+        <button mat-raised-button type="button" class="btn m-2" color="warn" data-bs-dismiss="modal"
+          (click)="Spinnercall()">OK</button>
       </div>
     </div>
   </div>
 </div>
 
 <button style="display: none;" id="savevaildation" data-bs-toggle="modal" data-bs-target="#Savemenudialog"></button>
-<div class="modal" id="Savemenudialog" data-bs-backdrop='static'>
+<div class="modal fade" id="Savemenudialog" data-bs-backdrop='static'>
   <div class="modal-dialog modal-sm modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header" style="font-size: medium;background-color: rgb(240, 255, 241);">SAVE:</div>
@@ -390,11 +423,11 @@
 </div>
 
 <button style="display: none;" id="Save" data-bs-toggle="modal" data-bs-target="#Savedialog"></button>
-<div class="modal" id="Savedialog" data-bs-backdrop='static'>
+<div class="modal fade" id="Savedialog" data-bs-backdrop='static'>
   <div class=" modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">SAVE:</div>
-      <div class="modal-body" style="margin-left: 1%;" >
+      <div class="modal-body" style="margin-left: 1%;">
         <div style="font-size: medium;font-weight: 600;color: rgb(140, 232, 140);" *ngIf="this.Sts == 'Y'">
           {{Msg}}
         </div>
@@ -409,7 +442,7 @@
         </div>
         <div *ngIf="this.Sts == 'N'">
           <button mat-raised-button class="btn btn-secondary" style="background-color: rgb(247, 107, 75);" type="button"
-            data-bs-dismiss="modal">OK</button>
+            data-bs-dismiss="modal" (click)="savetimeerror()">OK</button>
         </div>
       </div>
     </div>

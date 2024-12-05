@@ -94,6 +94,7 @@
               <label for="exampleFormControlInput3" class="form-label">Description</label><br>
               <textarea class="form-control" name="" id="" cols="30" rows="3" formControlName="SrDesc"></textarea>
             </div>
+            
           </div>
           <div class="row" *ngIf="this.indentype=='Capex'">
             <div class="col-3">
@@ -217,7 +218,7 @@
   </mat-card>
 </div>
 <!------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< POUP START >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>-->
-<div class="modal" id="Material" data-bs-backdrop='static'>
+<div class="modal " id="Material" data-bs-backdrop='static'>
   <div class="modal-dialog modal-fullscreen modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header"
@@ -236,8 +237,8 @@
                 </label>
                 <ng-select [(ngModel)]="Rawmatid" (change)="getMaterialDetails()" (input)="Rawmat($event)"
                 formControlName="material" placeholder="--Select--" [items]="RawmaterilData" class="form-control"
-                bindLabel="gstrmatdisp" [ngClass]="{ 'is-invalid':Materialupdatebtn && mat['material'].errors}"
-                bindValue="rawmatid" [searchFn]="customSearchFn">
+                bindLabel="RawmatName" [ngClass]="{ 'is-invalid':Materialupdatebtn && mat['material'].errors}"
+                bindValue="RawmatId" [searchFn]="customSearchFn">
               </ng-select>
                 <div *ngIf="Materialupdatebtn && mat['material'].errors" class="invalid-feedback">
                   <div *ngIf="mat['material'].errors['required']"> Field must be select-Indent Type</div>
@@ -422,7 +423,7 @@
 
 <button style="display: none;" id="storeloc" data-bs-toggle="modal" data-bs-target="#storeloccheckdialog"></button>
 
-<div class="modal" id="storeloccheckdialog" data-bs-backdrop='static'>
+<div class="modal " id="storeloccheckdialog" data-bs-backdrop='static'>
   <div class=" modal-dialog  modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header" style="font-size: medium;background-color: rgb(250, 223, 205);">!!! Warning</div>
@@ -430,8 +431,8 @@
         <h4>Please set the Location Name in location Master. Shall I continue ? </h4>
       </div>
       <div class="modal-footer">
-        <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
-          data-bs-target="#Material" data-bs-toggle="modal">Yes</button>
+        <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;" data-bs-toggle="modal"
+          data-bs-target="#Material" >Yes</button>
         <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightcoral;"
           data-bs-dismiss="modal">No</button>
       </div>
@@ -441,7 +442,7 @@
 
 <button style="display: none;" id="indentscheduledialog" data-bs-toggle="modal" data-bs-target="#IndentsModal"></button>
 
-<div class="modal" id="IndentsModal" data-bs-backdrop='static'>
+<div class="modal " id="IndentsModal" data-bs-backdrop='static'>
   <div class=" modal-dialog  modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header INDENT">Add Delivery Schedules For The Material
@@ -532,7 +533,7 @@
 <button style="display: none;" id="TotalIndetSChQty" data-bs-toggle="modal"
   data-bs-target="#TotalIndetSChQtyNotMatch"></button>
 
-<div class="modal" id="TotalIndetSChQtyNotMatch" data-bs-backdrop='static'>
+<div class="modal " id="TotalIndetSChQtyNotMatch" data-bs-backdrop='static'>
   <div class=" modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header" style="font-size: medium;background-color: rgb(250, 223, 205);">!!!Warning</div>
@@ -549,7 +550,7 @@
 
 <button style="display: none;" id="OldPo" data-bs-toggle="modal" data-bs-target="#OldPodialog"></button>
 
-<div class="modal" id="OldPodialog" data-bs-backdrop='static'>
+<div class="modal " id="OldPodialog" data-bs-backdrop='static'>
   <div class=" modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -589,7 +590,7 @@
 <button style="display: none;" id="IntendPendingViewData" data-bs-toggle="modal"
   data-bs-target="#intendrecordview"></button>
 
-<div class="modal" id="intendrecordview" data-bs-backdrop='static'>
+<div class="modal " id="intendrecordview" data-bs-backdrop='static'>
   <div class=" modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -637,7 +638,7 @@
 
 <button style="display: none;" id="matlpending" data-bs-toggle="modal" data-bs-target="#Matlrecordview"></button>
 
-<div class="modal" id="Matlrecordview" data-bs-backdrop='static'>
+<div class="modal " id="Matlrecordview" data-bs-backdrop='static'>
   <div class=" modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -675,7 +676,7 @@
   </div>
 </div>
 
-<div class="modal" id="Savemenudialog" data-bs-backdrop='static'>
+<div class="modal " id="Savemenudialog" data-bs-backdrop='static'>
   <div class="modal-dialog modal-sm modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header" style="font-size: medium;background-color: rgb(240, 255, 241);">SAVE:</div>
@@ -694,7 +695,7 @@
   </div>
 </div>
 <button style="display: none;" id="apierror" data-bs-toggle="modal" data-bs-target="#apierrorDialog"></button>
-<div class="modal" id="apierrorDialog" data-bs-backdrop='static'>
+<div class="modal " id="apierrorDialog" data-bs-backdrop='static'>
   <div class=" modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header" style="font-size: medium;color: rgb(248, 89, 89);font-weight: bold;">Warning!!!</div>
@@ -709,7 +710,7 @@
 </div>
 <button style="display: none;" id="Save" data-bs-toggle="modal" data-bs-target="#Savedialog"></button>
 
-<div class="modal" id="Savedialog" data-bs-backdrop='static'>
+<div class="modal " id="Savedialog" data-bs-backdrop='static'>
   <div class=" modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header"></div>

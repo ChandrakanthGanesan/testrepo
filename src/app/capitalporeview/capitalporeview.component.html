@@ -1,0 +1,52 @@
+<h1>Capital PO Review</h1>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <label for="">Review by</label>
+                <select name="" id="" class="form-select" (change)="reviewer()" [(ngModel)]="empid">
+                    <option value="" *ngFor="let review of LoadArray" [value]="review.empid">{{review.empname}}</option>
+                </select>
+            </div>
+            <div class="col-6">
+                <button mat-raised-button
+                    style="background-color: grey;font-family: 'Times New Roman', Times, serif; color:white;margin-top:1.5rem;"
+                    (click)="view()">View</button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>PONO</th>
+                        <th>PO Date</th>
+                        <th>Sup name</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let table of tableArray">
+                        <td><input type="checkbox" class="form-input-check" (change)="selectedrows($event,table)" />
+                        </td>
+                        <td>{{table.Pono}}</td>
+                        <td>{{table.podate}}</td>
+                        <td>{{table.supname}}</td>
+                        <td><textarea name="" id="" class="form-control"></textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row text-end">
+            <div class="col-12">
+                <button mat-raised-button
+                    style="background-color: rgb(18, 133, 18);font-family: 'Times New Roman', Times, serif;color:white;font-size: 16px;"
+                    (click)="review()">Review</button>
+                <button mat-raised-button
+                    style="background-color: red;font-family: 'Times New Roman', Times, serif;color: white;margin-left:3px"
+                    (click)="clear()">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>

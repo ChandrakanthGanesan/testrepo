@@ -1,0 +1,60 @@
+<app-navigation></app-navigation>
+<h1>Rejection PO Approval</h1>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <label for="">Supplier Name</label>
+                <ng-select [items]="SupplierArray" bindLabel="supname" bindValue="supid" (change)="supidfun($event)"
+                    [(ngModel)]="selectedSupplier"></ng-select>
+            </div>
+            <div class="col-6">
+                <button mat-raised-button
+                    style="font-family: 'Times New Roman', Times, serif;background-color:orange;color:white;margin-top:1.1rem"
+                    (click)="view()">View</button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>PO_NO</th>
+                        <th>PO_Date</th>
+                        <th>Supplier_Name</th>
+                        <th>Material_Name</th>
+                        <th>UOM</th>
+                        <th>Qty</th>
+                        <th>Rate</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let table of tableArray">
+                        <td>
+                            <input type="checkbox" class="form-check-input" (change)="selectedrows($event,table)" />
+                        </td>
+                        <td>{{ table.pono }}</td>
+                        <td>{{ table.podate }}</td>
+                        <td>{{ table.supname }}</td>
+                        <td>{{ table.rawmatname }}</td>
+                        <td>{{ table.uom }}</td>
+                        <td>{{ table.ord_qty }}</td>
+                        <td>{{ table.Rate }}</td>
+                        <td>{{ table.gvalue }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div style="text-align: end;">
+                <button mat-raised-button
+                    style="background-color: green;color: white;font-family: 'Times New Roman', Times, serif;font-size: 16px;"
+                    (click)="Approve()">Approve</button>
+                <button mat-raised-button
+                    style="background-color:red;color: white;font-family: 'Times New Roman', Times, serif;font-size: 16px;margin-left: 2px;"
+                    (click)=" clear()">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -187,12 +187,12 @@ p{
   font-size: medium;
 
 }
-.errorptag{
-  font-family: 'Times New Roman', Times, serif;
-  font-weight: 550;
+.modal-header{
   font-size: medium;
-  text-transform: uppercase;
-  color: #ff0000;
+  background-color: #f7dd8a;
+  color: brown;
+  font-weight: 550;
+  font-family: 'Times New Roman', Times, serif;
 }
 @media only screen and (min-width: 575px) and (max-width: 759px) {
   .content {

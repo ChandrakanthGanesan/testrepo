@@ -1,74 +1,129 @@
 <app-navigation></app-navigation>
-<div class="sidebar close">
+<div class="container-fluid">
+  <div class="sidebar close">
+    <ul class="nav-links" id="request">
+      <li style="padding-top: 10px;">
+        <a>
+          <!-- <img class="object-fit-cover border rounded" src="assets/PurchaseRequest.png"> -->
+          <h1 class="link_name" routerLink="/approval">Inventory</h1>
+        </a>
+        <ul class="sub-menu blank"
+          *ngIf="PurchaseRequest || IssueRequest || DirectIndent || StoreIssue || ReworkIssue || MatlReturnFrmDept||StorageQtyAlloc||Shelflife ||StoretoStore">
+          <li [ngClass]="{'disable-link':!PurchaseRequest}"><a routerLink="/PurchaseReq" id="menu"
+              class="subhead">Purchase Request</a></li>
+          <li [ngClass]="{'disable-link':!IssueRequest}"><a routerLink="/issueReq" id="menu" class="subhead">Issue
+              Request</a></li>
+          <li [ngClass]="{'disable-link':!DirectIndent}"><a class="subhead" id="menu" routerLink="/directIndent">Direct
+              Indent</a></li>
+          <li [ngClass]="{'disable-link':!StoreIssue}"><a class="subhead" (click)="getScreenLockVaildation()"
+              id="menu">Store
+              Issue</a></li>
+          <li [ngClass]="{'disable-link':!ReworkIssue}"><a class="subhead" id="menu" routerLink="/reworkissue">Rework
+              Issue</a></li>
+          <li [ngClass]="{'disable-link':!MatlReturnFrmDept}"><a class="subhead" id="menu"
+              routerLink="/MatlReceiveFrmDept">Material Return From Department</a></li>
+          <li [ngClass]="{'disable-link':!StorageQtyAlloc}"><a class="subhead" id="menu"
+              routerLink="/StorageQtyAlloc">Storage Quantity Allocation</a></li>
+          <li [ngClass]="{'disable-link':!Shelflife}"><a class="subhead" id="menu" routerLink="/Shelflife">Self-Life
+              Batch Quantity Entry</a></li>
+          <li [ngClass]="{'disable-link':!StoretoStore}"><a class="subhead" id="menu" routerLink="/StoretoStore">Store
+              To Store</a></li>
+          <li [ngClass]="{'disable-link':!Storelogout}"><a class="subhead" id="menu" routerLink="/Storelogout">Store
+              logout</a></li>
+        </ul>
+      </li>
+      <li>
+        <a>
+          <h1 class="link_name" routerLink="/approval">Inspection</h1>
+        </a>
+        <ul class="sub-menu" *ngIf="">
 
-  <ul class="nav-links" id="request">
-    <li  style="padding-top: 10px;">
-      <a>
-        <!-- <img class="object-fit-cover border rounded" src="assets/PurchaseRequest.png"> -->
-        <h1 class="link_name" routerLink="/approval">Inventory</h1>
-      </a>
-      <ul class="sub-menu blank" *ngIf="PurchaseRequest || IssueRequest || DirectIndent || StoreIssue || ReworkIssue || MatlReturnFrmDept||StorageQtyAlloc||Shelflife ||StoretoStore">
-        <li [ngClass]="{'disable-link':!PurchaseRequest}"><a routerLink="/PurchaseReq" id="menu"  class="subhead">Purchase Request</a></li>
-        <li [ngClass]="{'disable-link':!IssueRequest}"><a routerLink="/issueReq" id="menu" class="subhead">Issue Request</a></li>
-        <li [ngClass]="{'disable-link':!DirectIndent}"><a class="subhead" id="menu" routerLink="/directIndent">Direct Indent</a></li>
-        <li [ngClass]="{'disable-link':!StoreIssue}"><a class="subhead" id="menu" routerLink="/storeissue">Store Issue</a></li>
-        <li [ngClass]="{'disable-link':!ReworkIssue}"><a class="subhead" id="menu" routerLink="/reworkissue">Rework Issue</a></li>
-        <li [ngClass]="{'disable-link':!MatlReturnFrmDept}"><a class="subhead" id="menu" routerLink="/MatlReceiveFrmDept">Material Return From Department</a></li>
-        <li [ngClass]="{'disable-link':!StorageQtyAlloc}" ><a class="subhead" id="menu" routerLink="/StorageQtyAlloc"  >Storage Quantity Allocation</a></li>
-        <li [ngClass]="{'disable-link':!Shelflife}"><a class="subhead" id="menu" routerLink="/Shelflife"  >Self-Life Batch Quantity Entry</a></li>
-        <li [ngClass]="{'disable-link':!StoretoStore}"><a class="subhead" id="menu" routerLink="/StoretoStore"  >Store To Store</a></li>
-      </ul>
-    </li>
-    <li>
-      <a>
-        <h1 class="link_name" routerLink="/approval">Inspection</h1>
-      </a>
-      <ul class="sub-menu" *ngIf="">
+        </ul>
+      </li>
+      <li>
+        <a>
+          <h1 class="link_name" routerLink="/approval">Approvals</h1>
+        </a>
+        <ul class="sub-menu" *ngIf="">
 
-      </ul>
-    </li>
-    <li>
-      <a>
-        <h1 class="link_name" routerLink="/approval">Approvals</h1>
-      </a>
-      <ul class="sub-menu" *ngIf="">
+        </ul>
+      </li>
+      <li>
+        <a>
+          <h1 class="link_name" routerLink="/approval">Reports</h1>
+        </a>
+        <ul class="sub-menu" *ngIf="">
+        </ul>
+      </li>
+      <li>
+        <a>
+          <h1 class="link_name" routerLink="/approval">Weighment</h1>
+        </a>
+        <ul class="sub-menu" *ngIf="">
+        </ul>
+      </li>
+      <li>
+        <a>
+          <h1 class="link_name" routerLink="/approval">Master</h1>
+        </a>
+        <ul class="sub-menu" *ngIf="">
+        </ul>
+      </li>
+      <li>
+        <a>
+          <h1 class="link_name" routerLink="/approval">Quality</h1>
+        </a>
+        <ul class="sub-menu" *ngIf="">
+        </ul>
+      </li>
+      <li>
+        <a>
+          <h1 class="link_name" routerLink="/approval">Tools</h1>
+        </a>
+        <ul class="sub-menu" *ngIf="">
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
 
-      </ul>
-    </li>
-    <li >
-      <a>
-        <h1 class="link_name" routerLink="/approval">Reports</h1>
-      </a>
-      <ul class="sub-menu" *ngIf="">
-      </ul>
-    </li>
-    <li >
-      <a>
-        <h1 class="link_name" routerLink="/approval">Weighment</h1>
-      </a>
-      <ul class="sub-menu" *ngIf="">
-      </ul>
-    </li>
-    <li >
-      <a>
-        <h1 class="link_name" routerLink="/approval">Master</h1>
-      </a>
-      <ul class="sub-menu" *ngIf="">
-      </ul>
-    </li>
-    <li >
-      <a>
-        <h1 class="link_name" routerLink="/approval">Quality</h1>
-      </a>
-      <ul class="sub-menu" *ngIf="">
-      </ul>
-    </li>
-    <li >
-      <a>
-        <h1 class="link_name" routerLink="/approval">Tools</h1>
-      </a>
-      <ul class="sub-menu" *ngIf="">
-      </ul>
-    </li>
-  </ul>
+
+<button style="display: none;" id="apierror" data-bs-toggle="modal" data-bs-target="#apierrorDialog"></button>
+<div class="modal" id="apierrorDialog" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;color: rgb(14, 13, 13);font-weight: bold;">Error!!!</div>
+      <div class="modal-body">
+        <h3>
+          <p class="errorptag">
+            {{this.apiErrorMsg}}</p>
+          <span>Please Wait Few Minutes and Check The Internet Connection</span>
+          <h2> Contact Admin...</h2>
+        </h3>
+      </div>
+      <div class="modal-footer">
+        <button mat-raised-button type="button" class="btn m-2" color="warn" data-bs-dismiss="modal"
+          (click)="Spinnercall()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<button style="display: none;"  data-bs-toggle="modal" data-bs-target="#screenErrorDialog" #message></button>
+<div class="modal fade" id="screenErrorDialog" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;color: rgb(14, 13, 13);font-weight: bold;">Error!!!</div>
+      <div class="modal-body">
+        <h3>{{this.ErrorMsg}}</h3>
+      </div>
+      <div class="modal-footer" *ngIf="this.Error !==1">
+        <button mat-raised-button type="button" class="btn m-2" color="warn" data-bs-dismiss="modal">OK</button>
+      </div>
+      <div class="modal-footer" *ngIf="this.Error ===1">
+        <button mat-raised-button type="button" class="btn m-2" color="warn" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
 </div>

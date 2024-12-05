@@ -1,0 +1,300 @@
+<ngx-spinner>
+  <mat-spinner color="warn"></mat-spinner>
+</ngx-spinner>
+<app-navigation></app-navigation>
+<div class="container-fluid">
+  <div class="card-header mt-3">
+    <h4 style="font-family: 'Times New Roman', Times, serif;">Indent Entry</h4>
+  </div>
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="indentForm" (ngSubmit)="onSubmit()">
+        <div id="apierrorDialog">
+          <div class="row">
+            <div class="col col-6 col-sm-6 col-6 col-md-6 col-lg-3">
+              <label class="form-label">Indent No</label>
+              <input type="text" class="form-control" formControlName="indentNo" readonly>
+              <mat-error *ngIf="ViewStoreReq && this.indentForm.controls['indentNo'].value ===''">IndentNo Is
+                Required</mat-error>
+            </div>
+            <div class="col col-6 col-sm-6 col-6 col-md-6 col-lg-3">
+              <label class="form-label">Date</label>
+              <input type="date" class="form-control" formControlName="Date" readonly>
+              <mat-error *ngIf="ViewStoreReq && this.indentForm.controls['Date'].value ===''">Date Is
+                Required</mat-error>
+            </div>
+            <div class="col col-6 col-sm-12 col-6 col-md-6 col-lg-3">
+              <label class="form-label">Department</label>
+              <ng-select class="form-control" formControlName="dept" (change)="deptevent($event)">
+                <ng-option value="" disabled hidden selected>--Select--</ng-option>
+                <ng-option *ngFor="let item of deptdata" [value]="item.DeptId">{{item.DeptName}}</ng-option>
+              </ng-select>
+              <mat-error *ngIf="ViewStoreReq && this.indentForm.controls['dept'].value ===''">Department Is
+                Required</mat-error>
+            </div>
+            <div class="col col-6 col-sm-12 col-6 col-md-6 col-lg-3">
+              <label class="form-label">Category</label>
+              <input type="text" class="form-control" placeholder="--Category--" formControlName="category" readonly>
+              <mat-error *ngIf="ViewStoreReq && this.indentForm.controls['category'].value ===''">Category Is
+                Required</mat-error>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-12 col-sm-12 col-6 col-md-6 col-lg-3">
+              <label class="form-label">ApprovedBy</label>
+              <ng-select  class="form-control" formControlName="Approved">
+                <ng-option value="" selected disabled hidden>--Select--</ng-option>
+                <ng-option *ngFor="let item of appr" [value]="item.ApprovedById">{{item.ApprovedBy}}</ng-option>
+              </ng-select>
+              <mat-error *ngIf="ViewStoreReq && this.indentForm.controls['Approved'].value ===''">ApprovedBy Is
+                Required</mat-error>
+            </div>
+            <div class="col col-12 col-sm-12 col-6 col-md-6 col-lg-3">
+              <label class="form-label">Empolyee</label>
+               <ng-select class="form-control" formControlName="EmpName">
+                <ng-option value="" selected disabled hidden>--Select--</ng-option>
+                <ng-option *ngFor="let item of Empdet" [value]="item.EmpId">{{item.EmpName}}</ng-option>
+              </ng-select>
+              <mat-error *ngIf="ViewStoreReq && this.indentForm.controls['EmpName'].value ===''">Empolyee Is
+                Required</mat-error>
+            </div>
+            <div class="col col-6 col-sm-6 col-6 col-md-6 col-lg-3">
+              <label for="exampleFormControlInput3" class="form-label">Indent Type <span>*</span> </label><br>
+              <div class="form-control" style="padding: 0%;margin: 0%;">
+                <mat-radio-group aria-label="Select an option" formControlName="indenttype">
+                  <mat-radio-button value="Regular" checked>Regular</mat-radio-button>
+                  <mat-radio-button value="Capex" style="padding-right: 2%;">Capex</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+            <div class="col col-6 col-sm-6 col-6 col-md-6 col-lg-3">
+              <label class="form-label">Descripation</label>
+              <textarea class="form-control" style="field-sizing: content;resize: none;"
+                formControlName="desc"></textarea>
+            </div>
+          </div>
+          <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true"
+            class="scrollspy-example" tabindex="0"></div>
+          <div class="modal-footer mt-3">
+            <button mat-raised-button class="button" type="submit" color="primary">View</button>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+    <p-table [value]="MainTabelRelease" [scrollable]="true" scrollHeight="400px" *ngIf="MaintabelShow">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="tabelhead">S.No</th>
+          <th class="tabelhead">Material</th>
+          <th class="tabelhead">Quantity</th>
+          <th class="tabelhead">UOM</th>
+          <th class="tabelhead">Avl_Stock</th>
+          <th class="tabelhead">Min_Qty</th>
+          <th class="tabelhead">Max_Qty</th>
+          <th class="tabelhead">Reorder_Stock</th>
+          <th class="tabelhead">Specfication</th>
+          <th class="tabelhead">Descripation</th>
+          <th class="tabelhead">Priority</th>
+          <th class="tabelhead">CapexNo</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-customer let-i="rowIndex">
+        <tr>
+          <td class="body">{{i+1}}</td>
+          <td class="body">{{customer.gStrMatDisp}}</td>
+          <td class="body">{{customer.Currqty}}</td>
+          <td class="body">{{customer.SRUom}}</td>
+          <td class="body">{{customer.rstock}}</td>
+          <td class="body">{{customer.min_level}}</td>
+          <td class="body">{{customer.max_level}}</td>
+          <td class="body">{{customer.reorder_level}}</td>
+          <td class="body">{{customer.Spec}}</td>
+          <td class="body">{{customer.Desc}}</td>
+          <td class="body">{{customer.priority}}</td>
+          <td class="body">{{customer.capexno}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </mat-card>
+</div>
+<!-- Popup -->
+
+
+<button style="display: none;" data-bs-toggle="modal" data-bs-target="#StoreRe" #StoreRelease>view</button>
+<div class="modal" id="StoreRe" data-bs-backdrop='static'>
+  <div class="modal-dialog modal-fullscreen  modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header"
+        style="font-size: large;color: brown;  background-color: rgb(214, 247, 247);font-weight: bold;"> Release Store
+        Requestion
+        <button type="button" class="btn-close btn btn-outline-danger" data-bs-dismiss="modal" aria-label="Close"
+          #closeButton></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="StoreReqFrom" (ngSubmit)="Release()">
+          <div class="container-fluid">
+            <mat-card>
+              <mat-card-content>
+                <div class="row">
+                  <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+                    <label class="form-label">From Date</label>
+                    <input type="date" class="form-control" formControlName="frmdate">
+                  </div>
+                  <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+                    <label class="form-label">To Date</label>
+                    <input type="date" class="form-control" formControlName="todate">
+                  </div>
+                  <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+                    <label class="form-label">Department</label>
+                    <input type="text" class="form-control" formControlName="dept">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 col-sm-12 col-md-12 col-lg-10">
+                    <label class="form-label">Material</label>
+                    <ng-select [(ngModel)]="Rawmatid" (change)="materialevent($event)" formControlName="material"
+                      placeholder="--Select--" [items]="Rawmateriladata" class="form-control" bindLabel="rawmatname"
+                      bindValue="RawMatID" [searchFn]="customSearchFn">
+                    </ng-select>
+                  </div>
+                  <div class="col-12 col-sm-12 col-md-12 col-lg-2">
+                    <label class="form-label">EmpName</label>
+                    <input type="text" class="form-control" formControlName="Empname">
+                  </div>
+                </div>
+              </mat-card-content>
+
+              <div class="card m-3">
+                <p-table [value]="viewStoreData" [scrollable]="true" scrollHeight="400px">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th class="tabelhead">S.No</th>
+                      <th class="tabelhead">Ref.No</th>
+                      <th class="tabelhead">Ref.Date</th>
+                      <th class="tabelhead">Material</th>
+                      <th class="tabelhead">Quantity</th>
+                      <th class="tabelhead">UOM</th>
+                      <th class="tabelhead">Iss_Qty</th>
+                      <th class="tabelhead">Pen_Qty</th>
+                      <th class="tabelhead">Avl_Stock</th>
+                      <th class="tabelhead">Pend_PO_Qty</th>
+                      <th class="tabelhead">Cur_Qty</th>
+                      <th class="tabelhead">Min_Qty</th>
+                      <th class="tabelhead">Max_Qty</th>
+                      <th class="tabelhead">Reorder_Stock</th>
+                      <th class="tabelhead">Priority</th>
+                      <th class="tabelhead">CapexNo</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-customer let-i="rowIndex">
+                    <tr>
+                      <td class="body">{{i+1}}</td>
+                      <td class="body">{{customer.Sr_Ref_No}}</td>
+                      <td class="body">{{customer.SRDate | date: 'yyyy-MM-dd'}}</td>
+                      <td class="body">{{customer.gStrMatDisp}}</td>
+                      <td class="body">{{customer.srqty}}</td>
+                      <td class="body">{{customer.SRUom}}</td>
+                      <td class="body">{{customer.Iss_Qty}}</td>
+                      <td class="body">{{customer.Pen_Qty}}</td>
+                      <td class="body">{{customer.rstock}}</td>
+                      <td class="body">{{customer.Pend_PO_Qty}}</td>
+                      <td class="body"><input type="number" id="qty" class="form-control" [(ngModel)]="customer.Currqty"
+                          [ngModelOptions]="{standalone: true}"></td>
+                      <td class="body">{{customer.min_level}}</td>
+                      <td class="body">{{customer.max_level}}</td>
+                      <td class="body">{{customer.reorder_level}}</td>
+                      <td class="body">{{customer.priority}}</td>
+                      <td class="body">{{customer.name}}</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+              <div class="modal-footer">
+                <button mat-raised-button class="btn" type="submit" color="primary">Release</button>
+                <button mat-raised-button class="btn" style="margin-right: 2%;" color="warn"
+                  data-bs-dismiss="modal">Close</button>
+              </div>
+            </mat-card>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button style="display: none;" data-bs-toggle="modal" data-bs-target="#View" #ViewinTab>view</button>
+<div class="modal" id="View" data-bs-backdrop='static'>
+  <div class="modal-dialog modal-fullscreen  modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header"
+        style="font-size: large;color: brown;  background-color: rgb(214, 247, 247);font-weight: bold;"> Release Store
+        Requestion
+        <button type="button" class="btn-close btn btn-outline-danger" data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- <form [formGroup]="StoreReqFrom" (ngSubmit)="Release()"> -->
+        <div class="container-fluid">
+          <mat-card>
+            <mat-card-content *ngFor="let item of viewStoreData">
+              <div class="row">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+                  <label class="form-label">Uom</label>
+                  <input type="date" class="form-control" value="{{item.SRUom}}">
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+                  <label class="form-label">Min_level</label>
+                  <input type="date" class="form-control" value="{{item.min_level}}">
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+                  <label class="form-label">Max_level</label>
+                  <input type="date" class="form-control" value="{{item.max_level}}">
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+                  <label class="form-label">Reorder_level</label>
+                  <input type="date" class="form-control" value="{{item.reorder_level}}">
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+                  <label class="form-label">Priority</label>
+                  <input type="date" class="form-control" value="{{item.priority}}">
+                </div>
+              </div>
+            </mat-card-content>
+            <div class="modal-footer">
+              <button mat-raised-button class="btn" style="margin-right: 2%;" color="warn"
+                data-bs-dismiss="modal">Close</button>
+            </div>
+          </mat-card>
+        </div>
+        <!-- </form> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<button style="display: none;" data-bs-toggle="modal" data-bs-target="#apierrorD" #apierrorDialog></button>
+<div class="modal" id="apierrorD" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="font-size: medium;color: rgb(14, 13, 13);font-weight: bold;">Error!!!</div>
+      <div class="modal-body">
+        <h3>
+          <p class="errorptag">
+            {{this.apiErrorMsg}}</p>
+          <h2 *ngIf="NoRecordsShow && QtyVaildashow">Please Wait Few Minutes and Check The Internet Connection</h2>
+          <h2 *ngIf="NoRecordsShow&& QtyVaildashow"> Contact Admin...</h2>
+        </h3>
+      </div>
+      <div class="modal-footer">
+        <button mat-raised-button type="button" *ngIf="NoRecordsShow && QtyVaildashow" class="btn m-2" color="warn"
+          data-bs-dismiss="modal" (click)="apiError()">OK</button>
+        <button mat-raised-button type="button" *ngIf="NoRecordsShow" class="btn m-2" color="warn"
+          data-bs-dismiss="modal">OK</button>
+        <button mat-raised-button type="button" *ngIf="QtyVaildashow" class="btn m-2"
+          (click)="QtyVaildation()" #StoreRelease>OK</button>
+      </div>
+    </div>
+  </div>
+</div>

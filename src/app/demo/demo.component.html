@@ -1,107 +1,49 @@
-<div class="container-fluid">
-  <div class="card p-3">
-    <form [formGroup]="Registerform" (ngSubmit)="Submit()">
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label class="form-label">Name</label>
-          <input type="text" class="form-control" formControlName="name" minlength="8">
-          <mat-error *ngIf="submitbtn && this.Registerform.controls['name'].value ==''">Name is Required</mat-error>
-          <mat-error *ngIf=" submitbtn &&  this.Registerform.controls['name'].errors?.['minlength'] ">User Name should
-            be
-            Minumium 8 Character</mat-error>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Last Name</label>
-          <input type="text" class="form-control" formControlName="lname">
-          <mat-error *ngIf="submitbtn && Registerform.controls['lname'].value ==''">Last Name is Required</mat-error>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-control" formControlName="Email">
-          <mat-error *ngIf="submitbtn && Registerform.controls['Email'].value ==''">Email is Required</mat-error>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Password</label>
-          <input type="password" class="form-control" formControlName="password" minlength="8">
-          <mat-error class="m-2 " *ngIf="submitbtn && Registerform.controls['password'].value ==''">Password Is
-            Required</mat-error>
-          <mat-error class="m-2" *ngIf="submitbtn && Registerform.controls['password'].errors?.['minlength']">Password Length Must
-            be Minimum 8 Charcters</mat-error>
-          <mat-error class="m-2" *ngIf="submitbtn && Registerform.controls['password'].value?.match('^(?=.*[A-Z])')">Password
-            Character Atleast One Uppercase</mat-error>
-          <mat-error class="m-2" *ngIf="submitbtn && Registerform.controls['password'].value?.match('(?=.*[a-z])')">Password
-            Character Atleast One Lowercase</mat-error>
-          <mat-error class="m-2" *ngIf="submitbtn && Registerform.controls['password'].value?.match('(.*[0-9].*)')">Password
-            Character Atleast One Number</mat-error>
-          <mat-error class="m-2" *ngIf="submitbtn && Registerform.controls['password'].value?.match('(?=.*[!@#$%^&*])')">Password
-            Length Atleast Special Character</mat-error>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label class="form-label">Phone Number</label>
-          <input type="number" class="form-control" formControlName="mobilenumber"
-            onKeyPress="if(this.value.length==10) return false;">
-          <mat-error *ngIf="submitbtn && Registerform.controls['mobilenumber'].value ==''">Mobile Number
-            Required</mat-error>
-          <mat-error *ngIf="submitbtn && Registerform.controls['mobilenumber'].errors?.['minlength']">Mobile Number
-            should be 10 Charcters</mat-error>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Gender</label>
-          <mat-radio-group formControlName="Gender" align="'start'">
-            <mat-radio-button *ngFor="let choice of choices">{{choice.Gender}}
-            </mat-radio-button>
-          </mat-radio-group>
-          <mat-error *ngIf="submitbtn && Registerform.controls['lname'].value ==''">Gender is Required</mat-error>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label class="form-label">Address</label>
-          <textarea class="form-control" formControlName="Address" maxlength="100"></textarea>
-          <mat-error *ngIf="submitbtn && Registerform.controls['Address'].value ==''">Address is Required</mat-error>
-          <mat-error *ngIf="submitbtn && Registerform.controls['Address'].errors?.['minlength']">Address Should minimum
-            8 charcters</mat-error>
-          <mat-hint align="end">{{ this.Registerform.controls['Address'].value.length}} / 100</mat-hint>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Pincode</label>
-          <input type="number" class="form-control" formControlName="pincode"
-            onkeypress="if(this.value.length==5) return false;">
-          <mat-error *ngIf="submitbtn && Registerform.controls['pincode'].value ==''">Pincode Required</mat-error>
-        </div>
-      </div>
-      <div class="modal-footer mt-3">
-        <button mat-raised-button class="button" type="submit" color="primary">Submit</button>
-      </div>
-    </form>
-  </div>
-  <mat-card>
-    <mat-card-content>
-      <table class="table-bordered tabel w-100">
-        <thead>
-          <tr style="background-color: rgb(33, 115, 192);">
-            <th>S.No</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>mobilenumber</th>
-            <th>pincode</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of RegistrationArray;let i=index">
-            <td>{{i+1}}</td>
-            <td>{{item.Email}}</td>
-            <td>{{item.Address}}</td>
-            <td>{{item.mobilenumber}}</td>
-            <td>{{item.pincode}}</td>
-          </tr>
-        </tbody>
-      </table>
+<table class="table " style="border: 1px solid #4863a0;">
+  <thead>
+    <th style="border: 2px solid #4863a0">Check</th>
+    <th style="border: 2px solid #4863a0">Indent_No</th>
+    <th style="border: 2px solid #4863a0">Indent_Date</th>
+    <th style="border: 2px solid #4863a0">Department</th>
+    <th style="border: 2px solid #4863a0">Emp_name</th>
+    <th style="border: 2px solid #4863a0">Raw_Material_Name</th>
+    <th style="border: 2px solid #4863a0">UOM</th>
+    <th style="border: 2px solid #4863a0">Approved_Qty</th>
+    <th style="border: 2px solid #4863a0">PO_raised</th>
+    <th style="border: 2px solid #4863a0">Balance</th>
+    <th style="border: 2px solid #4863a0">PO_Qty</th>
+    <th style="border: 2px solid #4863a0">Status</th>
+    <th style="border: 2px solid #4863a0">Rate</th>
+    <th style="border: 2px solid #4863a0">Discount</th>
+    <th style="border: 2px solid #4863a0">Pack_Charge</th>
+    <th style="border: 2px solid #4863a0">Tax_group_ID</th>
+    <th style="border: 2px solid #4863a0">Restrict</th>
+    <th style="border: 2px solid #4863a0">PO_raised</th>
+    <th style="border: 2px solid #4863a0">Balance</th>
+    <th style="border: 2px solid #4863a0">Freight</th>
+    <th style="border: 2px solid #4863a0">HSN_code</th>
+    <th style="border: 2px solid #4863a0">Pack_Qty</th>
+  </thead>
+  <tbody>
+    <tr *ngFor="let mainTable of POMainTableArray">
 
-    </mat-card-content>
-  </mat-card>
-</div>
+      <td style="border: 2px solid #4863a0;text-align: center;">
+        {{mainTable.PR_Ref_No}}</td>
+      <td style="border: 2px solid #4863a0;text-align: center;">
+        {{mainTable.PRDate |
+        date:'dd-MMM-yyyy' }}
+      </td>
+      <td style="border: 2px solid #4863a0;text-align: left;">
+        {{mainTable.deptname}}</td>
+      <td style="border: 2px solid #4863a0;text-align: left;">
+        {{mainTable.empname}}</td>
+      <td style="border: 2px solid #4863a0;text-align: left;white-space: wrap;">
+        {{mainTable.rawmatname}}</td>
+      <td style="border: 2px solid #4863a0;text-align: left;">
+        {{mainTable.uom}}
+      </td>
+      <td style="border: 2px solid #4863a0;">{{mainTable.ApprovedQty}}</td>
+      <td style="border: 2px solid #4863a0;">{{mainTable.poqty}}</td>
+      <td style="border: 2px solid #4863a0;">{{mainTable.balqty}}</td>
+    </tr>
+  </tbody>
+</table>

@@ -20,48 +20,48 @@ export class AdminService {
     return throwError(errorMessage);
   }
   Location(){
-    return this.http.get('http://103.21.76.94:6055/login/Location').pipe(
+    return this.http.get('http://192.168.203.59:3000/login/Location').pipe(
       catchError(this.handleError))
   }
 
   dept(){
-    return this.http.get('http://103.21.76.94:6055/login/Department').pipe(
+    return this.http.get('http://192.168.203.59:3000/login/Department').pipe(
       catchError(this.handleError))
   }
   Emp(Deptid:any){
-    return this.http.get('http://103.21.76.94:6055/login/Empolyee?Deptid='+Deptid).pipe(
+    return this.http.get('http://192.168.203.59:3000/login/Empolyee?Deptid='+Deptid).pipe(
       catchError(this.handleError))
   }
   menuname(){
-    return this.http.get('http://103.21.76.94:6055/login/menuname').pipe(
+    return this.http.get('http://192.168.203.59:3000/login/menuname').pipe(
       catchError(this.handleError))
   }
   View(Empid:any,DeptId:any,LocationId:any){
-    return this.http.get('http://103.21.76.94:6055/login/Viewrights?Empid='+Empid+'&DeptId='+DeptId+'&LocationId='+LocationId).pipe(
+    return this.http.get('http://192.168.203.59:3000/login/Viewrights?Empid='+Empid+'&DeptId='+DeptId+'&LocationId='+LocationId).pipe(
       catchError(this.handleError))
   }
   poweruser(Empid:any){
-    return this.http.get('http://103.21.76.94:6055/login/Poweruser?Empid='+Empid).pipe(
+    return this.http.get('http://192.168.203.59:3000/login/Poweruser?Empid='+Empid).pipe(
       catchError(this.handleError))
   }
   Approved(){
-    return this.http.get('http://103.21.76.94:6055/login/Approved').pipe(
+    return this.http.get('http://192.168.203.59:3000/login/Approved').pipe(
       catchError(this.handleError))
   }
   RighitsCheck(Empid: any, Locationid: any,ModuleId:any) {
-    return this.http.get('http://103.21.76.94:6055/login/Samelocationrightscheck?Empid=' + Empid + '&Locationid=' + Locationid+'&ModuleId='+ModuleId)
+    return this.http.get('http://192.168.203.59:3000/login/Samelocationrightscheck?Empid=' + Empid + '&Locationid=' + Locationid+'&ModuleId='+ModuleId)
   }
   Save(RightsUpdate:any){
-    return this.http.post('http://103.21.76.94:6055/login/MenuRighitsDet',RightsUpdate).pipe(
+    return this.http.post('http://192.168.203.59:3000/login/MenuRighitsDet',RightsUpdate).pipe(
       catchError(this.handleError))
   }
   Unapprove(ModuleId:any,Empid:any,DeptId:any,LocationId:any){
-    return this.http.get('http://103.21.76.94:6055/login/Unapprove?ModuleId='+ModuleId+'&Empid='+Empid+'&DeptId='+DeptId+'&LocationId='+LocationId).pipe(
+    return this.http.get('http://192.168.203.59:3000/login/Unapprove?ModuleId='+ModuleId+'&Empid='+Empid+'&DeptId='+DeptId+'&LocationId='+LocationId).pipe(
       catchError(this.handleError))
   }
 
   View1(): Observable<any>{
-    return this.http.get('http://103.21.76.94:6055/login/menuname').pipe(
+    return this.http.get('http://192.168.203.59:3000/login/menuname').pipe(
       catchError(this.handleError)
     );
   }

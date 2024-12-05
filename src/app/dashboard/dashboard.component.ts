@@ -54,20 +54,21 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     const data = JSON.parse(sessionStorage.getItem('location') || '{}');
     this.LoactionId = data[data.length - 1]
-    console.log(this.LoactionId);
+
     const user = JSON.parse(sessionStorage.getItem('session') || '{}');
     this.Empid = user[0].empid
-    console.log(this.Empid);
+    console.log( this.Empid = user[0].empid);
+    
+
 
     this.service.RighitsCheck(this.Empid, this.LoactionId).subscribe((data: any) => {
       this.userRighitsData = data
       if (this.Empid === 154311 || this.Empid === 18 || this.Empid === 132367) {
         this.Admin = true;
-      }else{
+      } else {
         this.Admin = false;
       }
     })
-
   }
 
   cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
@@ -83,8 +84,25 @@ export class DashboardComponent implements OnInit {
       ];
     })
   );
+  Updatelogout = {}
   Logout() {
-    this.router.navigate(['/login'], {});
+    this.Updatelogout = {
+      LocationId: this.LoactionId,
+      Empid: this.Empid,
+      LoginSystem: 'Tab-Entry'
+    }
+
+    this.service.updateuserDetlogout(this.Updatelogout).subscribe({
+      next: (res: any) => {
+        const logout = res
+        if (logout[0].status === 'Y') {
+          this.router.navigate(['/login'], {});
+        } else {
+          return;
+        }
+      },
+    })
+
   }
 
 }

@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { data } from 'jquery';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 
@@ -18,10 +19,12 @@ import { data } from 'jquery';
 })
 export class AdminComponent implements OnInit {
   Menuform!: FormGroup;
+  Logoutform!: FormGroup;
   LoactionId: number = 0
   displayedColumns: string[] = ['S.No', 'Empid', 'Menuname', 'MenuId', 'LocationId', 'DeptId', 'Status', 'ApprovedBy'];
+  displayedLoginuser: string[] = ['S.No', 'Empname', 'LocationId', 'LoginSystem', 'LoginTime','LogoutTime'];
   i: any;
-  constructor(private service: AdminService, private formBuilder: FormBuilder, private loginservice: LoginService, private toastr: ToastrService) {
+  constructor(private service: AdminService, private spinners: NgxSpinnerService, private formBuilder: FormBuilder, private loginservice: LoginService, private toastr: ToastrService) {
 
   }
   isSticky(buttonToggleGroup: MatButtonToggleGroup, id: string) {
@@ -32,7 +35,7 @@ export class AdminComponent implements OnInit {
 
     const data = JSON.parse(sessionStorage.getItem('location') || '{}');
     this.LoactionId = data[data.length - 1]
-    console.log(this.LoactionId);
+    
 
     this.Menuform = this.formBuilder.group({
       modulname: new FormControl('', Validators.required),
@@ -41,7 +44,11 @@ export class AdminComponent implements OnInit {
       Emp: new FormControl('', Validators.required),
       ApprovedBy: new FormControl('', Validators.required),
     })
-
+    this.Logoutform = this.formBuilder.group({
+      Loaction: new FormControl('', Validators.required),
+      Dept: new FormControl('', Validators.required),
+      Emp: new FormControl('', Validators.required),
+    })
     this.GetMenu()
     this.getview()
   }
@@ -51,7 +58,7 @@ export class AdminComponent implements OnInit {
     this.service.menuname().subscribe({
       next: (res: any) => {
         this.MenuNameData = res
-        console.log(this.MenuNameData);
+ 
       },
       error: (err: any) => {
         this.apiErrorMsg = err
@@ -255,21 +262,22 @@ export class AdminComponent implements OnInit {
       })
     }
     console.log(this.RightsUpdate, 'save');
-    this.service.Save(this.RightsUpdate).subscribe({next:(data: any) => {
-      this.RightsDet = data
-      console.log(this.RightsDet);
-      this.Success = this.RightsDet[0].status
-      this.Success_Error = this.RightsDet[0].Msg
-      if (this.RightsDet[0].status === 'Y') {
-        const success = document.getElementById('RightsSave') as HTMLInputElement
-        success.click()
-      } else {
-        const success = document.getElementById('RightsSave') as HTMLInputElement
-        success.click()
-      }
+    this.service.Save(this.RightsUpdate).subscribe({
+      next: (data: any) => {
+        this.RightsDet = data
+        console.log(this.RightsDet);
+        this.Success = this.RightsDet[0].status
+        this.Success_Error = this.RightsDet[0].Msg
+        if (this.RightsDet[0].status === 'Y') {
+          const success = document.getElementById('RightsSave') as HTMLInputElement
+          success.click()
+        } else {
+          const success = document.getElementById('RightsSave') as HTMLInputElement
+          success.click()
+        }
       },
       error: (err: any) => {
-        this.apiErrorMsg=err
+        this.apiErrorMsg = err
         const Error = document.getElementById('apierror') as HTMLInputElement
         Error.click()
         return
@@ -285,6 +293,10 @@ export class AdminComponent implements OnInit {
     if (this.tablabelname === 'VIEW') {
       this.GetDept()
       this.Location()
+    }
+    if (this.tablabelname === 'Logout') {
+      this.GetDept()
+
     }
   }
   RightsDetView: any[] = new Array()
@@ -340,5 +352,88 @@ export class AdminComponent implements OnInit {
       }
     });
 
+  }
+  logoutdeptid: number = 0
+  logoutDeptEvent(a: any) {
+    this.logoutdeptid = a
+    console.log(this.logoutdeptid);
+    if (this.logoutdeptid > 0) {
+      this.service.Emp(this.logoutdeptid).subscribe({
+        next: (data: any) => {
+          this.Employee = data
+          console.log(this.Employee, 'dept');
+        },
+        error: (err: any) => {
+          this.apiErrorMsg = err
+          const Error = document.getElementById('apierror') as HTMLInputElement
+          Error.click()
+          return
+        }
+      })
+    } else {
+      return;
+    }
+  }
+
+  logoutEmpid: number = 0
+  logoutEmpEvent(a: any) {
+    this.logoutEmpid = a.target.value
+    console.log(this.logoutEmpid);
+    if (this.logoutEmpid > 0) {
+      this.service.Location().subscribe({
+        next: (data: any) => {
+          this.LocationData = data
+          console.log(this.LocationData, 'location');
+        },
+        error: (err: any) => {
+          this.apiErrorMsg = err
+          const Error = document.getElementById('apierror') as HTMLInputElement
+          Error.click()
+          return
+        }
+      })
+    }
+  }
+  logoutLocid: number = 0
+  LogutLocationevent(a: any) {
+    this.logoutLocid = a.target.value
+    console.log(this.logoutLocid);
+  }
+  ViewLoginUserDet:any[]=new Array()
+  ViewLogin:boolean=false
+  Viewloginuser(){
+    this.loginservice.ViewloginuserDet(this.Logoutform.controls['Emp'].value,this.Logoutform.controls['Loaction'].value).subscribe((res:any)=>{
+      this.ViewLoginUserDet=res
+      console.log(this.ViewLoginUserDet);
+      if(this.ViewLoginUserDet.length>0){
+        this.ViewLogin=true
+      }
+    })
+  }
+  ErrorMsg: string = ''
+  Updatelogout={}
+  LogoutEmp() {
+    this.Updatelogout={
+      LocationId:this.Logoutform.controls['Loaction'].value,
+      Empid: this.logoutEmpid ,
+      LoginSystem: 'Tab-Entry'
+    }
+    console.log(this.Updatelogout,'this.Updatelogout');
+    this.loginservice.updateuserDetlogout(this.Updatelogout).subscribe({
+      next: (res: any) => {
+        const logout = res
+        if (logout[0].status === 'Y') {
+          this.ErrorMsg = "You Logout " + this.Empid + ""
+          console.log(this.ErrorMsg);
+          // const view = document.getElementById('Error') as HTMLInputElement
+          // view.click()
+        } else {
+          return;
+        }
+      },
+    })
+  }
+  spinner() {
+    this.spinners.show()
   }
 }

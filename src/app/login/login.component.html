@@ -37,7 +37,7 @@
         <select class="form-select" formControlName="Loaction" (change)="LoactionEvent($event)"
           [ngClass]="{ 'is-invalid':gobtn && go['Loaction'].errors}" required>
           <option value="" disabled selected hidden>Select a Location-ID</option>
-          <option *ngFor="let item of Loaction" [value]="item.CompanyID">{{item.CompShort}}</option>
+          <option value="" *ngFor="let item of Loaction" [value]="item.CompanyID">{{item.CompShort}}</option>
         </select>
         <div *ngIf="gobtn && go['Loaction'].errors" class="invalid-feedback">
           <div *ngIf="go['Loaction'].errors['required']"> Field must be Select-Loaction</div>
@@ -120,7 +120,22 @@
         </h3>
       </div>
       <div class="modal-footer">
-        <button mat-raised-button class="button" type="button" color="primary" >Ok</button>
+        <button mat-raised-button class="button" type="button" color="warn" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button style="display: none;" id="screenError" data-bs-toggle="modal" data-bs-target="#screenErrorDialog"></button>
+<div class="modal fade" id="screenErrorDialog" data-bs-backdrop='static'>
+  <div class=" modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" >Warning!!!</div>
+      <div class="modal-body">
+        <h3 style="font-weight: 550;color: black;">{{this.ErrorMsg}}</h3>
+      </div>
+      <div class="modal-footer">
+        <button mat-raised-button class="button" type="button" color="warn" data-bs-dismiss="modal">OK</button>
       </div>
     </div>
   </div>

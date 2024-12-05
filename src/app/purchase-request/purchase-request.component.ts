@@ -26,6 +26,8 @@ export class PurchaseRequestComponent implements OnInit {
   loactionId: number = 0
 
   @ViewChild('Termsbtnupdate') Termsbtnupdate!: ElementRef;
+  @ViewChild('Error01') Error01!: ElementRef;
+
   constructor(private router: Router, private date: DatePipe, private toastr: ToastrService, private spinnerService: NgxSpinnerService, private formBuilder: FormBuilder, private service: PurchaseRequestService) { }
   ngOnInit(): void {
     this.frmdate = this.date.transform(this.currentDate, 'yyyy-MM-dd');
@@ -103,8 +105,9 @@ export class PurchaseRequestComponent implements OnInit {
             if (this.Issuelocaid == 0) {
               this.ErrorMsg = ''
               this.ErrorMsg = 'Please fix the Issue Location ID in Store Master entry...'
-              const Company = document.getElementById('Error') as HTMLInputElement
-              Company.click()
+              // const Company = document.getElementById('Error') as HTMLInputElement
+              // Company.click()
+              this.Error01.nativeElement.click()
               return
             }
           }
@@ -131,11 +134,9 @@ export class PurchaseRequestComponent implements OnInit {
   apiErrorMsg:string=''
   capexDeptid: number = 0
   GetDeptCapex() {
-debugger
     this.service.CapexValidationDept(this.Empid).subscribe((data: any) => {
       const capexDeptdata = data
       console.log("capexDeptdata", capexDeptdata)
-      debugger
       if(capexDeptdata[0].status ==='N'){
         this.apiErrorMsg=capexDeptdata[0].Msg
         const Error = document.getElementById('apierror') as HTMLInputElement
@@ -203,8 +204,7 @@ debugger
       if (StockReNoValidationData.length > 0) {
         this.ErrorMsg = ''
         this.ErrorMsg = 'Already this transactions No exists in Store Requisition Table. Please contact your Systemadmin '
-        let Error = document.getElementById('Error')?.click()
-
+        this.Error01.nativeElement.click()
         return;
       } else {
         return;
@@ -228,6 +228,8 @@ debugger
     this.GetStockReNochck()
     this.gobtn = true
     if (this.Purchaseindenttypeform.invalid) {
+      console.log(this.Purchaseindenttypeform);
+
       this.scrollToFirstInvalidControl()
       return;
     }
@@ -317,9 +319,10 @@ debugger
           this.ErrorMsg = ''
           this.ErrorMsg = 'Material already selected..Please Select a Another Material...'
           this.StockRequestmaterialForm.controls['material'].setValue('')
-          const material = document.getElementById('Error') as HTMLInputElement
-          material.click()
-          material.focus()
+          // const material = document.getElementById('Error') as HTMLInputElement
+          // material.click()
+          // material.focus()
+          this.Error01.nativeElement.click()
           return;
         }
         else {
@@ -452,10 +455,10 @@ debugger
         this.error = 1
         this.ErrorMsg = ''
         this.ErrorMsg = 'Please set the Location Name in location Master. Shall I continue ? '
-        const loc = document.getElementById('Error') as HTMLInputElement
-        loc.click()
+        // const loc = document.getElementById('Error') as HTMLInputElement
+        // loc.click()
+        this.Error01.nativeElement.click()
       }
-      debugger
       if (this.LocationstoreData.length == 1) {
         console.log(this.LocationstoreData[0].locname, 'b');
         let a = this.LocationstoreData[0].locname
@@ -577,7 +580,6 @@ debugger
         this.Viewbtn = true
         this.Rawmateriladata = []
         this.toastr.success('Record Updated SuccessFully', "Success")
-        debugger
         if (this.Material.length > 0) {
           if (this.POIntentDisablebtn[this.IndentdisIndex] === false) {
             this.matlcolor = 1
@@ -621,7 +623,6 @@ debugger
   }
   ii: any
   deleteMat() {
-    debugger
     if (this.IntendScheduleSave.length > 0) {
       for (let i = 0; i < this.IntendScheduleSave.length; i++) {
         console.log(this.Material[this.schInd].MaterialId, 'mattabel');
@@ -644,8 +645,9 @@ debugger
     this.error = 2
     this.ErrorMsg = ''
     this.ErrorMsg = 'If You Want to Delete Material... !'
-    const delte = document.getElementById('Error') as HTMLInputElement
-    delte.click()
+    // const delte = document.getElementById('Error') as HTMLInputElement
+    // delte.click()
+    this.Error01.nativeElement.click()
     this.schInd = Index
 
   }
@@ -654,7 +656,6 @@ debugger
   IndemtremoveIndex: number = 0
   Qtycorrection(Index: any) {
     this.IndemtremoveIndex = Index
-    debugger
    }
   EditQty(){
     if (this.IntendScheduleSave.length > 0) {
@@ -662,15 +663,14 @@ debugger
         this.ErrorMsg = ''
         this.ErrorMsg = "Do You Want  Change The Quantity ?" +
           "If You Change,Indent Schdeule Will be Delete"
-        const value = document.getElementById('Error') as HTMLInputElement
-        value.click()
+        // const value = document.getElementById('Error') as HTMLInputElement
+        // value.click()
+        this.Error01.nativeElement.click()
       }
     }
   }
   changeQty() {
-    debugger
     console.log('sddhsf');
-
     if (this.IntendScheduleSave.length > 0) {
       console.log(this.IndemtremoveIndex);
       for (let i = 0; i < this.IntendScheduleSave.length; i++) {
@@ -772,7 +772,6 @@ debugger
         }
       }
       else {
-        debugger
         let y = 0
         for (let i = 0; i < this.IntendScheduleInsertArr.length; i++) {
           this.last = +  this.IntendScheduleInsertArr[i].Qty
@@ -857,8 +856,9 @@ debugger
       this.ErrorMsg = ''
       this.ErrorMsg = 'Please fill the full schedule'
       this.POIntentDisablebtn[this.IndentdisIndex] = false
-      const TotalIndetSChQtydialog = document.getElementById('Error')
-      TotalIndetSChQtydialog?.click()
+      // const TotalIndetSChQtydialog = document.getElementById('Error')
+      // TotalIndetSChQtydialog?.click()
+      this.Error01.nativeElement.click()
       this.valid = 1
     }
 
@@ -874,7 +874,6 @@ debugger
   }
   OldPOData: any[] = new Array()
   OldPo(Index: number) {
-    debugger
     this.IntentRawMatId = this.Material[Index].MaterialId
     this.Old()
   }
@@ -900,10 +899,7 @@ debugger
   AddAttackment() {
 
   }
-  savemenu() {
-    const Save = document.getElementById('Savemenu') as HTMLInputElement
-    Save.click()
-  }
+
 
   PurchaseReqSave: any[] = new Array()
   srnewtype: number = 0
@@ -915,7 +911,6 @@ debugger
   Msg: string = ''
   GetSave() {
     this.getStockReqno()
-    debugger
     this.last = this.IntendScheduleSave.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.Qty), 0);
     const first = this.Material.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.Quantity), 0);
     if (parseFloat(this.last) === parseFloat(first)) {
@@ -958,10 +953,10 @@ debugger
 
       })
       console.log(this.PurchaseReqSave, 'save');
-      this.spinnerService.show()
+      // this.spinnerService.show()
       this.service.Save(this.PurchaseReqSave).subscribe((data: any) => {
         this.PurchaseReqUpdate = data
-        this.spinnerService.hide()
+        // this.spinnerService.hide()
         this.Sts = this.PurchaseReqUpdate[0].status
         this.Msg = this.PurchaseReqUpdate[0].Msg
         if (this.Sts === 'Y') {

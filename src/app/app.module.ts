@@ -57,9 +57,23 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { StorageQtyAllocationComponent } from './storage-qty-allocation/storage-qty-allocation.component';
 import { TooltipModule } from 'primeng/tooltip';
-import { DashComponent } from './dash/dash.component';
 import { ShelfLifeBatchQtyComponent } from './shelf-life-batch-qty/shelf-life-batch-qty.component';
 import { StoreToStoreMomentComponent } from './store-to-store-moment/store-to-store-moment.component';
+import { StoreissuelogoutComponent } from './storeissuelogout/storeissuelogout.component';
+import { IndentEntryComponent } from './indent-entry/indent-entry.component';
+import { PurchaseMainModuleComponent } from './purchase-main-module/purchase-main-module.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { NewPurchaseOrderComponent } from './new-purchase-order/new-purchase-order.component';
+import { PoApprovalComponent } from './po-approval/po-approval.component';
+import { PocloseComponent } from './poclose/poclose.component';
+import { RejPOApprovalComponent } from './rej-poapproval/rej-poapproval.component';
+import { CODApproveComponent } from './cod-approve/cod-approve.component';
+import { CapitalporeviewComponent } from './capitalporeview/capitalporeview.component';
+import { Poshortclose2levelComponent } from './poshortclose2level/poshortclose2level.component';
+import { Poshortclose3levelComponent } from './poshortclose3level/poshortclose3level.component';
+import { CreditdaysApprovalComponent } from './creditdays-approval/creditdays-approval.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -78,9 +92,20 @@ import { StoreToStoreMomentComponent } from './store-to-store-moment/store-to-st
     MaterialReturnFrmDeptComponent,
     ReworkissueComponent,
     StorageQtyAllocationComponent,
-    DashComponent,
     ShelfLifeBatchQtyComponent,
     StoreToStoreMomentComponent,
+    StoreissuelogoutComponent,
+    IndentEntryComponent,
+    PurchaseMainModuleComponent,
+    NewPurchaseOrderComponent,
+    PoApprovalComponent,
+    PocloseComponent,
+    RejPOApprovalComponent,
+    CODApproveComponent,
+    CapitalporeviewComponent,
+    Poshortclose2levelComponent,
+    Poshortclose3levelComponent,
+    CreditdaysApprovalComponent,
     // DashboardCommericaComponent
   ],
   imports: [
@@ -104,7 +129,7 @@ import { StoreToStoreMomentComponent } from './store-to-store-moment/store-to-st
     NgSelectModule,
     MatCheckboxModule,
     InputOtpModule,
-    FieldsetModule,MatTooltipModule,DialogModule,NgxSpinnerModule,ConfirmDialogModule,TooltipModule,
+    FieldsetModule,MatTooltipModule,DialogModule,NgxSpinnerModule,ConfirmDialogModule,TooltipModule,MatProgressSpinnerModule,
     TableModule,ContextMenuModule, MatSidenavModule, MatListModule, MatTableModule, MatPaginatorModule, MatSortModule,
     HttpClientModule,MatAutocompleteModule,MatTabsModule,NgMultiSelectDropDownModule,MatButtonToggleModule,MatProgressBarModule
   ],

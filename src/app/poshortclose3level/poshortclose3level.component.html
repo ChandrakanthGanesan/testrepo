@@ -1,0 +1,65 @@
+<h1>PO Short Close 3rd Level</h1>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <label for="" class="form-label">Approved By</label>
+                <select name="" id="" class="form-select" [(ngModel)]="empid">
+                    <option value="" *ngFor="let load of loadArray" [value]="load.empid">{{load.empname}}</option>
+                </select>
+            </div>
+            <div class="col-6">
+                <button mat-raised-button
+                    style="background-color: grey;color: white;font-family: 'Times New Roman', Times, serif;margin-top: 1.8rem;"
+                    (click)=" table() ">View</button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>PONO</th>
+                        <th>PO_Date</th>
+                        <th>Supplier_Name</th>
+                        <th>Raw_Material</th>
+                        <th>UOM</th>
+                        <th>Ord_Qty</th>
+                        <th>GRN_Qty</th>
+                        <th>Bal_Qty</th>
+                        <th>Rate</th>
+                        <th>Value</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let table of tableArray">
+                        <td><input type="checkbox" class="form-input-check" (change)="selectedrows($event,table)"></td>
+                        <td>{{table.pono}}</td>
+                        <td>{{table.podate}}</td>
+                        <td>{{table.supname}}</td>
+                        <td>{{table.rawmatname}}</td>
+                        <td>{{table.uom}}</td>
+                        <td>{{table.Ord_Qty}}</td>
+                        <td>{{table.grnqty}}</td>
+                        <td>{{table.balqty}}</td>
+                        <td>{{table.Rate}}</td>
+                        <td>{{(table.balqty)*(table.Rate)}}</td>
+                        <td>{{table.Shortclose_reason}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-end">
+                <button mat-raised-button
+                    style="background-color: rgb(38, 158, 38);color: white;font-family: 'Times New Roman', Times, serif;font-size: 16px;"
+                    (click)="approve()">Approve</button>
+                <button mat-raised-button
+                    style="background-color: red;color: white;font-family: 'Times New Roman', Times, serif;margin-left: 3px;font-size: 16px;"
+                    (click)="  clear()">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>

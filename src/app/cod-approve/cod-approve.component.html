@@ -1,0 +1,49 @@
+<h1>COD Approve</h1>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <label for="" class="form-label">Approved By</label>
+                <ng-select [items]="ApproverArray" bindValue="empid" bindLabel="empname"
+                    (change)="Approver($event)"></ng-select>
+            </div>
+            <div class="col-6">
+                <button mat-raised-button
+                    style="background-color: grey;font-family: 'Times New Roman', Times, serif;font-size: 16px;margin-top: 1.5rem;color: white;"
+                    (click)="view()">View</button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Approve</th>
+                        <th>PO No</th>
+                        <th>PO Date</th>
+                        <th>Supplier Name</th>
+                        <th>Transporter Name</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let table of tableArray">
+                    <tr>
+                        <td><input type="checkbox" class="form-input-check" (change)="selectedrows($event,table)"></td>
+                        <td>{{table.pono}}</td>
+                        <td>{{table.podate}}</td>
+                        <td>{{table.name}}</td>
+                        <td>{{table.supname}}</td>
+                        <td>{{table.amount}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-end">
+            <button mat-raised-button
+                style="background-color: green;color: white;font-family: 'Times New Roman', Times, serif;"
+                (click)="  approve()">Approve</button>
+            <button mat-raised-button
+                style="background-color: red;color: white;font-family: 'Times New Roman', Times, serif;margin-left: 2px;" (click)="clear()">Clear</button>
+        </div>
+    </div>
+</div>

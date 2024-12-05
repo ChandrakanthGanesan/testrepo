@@ -4,9 +4,9 @@
   </div>
 </ngx-spinner>
 <app-navigation></app-navigation>
-<mat-card-header class="justify-content-center mt-1">
+<!-- <mat-card-header class="justify-content-center mt-1">
   <mat-card-title class="title" style="text-transform: uppercase;font-weight: 600;">Purchase Request</mat-card-title>
-</mat-card-header>
+</mat-card-header> -->
 <div class="main content mt-3">
   <mat-card>
     <mat-card-content>
@@ -40,14 +40,10 @@
           <div class="row">
             <div class="col-md-6">
               <label for="exampleFormControlInput3" class="form-label">Indent Type <span>*</span> </label>
-              <mat-select class="form-control" formControlName="indentype"
-                [ngClass]="{ 'is-invalid':gobtn && go['indentype'].errors}">
-                <mat-option value="" disabled selected hidden>--Select--</mat-option>
-                <mat-option value="0" selected>Indent</mat-option>
-              </mat-select>
-              <div *ngIf="gobtn && go['indentype'].errors" class="invalid-feedback">
-                <div *ngIf="go['indentype'].errors['required']"> Field must be entered-Indent Type</div>
-              </div>
+              <select class="form-control" formControlName="indentype">
+                <option value="1" selected>Indent</option>
+              </select>
+              <mat-error *ngIf="gobtn && this.Purchaseindenttypeform.controls['indentype'].value==''">Field must be entered-Indent Type</mat-error>
             </div>
             <div class="col-md-6 mt-2">
               <label for="exampleFormControlInput3" class="form-label">Description</label>
@@ -179,7 +175,7 @@
     </mat-card-content>
     <mat-card-footer class="d-grid gap-2 d-flex justify-content-end savebtn">
       <button mat-raised-button type="button" class="" style="background-color: rgb(32, 178, 44);"
-        (click)="GetSave()">Save</button>
+      data-bs-toggle="modal" data-bs-target="#Savemenudialog" >Save</button>
       <button mat-raised-button type="button" class="" style="background-color:lightcoral;">Clear</button>
     </mat-card-footer>
   </mat-card>
@@ -191,8 +187,8 @@
       <div class="modal-header"
         style="font-size: large;color: brown;  background-color: rgb(214, 247, 247);font-weight: bold;"> Store
         Requestion Material Detail
-        <button type="button" class="btn-close btn btn-outline-danger" data-bs-dismiss="modal"
-          aria-label="Close"></button>
+        <button type="button" class="btn-close btn btn-outline-danger" data-bs-dismiss="modal" aria-label="Close"
+          #closeButton></button>
       </div>
       <div class="modal-body termsfrm">
         <form [formGroup]="StockRequestmaterialForm" id="formId" appInvalidControlScroll>
@@ -204,13 +200,10 @@
                 </label>
                 <ng-select [(ngModel)]="Rawmatid" (change)="getMaterialDetails()" (input)="Rawmat($event)"
                   formControlName="material" placeholder="--Select--" [items]="Rawmateriladata" class="form-control"
-                  bindLabel="gstrmatdisp" [ngClass]="{ 'is-invalid':Materialupdatebtn && mat['material'].errors}"
-                  bindValue="rawmatid" [searchFn]="customSearchFn">
+                  bindLabel="gstrmatdisp" bindValue="rawmatid" [searchFn]="customSearchFn">
                 </ng-select>
-
-                <div *ngIf="Materialupdatebtn && mat['material'].errors" class="invalid-feedback">
-                  <div *ngIf="mat['material'].errors['required']"> Field must be select-Indent Type</div>
-                </div>
+                <mat-error *ngIf="Materialupdatebtn &&StockRequestmaterialForm.controls['material'].value ==''">Material
+                  Required</mat-error>
               </div>
               <div class="col">
                 <label for="exampleFormControlInput3" class="form-label">UOM</label>
@@ -238,12 +231,10 @@
             <div class="row no-gutters">
               <div class="col-6 col-md-3 col-lg-3">
                 <label for="exampleFormControlInput3" class="form-label">Quantity <span>*</span></label>
-                <input type="number" class="form-control" formControlName="MaterialQty"
-                  [ngClass]="{ 'is-invalid':Materialupdatebtn && mat['MaterialQty'].errors}"
-                  (input)="RequestQty($event)">
-                <div *ngIf="Materialupdatebtn && mat['MaterialQty'].errors" class="invalid-feedback">
-                  <div *ngIf="mat['MaterialQty'].errors['required']"> Field must be entered-Quantity</div>
-                </div>
+                <input type="number" class="form-control" formControlName="MaterialQty" (input)="RequestQty($event)">
+                <mat-error
+                  *ngIf="Materialupdatebtn &&StockRequestmaterialForm.controls['MaterialQty'].value ==''">Quantity
+                  Required</mat-error>
               </div>
               <div class="col-6 col-md-3 col-lg-3">
                 <button mat-stroked-button type="button" class="de" (click)="GetMatQtyPending()">Detail</button>
@@ -267,16 +258,14 @@
               </div>
               <div class="col-6 col-md-4 col-lg-4">
                 <label for="exampleFormControlInput3" class="form-label">Priority <span>*</span></label>
-                <select class="form-select" formControlName="Priority"
-                  [ngClass]="{ 'is-invalid':Materialupdatebtn && mat['Priority'].errors}">
+                <select class="form-select" formControlName="Priority">
                   <option value="" disabled selected hidden>--Select--</option>
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
                   <option value="High">High</option>
                 </select>
-                <div *ngIf="Materialupdatebtn && mat['Priority'].errors" class="invalid-feedback">
-                  <div *ngIf="mat['Priority'].errors['required']"> Field must be entered-Priority</div>
-                </div>
+                <mat-error *ngIf="Materialupdatebtn &&StockRequestmaterialForm.controls['Priority'].value ==''">Priority
+                  Required</mat-error>
               </div>
               <div class="col-6 col-md-4 col-lg-4">
                 <label for="exampleFormControlInput3" class="form-label">Location <span>*</span> </label>
@@ -358,15 +347,12 @@
             <div class="row mt-1"> -->
               <div class="col-md-6">
                 <label for="exampleFormControlInput3" class="form-label">Description <span>*</span></label>
-                <textarea class="form-control" cols="10" rows="3" formControlName="Descripation"
-                  [ngClass]="{ 'is-invalid':Materialupdatebtn && mat['Descripation'].errors}"></textarea>
-                <div *ngIf="Materialupdatebtn && mat['Descripation'].errors" class="invalid-feedback">
-                  <div *ngIf="mat['Descripation'].errors['required']">Please fill the description. without Description
-                    you
-                    cannot save</div>
-                  <mat-hint *ngIf="Descripation.length < 10">Please fill the clear description. without
-                    clear Description you cannot save, It should be atleast 10 character</mat-hint>
-                </div>
+                <textarea class="form-control" cols="10" rows="3" formControlName="Descripation"></textarea>
+                <mat-error
+                  *ngIf="Materialupdatebtn && StockRequestmaterialForm.controls['Descripation'].value ==''">Description
+                  Required</mat-error><br>
+                <mat-error *ngIf="Materialupdatebtn && StockRequestmaterialForm.controls['Descripation'].value.length < 10">Please fill the clear description. without
+                  clear Description you cannot save, It should be atleast 10 character</mat-error>
               </div>
             </div>
           </div>
@@ -477,31 +463,32 @@
   </div>
 </div>
 
-<button style="display: none;" id="Error" data-bs-toggle="modal" data-bs-target="#ErrorDialog"></button>
-<div class="modal" id="ErrorDialog" data-bs-backdrop='static'>
-  <div class=" modal-dialog modal-dialog-centered">
+<button style="display: none;" data-bs-toggle="modal" data-bs-target="#er" #Error01>bbbb</button>
+<div class="modal" id="er" data-bs-backdrop='static'>
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header" style="font-size: medium;color: rgb(5, 5, 5);font-weight: bold;">Warning</div>
       <div class="modal-body">
-        <p>{{ErrorMsg}}</p>
+        <h3>{{this.ErrorMsg}}</h3>
       </div>
       <div class="modal-footer" *ngIf="this.error===1">
-        <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
-          data-bs-toggle="modal" data-bs-target="#Material">Yes</button>
+        <button mat-raised-button type="button" class="btn  m-2" color="primary" data-bs-toggle="modal"
+          data-bs-target="#Material">Yes</button>
         <button mat-raised-button type="button" class="btn  m-2" color="warn" data-bs-dismiss="modal">No</button>
       </div>
       <div class="modal-footer" *ngIf="this.error===2">
-        <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
-          (click)="deleteMat()" data-bs-dismiss="modal">Yes</button>
+        <button mat-raised-button type="button" class="btn  m-2" color="primary" (click)="deleteMat()"
+          data-bs-dismiss="modal">Yes</button>
         <button mat-raised-button type="button" class="btn  m-2" color="warn" data-bs-dismiss="modal">No</button>
       </div>
       <div class="modal-footer" *ngIf="this.error===3">
-        <button mat-raised-button type="button" class="btn  m-2" style="background-color: lightgreen;"
-          data-bs-target="#IndentsModal" data-bs-toggle="modal">OK</button>
+        <button mat-raised-button type="button" class="btn  m-2" color="primary" data-bs-target="#IndentsModal"
+          data-bs-toggle="modal">OK</button>
       </div>
     </div>
   </div>
 </div>
+
 
 <button style="display: none;" id="apierror" data-bs-toggle="modal" data-bs-target="#apierrorDialog"></button>
 <div class="modal" id="apierrorDialog" data-bs-backdrop='static'>
@@ -517,8 +504,7 @@
         </h3>
       </div>
       <div class="modal-footer">
-        <button mat-raised-button type="button" class="btn m-2" color="warn" data-bs-dismiss="modal"
-          (click)="Spinnercall()">OK</button>
+        <button mat-raised-button type="button" class="btn m-2" color="warn" data-bs-dismiss="modal">OK</button>
       </div>
     </div>
   </div>
@@ -651,7 +637,7 @@
   </div>
 </div>
 
-<button style="display: none;" id="Savemenu" data-bs-toggle="modal" data-bs-target="#Savemenudialog"></button>
+<button style="display: none;" id="Savemenu" data-bs-toggle="modal" data-bs-target="#Savemenudialog" ></button>
 
 <div class="modal" id="Savemenudialog" data-bs-backdrop='static'>
   <div class="modal-dialog modal-sm modal-dialog-centered">
@@ -664,7 +650,7 @@
       </div>
       <div class="modal-footer" style="background-color: rgb(214, 248, 206);">
         <button mat-raised-button type="button" style="background-color: #92d87e;" data-bs-dismiss="modal"
-          (click)="GetSave()">Yes</button>
+          (click)="GetSave() ">Yes</button>
         <button mat-raised-button type="button" style="background-color: #f57c7c;" data-bs-dismiss="modal"
           data-bs-dismiss="modal">No</button>
       </div>

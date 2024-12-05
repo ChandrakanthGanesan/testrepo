@@ -23,9 +23,11 @@ export class LoginComponent implements OnInit {
   currentDate = new Date()
   Todate: any
   Frmdate1: any
-  constructor(private router: Router, private date: DatePipe,private spinnerService: NgxSpinnerService, private fb: FormBuilder, private toastr: ToastrService, private zone: NgZone, private service: LoginService) { }
+  Logindate: any
+  constructor(private router: Router, private date: DatePipe, private spinnerService: NgxSpinnerService, private fb: FormBuilder, private toastr: ToastrService, private zone: NgZone, private service: LoginService) { }
   ngOnInit(): void {
     this.password = 'password';
+    this.Logindate = this.date.transform(this.currentDate, 'yyyy/MM/dd hh:mm:ss');
     this.Frmdate = this.date.transform(this.currentDate, 'yyyy/MM/dd hh:MM:ss');
     this.Frmdate1 = this.date.transform(this.currentDate, 'yyyy/MM/dd ');
     this.Todate = this.date.transform(this.currentDate, 'yyyy/MM/dd hh:MM:ss');
@@ -39,6 +41,9 @@ export class LoginComponent implements OnInit {
       Loaction: new FormControl('', Validators.required),
     });
     this.Company()
+    // console.log(this.Loaction[0].CompShort,'dfg');
+
+
   }
   Login: boolean = false;
   Mpin: boolean = true;
@@ -94,18 +99,21 @@ export class LoginComponent implements OnInit {
     this.service.companyDetail().subscribe((res: any) => {
       this.Loaction = res
       // console.log(this.Loaction);
-
+    this.loginform.controls['Loaction'].setValue(this.Loaction[0].CompShort)
+    this.loginform.controls['Loaction'].setValue(this.Loaction[0].CompanyID)
+    this.LoactionId.push(this.loginform.controls['Loaction'].value)
+    sessionStorage.setItem('location', JSON.stringify(this.LoactionId));
     })
   }
   LoactionId: any[] = new Array()
   LoactionEvent(event: any) {
-    const LoactionId = parseInt(event.target.value)
-    // console.log(LoactionId, 'LoactionId');
+    let LoactionId = parseInt(event.target.value)
+    LoactionId= parseInt(this.loginform.controls['Loaction'].value)
+    console.log(LoactionId, 'LoactionId');
+    sessionStorage.clear()
+    this.LoactionId=[]
     this.LoactionId.push(LoactionId)
     sessionStorage.setItem('location', JSON.stringify(this.LoactionId));
-
-
-
   }
   get go(): { [key: string]: AbstractControl } {
     return this.loginform.controls;
@@ -116,50 +124,108 @@ export class LoginComponent implements OnInit {
   Strvar: any = ''
   UserEmpid: number = 0
   userloc: number = 0
+  ErrorMsg: string = ''
   login() {
     this.gobtn = true
     if (this.loginform.invalid) {
       return
     } else {
-      this.service.login(this.loginform.controls['UserName'].value, this.loginform.controls['Pwd'].value).subscribe({next:(res: any) => {
-        this.logindata = res
-        // console.log(this.logindata, 'login');
-        if (this.logindata[0].password === this.service.CryptString(this.loginform.controls['Pwd'].value)) {
-          this.toastr.success('Login Successfully', 'Success');
-          this.zone.run(() => {
-            sessionStorage.setItem('session', JSON.stringify(this.logindata));
+      //
+      this.service.login(this.loginform.controls['UserName'].value, this.loginform.controls['Pwd'].value).subscribe({
+        next: (res: any) => {
+          this.logindata = res
+          console.log(this.logindata, 'login');
+          if (this.logindata.length > 0) {
+            if (this.logindata[0].password === this.service.CryptString(this.loginform.controls['Pwd'].value)) {
+              this.zone.run(() => {
+                sessionStorage.setItem('session', JSON.stringify(this.logindata));
+                const user = JSON.parse(sessionStorage.getItem('session') || '{}');
+                this.Frm_emailId = user[0].email
+                this.Empname = user[0].cusername
+                this.Poweruser = user[0].poweruser
+                this.UserEmpid = user[0].empid
+                const data = JSON.parse(sessionStorage.getItem('location') || '{}');
+                this.userloc = data[data.length - 1]
+                this.service.logionvaild(this.UserEmpid).subscribe({
+                  next: (data: any) => {
+                    const Alreadtlogindata = data
+                    console.log(Alreadtlogindata);
+                    if (Alreadtlogindata.length > 0) {
+                      if (Alreadtlogindata[0].status == 'N') {
+                        this.apiErrorMsg = Alreadtlogindata[0].Msg
+                        const Error = document.getElementById('apierror') as HTMLInputElement
+                        Error.click()
+                        return
+                      }
+                      this.ErrorMsg = ''
+                      this.ErrorMsg = 'Your Empid Is Already Login in Another System/Tab..Please Logout And Login';
+                      // console.log(this.ErrorMsg);
+                      const Error = document.getElementById('screenError') as HTMLInputElement
+                      Error.click()
+                      return
+                    } else {
+                      this.service.userlogin(this.UserEmpid, this.Empname, this.userloc, this.LoginSystem, this.Logindate).subscribe({
+                        next: (res: any) => {
+                          this.UpdateLoginDetail = res
+                          if (this.UpdateLoginDetail[0].status === 'Y') {
+                            this.toastr.success('Login Successfully', 'Success');
+                            this.router.navigate(['/Dashboard'], {});
+                          } else {
+                            this.apiErrorMsg = ''
+                            this.apiErrorMsg = this.UpdateLoginDetail[0].Msg
+                            const Error = document.getElementById('apierror') as HTMLInputElement
+                            Error.click()
+                            return
+                          }
+                        },
+                        error: (err: any) => {
+                          this.apiErrorMsg = err
+                          const Error = document.getElementById('apierror') as HTMLInputElement
+                          Error.click()
+                          return
+                        }
+                      })
+                    }
 
+                  },
+                  error: (err: any) => {
+                    this.apiErrorMsg = err
+                    const Error = document.getElementById('apierror') as HTMLInputElement
+                    Error.click()
+                    return
+                  }
+                })
 
-            const user = JSON.parse(sessionStorage.getItem('session') || '{}');
-            this.Frm_emailId = user[0].email
-            this.Empname = user[0].cusername
-            this.Poweruser = user[0].poweruser
-            this.UserEmpid = user[0].empid
-            const data = JSON.parse(sessionStorage.getItem('location') || '{}');
-            this.userloc = data[data.length - 1]
-            this.router.navigate(['/Dashboard'], {});
-            // if (this.Poweruser === 'Y') {
-            //   this.router.navigate(['/Dashboard'], {});
-            // } else {
-            //   this.getMailuserlist()
-            //   this.showDialog()
-            // }
-          })
-        } else {
-          this.toastr.error('Please Check Username and Password', 'Error')
+                // if (this.Poweruser === 'Y') {
+                //   this.router.navigate(['/Dashboard'], {});
+                // } else {
+                //   this.getMailuserlist()
+                //   this.showDialog()
+                // }
+              })
+            }
+          } else {
+            console.log("sdfjksdfh");
+            this.ErrorMsg = ''
+            this.ErrorMsg = 'Your Password Is Invaild..Please Check...'
+            const Error = document.getElementById('screenError') as HTMLInputElement
+            Error.click()
+            return
+          }
+        },
+        error: (err: any) => {
+          this.apiErrorMsg = err
+          const Error = document.getElementById('apierror') as HTMLInputElement
+          Error.click()
+          return
         }
-      },
-      error: (err: any) => {
-        this.apiErrorMsg=err
-        const Error = document.getElementById('apierror') as HTMLInputElement
-        Error.click()
-        return
-      }
       })
 
     }
   }
-  apiErrorMsg:string=''
+  UpdateLoginDetail: any[] = new Array()
+  LoginSystem: string = 'Tab-Entry'
+  apiErrorMsg: string = ''
   Empname: string = ''
   Poweruser: string = ''
   Mpinlogin() {
@@ -254,8 +320,8 @@ export class LoginComponent implements OnInit {
                     const InsertOtpDetalis = data
                     if (InsertOtpDetalis[0].status === 'Y') {
                       this.router.navigate(['/Dashboard'], {});
-                    }else{
-                      this.otpvaildation=  this.otpvaildation +1
+                    } else {
+                      this.otpvaildation = this.otpvaildation + 1
                       this.service.UpdateOtpValidation(this.otpvaildation, this.UserEmpid, this.userloc, this.OtpManual, this.Frmdate1).subscribe((data: any) => {
                         this.updateotpVaild = data
                       })
@@ -270,8 +336,8 @@ export class LoginComponent implements OnInit {
               return
             }
           } else {
-            if(parseInt(this.vaildotp[0].OtpValidation)===0){
-              const newotp=document.getElementById('newotp')as HTMLInputElement
+            if (parseInt(this.vaildotp[0].OtpValidation) === 0) {
+              const newotp = document.getElementById('newotp') as HTMLInputElement
               newotp.click()
             }
             this.Otpvaild = this.Otpvaild - 1

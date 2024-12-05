@@ -1,0 +1,49 @@
+h1 {
+    font-family: 'Times New Roman', Times, serif;
+    color: brown;
+    font-weight: 800;
+    text-align: center;
+    margin-top: 10px;
+}
+
+label {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+}
+input{
+    font-family: 'Times New Roman', Times, serif;
+}
+
+select,option{
+    font-family: 'Times New Roman', Times, serif;
+}
+th{
+    font-family: 'Times New Roman', Times, serif;
+    background-color: rgb(138, 157, 223);
+    text-align: center;
+}
+td{
+    font-family: 'Times New Roman', Times, serif;
+}
+ng-select{
+   font-family:'Times New Roman', Times, serif 
+}
+#button{
+    font-family: 'Times New Roman', Times, serif;
+    margin-top: 1.6rem;    
+}
+
+@media (max-width:700px) {
+    .custom-col{
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-top: -1.6rem;
+    }
+    .custom{
+        flex: 0 0 100%;
+        max-width: 100%;
+    }    
+}
+.card{
+   margin: 20px;
+}

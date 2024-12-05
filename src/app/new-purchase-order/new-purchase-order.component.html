@@ -1,0 +1,1168 @@
+<app-navigation></app-navigation>
+<h1 style="margin-top: 1rem;font-family: 'Times New Roman', Times, serif;"><b>Purchase Order</b></h1>
+<mat-card style="margin:1%;padding:1%; border: 1px solid rgb(16, 88, 223);margin-bottom: 10px;">
+    <mat-tab-group [(selectedIndex)]="selectedIndex">
+        <mat-tab label="Entry">
+            <div class="card mt-5 mb-5">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <label class="form-check-label" for="">Department:</label>
+                            <select [(ngModel)]="Department" style="color: #0e269e;"
+                                (ngModelChange)="selDepartment($event)" class="form-select">
+                                <option *ngFor="let dept of GetDepartmentArray" [value]="dept.deptname">
+                                    {{ dept.deptname }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <label class="form-check-label" for="">Purchase Type:</label>
+                            <select class="form-select" name="" id="" style="color: #0e269e;" [(ngModel)]="PurchaseType"
+                                (ngModelChange)="purchType($event)">
+                                <option value="" *ngFor="let purchasety of GetPurchaseTypeArray"
+                                    [value]="purchasety.TypeName">
+                                    {{purchasety.TypeName}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-6 mt-3" id="marginTopSpacing">
+                            <label class="form-check-label" for="supplierSelect">Supplier Name:</label>
+                            <select class="form-select selectpicker" name="" id="supplierSelect" style="color: #0e269e;"
+                                [(ngModel)]="this.SupplierName" (ngModelChange)="SupplName($event)"
+                                data-live-search="true">
+                                <option *ngFor="let supplier of GetSupplierNameArray" [value]="supplier.supname">
+                                    {{supplier.supname}}
+                                </option>
+                            </select>
+                        </div> -->
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 mt-3" id="marginTopSpacing">
+                            <label class="form-check-label" for="supplierSelect">Supplier Name:</label>
+                            <ng-select appendTo="body" [items]="GetSupplierNameArray" bindLabel="supname"
+                                bindValue="supname" [(ngModel)]="this.SupplierName" (change)="SupplName($event)"
+                                [searchable]="true"
+                                style="font-family: 'Times New Roman', Times, serif; border: 1px solid #a8b0da;border-radius: 7px;padding: 13px;">
+                            </ng-select>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 mt-3">
+                            <label class="form-check-label" for="">Currency Type:</label>
+                            <input type="text" class="form-control" [value]=" this.currencyType" readonly>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 mt-3">
+                            <label class="form-check-label" for="">Exchange Rate:</label>
+                            <input type="text" class="form-control" style="color: #0e269e;" [value]="this.ExchangeRate"
+                                readonly>
+                        </div>
+                    </div>
+                    <div *ngIf="isCardVisible()">
+                        <div class="row mt-3">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <label class="form-check-label" for="">Location:</label>
+                                <select class="form-select" name="" id="" style="color: #0e269e;"
+                                    [(ngModel)]="Location">
+                                    <option *ngFor="let Location of GetLocationArray">{{Location.location}}</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4" id="marginTopSpacing">
+                                <label class="form-check-label" for="">PO No:</label>
+                                <input type="text" class="form-control" style="color: #0e269e;" [(ngModel)]="PoNO"
+                                    readonly>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4" id="marginTopSpacing">
+                                <label class="form-check-label" for="">PO Value:</label>
+                                <input type="text" class="form-control" style="color: #0e269e;"
+                                    value="{{this.POQty*this.restrict}}" readonly>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <label class="form-check-label" for="">PO Date:</label>
+                                <input type="date" [min]="today" class="form-control" id="poDate" value="{{today}}"
+                                    readonly>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <label class="form-check-label" for="poValidUpto">PO Valid Upto:</label>
+                                <input type="date" id="poValidUpto" style="color: #0e269e;" class="form-control"
+                                    [min]="today" [value]="validupto" (change)="todaynext($event)"
+                                    onkeydown="return false;">
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <label class="form-check-label" style="margin-left: 0.25rem;" for="">Credit
+                                    period:</label>
+                                <input class="form-control" style="font-size:larger" type="text" [value]="creditPeriod"
+                                    readonly>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <input type="checkbox" style="color: #0e269e;" class="form-check-input"
+                                    [(ngModel)]="trialpochecked">
+                                <label for="" class="form-check-label"
+                                    style="margin-top: 0.3rem;margin-left: 0.2rem;">Trail PO</label>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <input type="checkbox" style="color: #0e269e;" class="form-check-input"
+                                    [(ngModel)]="devpoChecked">
+                                <label for="" class="form-check-label"
+                                    style="margin-top: 0.3rem;margin-left: 0.2rem;">Development PO</label>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-3" style="text-align: right;">
+                            <button mat-raised-button color="warn"
+                                style="margin-right: 0.5rem;font-family: 'Times New Roman', Times, serif;color:white;font-size: 18px;"
+                                (click)="clear()">Clear</button>
+                            <button mat-raised-button color="primary"
+                                style="font-family: 'Times New Roman', Times, serif;font-size: 18px;"
+                                (click)="next()">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab label="PO release">
+            <div class="card mt-5">
+                <div class="card-body">
+                    <div class="row mt-1">
+                        <div class="col-12 col-sm-12 col-md-3 col-lg-3">
+                            <label for="Schedule Date" class="form-check-label">Schedule Date:</label>
+                            <div style="display: flex;">
+                                <input type="checkbox" class="form-check-input"
+                                    style="display: flex;margin-top:0.5rem;padding:10px;color: #0e269e;"
+                                    name="Schedule Date" (change)="checkBox($event)" [checked]="scheduleDate">
+                                <input type="date" style="margin-left: 1rem;color: #0e269e;" class="form-control"
+                                    [(ngModel)]="SchedDate" (ngModelChange)="scheddateChange($event)"
+                                    [disabled]="!scheduleDate">
+                            </div>
+                        </div>
+                    </div>
+
+                    <mat-tab-group mat-align-tabs="start" style="margin-top:1rem;">
+                        <div>
+                            <mat-tab label="Indent Pending">
+                                <div class="table-responsive" style="margin-top: 1rem;">
+                                    <table class="table table-bordered" style="border: 1px solid #4863a0;">
+                                        <thead>
+                                            <th style="border: 2px solid #4863a0">Check</th>
+                                            <th style="border: 2px solid #4863a0">PO Schedule</th>
+                                            <th style="border: 2px solid #4863a0">Indent_No</th>
+                                            <th style="border: 2px solid #4863a0">Indent_Date</th>
+                                            <!-- <th style="border: 2px solid #4863a0">Department</th>
+                                            <th style="border: 2px solid #4863a0">Emp_name</th> -->
+                                            <th style="border: 2px solid #4863a0">Raw_Material_Name</th>
+                                            <th style="border: 2px solid #4863a0">UOM</th>
+                                            <th style="border: 2px solid #4863a0">Approved_Qty</th>
+                                            <th style="border: 2px solid #4863a0">PO_raised</th>
+                                            <th style="border: 2px solid #4863a0">Balance</th>
+                                            <th style="border: 2px solid #4863a0">PO_Qty</th>
+                                            <!-- <th style="border: 2px solid #4863a0">Status</th> -->
+                                            <th style="border: 2px solid #4863a0">Rate</th>
+                                            <!-- <th style="border: 2px solid #4863a0">Discount</th> -->
+                                            <!-- <th style="border: 2px solid #4863a0">Pack_Charge</th> -->
+                                            <!-- <th style="border: 2px solid #4863a0">Tax_group_ID</th> -->
+                                            <th style="border: 2px solid #4863a0">Restrict</th>
+                                            <!-- <th style="border: 2px solid #4863a0">PO_raised</th> -->
+                                            <!-- <th style="border: 2px solid #4863a0">Balance</th> -->
+                                            <!-- <th style="border: 2px solid #4863a0">Freight</th> -->
+                                            <!-- <th style="border: 2px solid #4863a0">HSN_code</th> -->
+                                            <th style="border: 2px solid #4863a0">Pack_Qty</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let mainTable of POMainTableArray; let i = index"
+                                                [ngClass]="{'red-row': mainTable.scheduled}">
+                                                <!-- Capture index here -->
+                                                <td style="border: 2px solid #4863a0;text-align: center;">
+                                                    <input #checkbox type="checkbox" class="form-check-input"
+                                                        style="padding: 10px;text-align: center;"
+                                                        (change)="onCheckboxChange($event, mainTable)"
+                                                        [attr.readonly]="true" (click)="$event.preventDefault()">
+                                                </td>
+                                                <td>
+                                                    <button mat-raised-button class="custom-menu-item"
+                                                        [color]="mainTable.disabled ? 'warn' : 'primary'"
+                                                        [ngStyle]="mainTable.disabled ? {'background-color': 'red' ,'color':'white'} : {}"
+                                                        style="font-family: 'Times New Roman', Times, serif; font-size: 18px;"
+                                                        (click)="PODetails(i)" [disabled]="mainTable.disabled">
+                                                        Schedule
+                                                    </button>
+                                                </td>
+                                                <td style="border: 2px solid #4863a0;text-align: center;">
+                                                    {{mainTable.PR_Ref_No}}</td>
+                                                <td style="border: 2px solid #4863a0;text-align: center;">
+                                                    {{mainTable.PRDate |
+                                                    date:'dd-MMM-yyyy' }}
+                                                </td>
+                                                <!-- <td style="border: 2px solid #4863a0;text-align: left;">
+                                                    {{mainTable.deptname}}</td>
+                                                <td style="border: 2px solid #4863a0;text-align: left;">
+                                                    {{mainTable.empname}}</td> -->
+                                                <td
+                                                    style="border: 2px solid #4863a0;text-align: left;white-space: wrap;">
+                                                    {{mainTable.rawmatname}}</td>
+                                                <td style="border: 2px solid #4863a0;text-align: left;">
+                                                    {{mainTable.uom}}
+                                                </td>
+                                                <td style="border: 2px solid #4863a0;">{{mainTable.ApprovedQty}}</td>
+                                                <td style="border: 2px solid #4863a0;">{{mainTable.poqty}}</td>
+                                                <td style="border: 2px solid #4863a0;">{{mainTable.balqty}}</td>
+                                                <td style="border: 2px solid #4863a0;">
+                                                    <input type="text" [(ngModel)]="POQty" class="form-control"
+                                                        [disabled]="restrict === 0"
+                                                        (keyup.enter)="checkBoxOnEnter(checkbox, mainTable)"
+                                                        (blur)="checkBoxOnBlur(checkbox, mainTable)">
+                                                </td>
+                                                <!-- <td style="border: 2px solid #4863a0;text-align: left;"> 
+                                                    {{mainTable.Status}}</td> -->
+                                                <td style="border: 2px solid #4863a0;">{{mainTable.Rate}}</td>
+                                                <!-- <td style="border: 2px solid #4863a0;"
+                                                    *ngFor="let mainTable1 of POMainTableArray1">{{mainTable1.discount}}
+                                                </td>
+                                                <td style="border: 2px solid #4863a0;"
+                                                    *ngFor="let mainTable1 of POMainTableArray1">{{mainTable1.packing}}
+                                                </td>
+                                                <td style="border: 2px solid #4863a0;text-align: left;"
+                                                    *ngFor="let mainTableTax of POMainTableTaxArray1">
+                                                    {{(mainTableTax.taxgroup)}}</td> -->
+                                                <td style="border: 2px solid #4863a0;">{{((this.restrict).toFixed(2))}}
+                                                </td>
+                                                <!-- <td style="border: 2px solid #4863a0;">
+                                                    {{(this.PORaised==0?'':(this.PORaised)) }}</td>
+                                                <td style="border: 2px solid #4863a0;">
+                                                    {{(this.restrict)-(this.PORaised)}}
+                                                </td>
+                                                <td style="border: 2px solid #4863a0;"
+                                                    *ngFor="let mainTable1 of POMainTableArray1">
+                                                    {{(mainTable1.freight).toFixed(2)}}
+                                                </td>
+                                                <td style="border: 2px solid #4863a0;">{{mainTable.hsn_code}}</td> -->
+                                                <td style="border: 2px solid #4863a0;"
+                                                    *ngFor="let mainTable1 of POMainTableArray1">{{ this.packQty ?
+                                                    this.packQty.toFixed(3) : '0' }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="Additional details">
+                                <table style="margin-top:1rem;width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Detail</th>
+                                            <th>Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let value of addValueArray">
+                                            <td style="text-align: left;">Rate</td>
+                                            <td style="text-align: left;">{{value.Rate}}</td>
+                                        </tr>
+                                        <tr *ngFor="let value of addValueArray">
+                                            <td style="text-align: left;">Mode Of Transport</td>
+                                            <td style="text-align: left;">{{value['Mode of Transport']}}</td>
+                                            <!-- key has space -->
+                                        </tr>
+                                        <tr *ngFor="let value of addValueArray">
+                                            <td style="text-align: left;">Insurance Terms</td>
+                                            <td style="text-align: left;">{{value['Insurance Terms']}}</td>
+                                            <!-- key has space -->
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div>
+                                    <div class="mt-2">
+                                        <input type="checkbox" class="form-check-input" id="attachmentCheckbox"
+                                            (change)="onCheckboxChange1($event)">
+                                        <label for="attachmentCheckbox" style="margin-top: 5px; margin-left: 5px;"
+                                            class="form-check-label">New Attachment</label>
+                                    </div>
+                                    <p *ngIf="isCheckboxChecked" class="mt-2"
+                                        style="color:brown;font-family: 'Times New Roman', Times, serif;font-weight:800;font-size:18px">
+                                        Upload and Fetch File from IndexedDB
+                                    </p>
+                                    <!-- File input for uploading -->
+                                    <div class="form-group" *ngIf="isCheckboxChecked">
+                                        <label for="attachment">Attachment</label>
+                                        <input type="file" class="form-control" id="attachment" #attachmentInput />
+                                        <button (click)="uploadFile()" mat-raised-button color="primary"
+                                            style="margin-top:10px;font-family:'Times New Roman', Times, serif">Upload
+                                            File</button>
+                                    </div>
+                                    <!-- Dropdown to select the file -->
+                                    <div class="col-4 form-group mt-3">
+                                        <label for="fileSelect">Select a file to fetch:</label>
+                                        <select id="fileSelect" #fileSelect class="form-control">
+                                            <option value="" disabled selected>Select a file</option>
+                                            <!-- Options will be populated dynamically -->
+                                        </select>
+                                    </div>
+                                    <button (click)="fetchFile()" mat-raised-button color="primary"
+                                        style="margin-top:10px;font-family:'Times New Roman', Times, serif">Fetch
+                                        File from
+                                        IndexedDB</button>
+                                    <!-- Placeholder for file preview -->
+                                    <h2
+                                        style="color:brown;font-family: 'Times New Roman', Times, serif;font-weight:800;font-size:18px">
+                                        File Preview or Download</h2>
+                                    <img #fileImage src="" alt="Fetched File Image"
+                                        style="max-width: 100%; display: none;" />
+                                    <p #fileDetails></p>
+                                </div>
+                                <div class="col-4">
+                                    <label for="" class="form-check-label">Comments</label>
+                                    <textarea name="" id="" class="form-control"
+                                        style="resize: none;field-sizing: content;" [(ngModel)]="Comment"></textarea>
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="Payment Terms">
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-6 mt-3">
+                                    <label for="" class="form-check-label">Payment Terms</label>
+                                    <select class="form-select" name="" id="" [(ngModel)]="paymentTerms"
+                                        (ngModel)="paymentTerms" (ngModelChange)="payTerms($event)">
+                                        <option *ngFor="let paymentTerms of GetPaymentTermsArray">{{paymentTerms.terms}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mt-3">
+                                    <table class=" table table-responsive">
+                                        <thead>
+                                            <th>Term</th>
+                                            <th>Percentage(%)</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr style="border: 2px solid #4863a0;"
+                                                *ngFor="let payDetail of paymentDetailsArray">
+                                                <td>{{payDetail.term}}</td>
+                                                <td>{{(payDetail.perc).toFixed(2)}}</td>
+                                                <td style="text-align: left">{{payDetail.detail}}</td>
+                                                <td>{{this.POQty*this.restrict}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </mat-tab>
+                        </div>
+                    </mat-tab-group>
+                    <!-- <div class="row mt-2">
+                         <div class="col-4" style="text-align: center;">
+                            <button mat-raised-button class="custom-menu-item" color="primary"
+                                style="font-family: 'Times New Roman', Times, serif;font-size: 18px;"
+                                (click)="PODetails()">PO
+                                Schedule</button>
+                        </div> 
+                        <div class="col-4" style="text-align: center">
+                            <button mat-raised-button color="warn"
+                                style="color:white;font-family: 'Times New Roman', Times, serif;font-size: 18px; display:none"
+                                (click)="download()">Capex Details</button>
+                        </div>
+                        <div class="col-4" style="text-align: center">
+                            <button mat-raised-button
+                                style="background-color:rgb(69, 171, 69);color:white;font-family: 'Times New Roman', Times, serif;font-size: 18px;"
+                                (click)="releaseSelected()" >Release</button>
+                        </div>
+                    </div> -->
+                    <div class=" row mt-3 ">
+                        <div class="mt-2 col " style=" font-family: 'Times New Roman', Times, serif;font: size 18px;">
+                            <button mat-raised-button color="primary"
+                                style="text-align: right;margin-right: 0.5rem;font-family: 'Times New Roman', Times, serif;color:white;font-size: 18px;"
+                                (click)="back()">Back</button>
+                            <button mat-raised-button color="warn"
+                                style="text-align: right;margin-right: 0.5rem;font-family: 'Times New Roman', Times, serif;color:white;font-size: 18px;"
+                                id="clear" (click)="clear()">Clear</button>
+                        </div>
+                        <div class="mt-2 col" style="text-align: right;margin-right: 0.5rem;">
+                            <button mat-raised-button
+                                style="background-color:rgb(69, 171, 69);color:white;font-family: 'Times New Roman', Times, serif;font-size: 18px;"
+                                (click)="releaseSelected()">Release</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- *ngIf="this.isCardVisible1" -->
+            <div *ngIf="this.isCardVisible1">
+                <div class="card mt-3" style="margin-bottom: 3rem;">
+                    <div class="card-body">
+                        <h2 style="text-align: center;font-family: 'Times New Roman', Times, serif;"><b> Purchase Order
+                                Release</b></h2>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <th>Item_Description</th>
+                                    <th>UOM</th>
+                                    <th>PO_Qty</th>
+                                    <th>Rate</th>
+                                    <th>Discount</th>
+                                    <th>Packing</th>
+                                    <th>Freight</th>
+                                    <th>Gross</th>
+                                    <th>Value</th>
+                                    <th>PrId</th>
+                                    <th>Trans_ID</th>
+                                    <th>Trans_Incl</th>
+                                    <th>TaxPer</th>
+                                    <th>PoProductId</th>
+                                </thead>
+                                <tbody *ngFor="let selectedRow of selectedRows">
+                                    <td style="text-align: left;white-space: wrap;">{{selectedRow.rawmatname}}</td>
+                                    <td style="text-align: left;">{{selectedRow.uom}}</td>
+                                    <td>{{this.POQty}}</td>
+                                    <td>{{selectedRow.Rate}}</td>
+                                    <td *ngFor="let mainTable1 of POMainTableArray1">{{mainTable1.discount}}</td>
+                                    <td *ngFor="let mainTable1 of POMainTableArray1">{{mainTable1.packing}}</td>
+                                    <td *ngFor="let mainTable1 of POMainTableArray1">{{mainTable1.freight}}</td>
+                                    <td *ngFor="let mainTable1 of POMainTableArray1">
+                                        {{(selectedRow.Rate-mainTable1.discount+((mainTable1.packing*this.POQty)/this.POQty))
+                                        }}</td>
+                                    <td>{{this.POQty*this.restrict}}</td>
+                                    <td>{{selectedRow.prid}}</td>
+                                    <td *ngFor="let mainTable1 of POMainTableArray1">{{mainTable1.transporterid}}</td>
+                                    <td *ngFor="let mainTable1 of POMainTableArray1" style="text-align: left;">
+                                        {{mainTable1.freight_incl}}</td>
+                                    <td>{{(this.taxpercentage).toFixed(2) }}</td>
+                                    <td>{{selectedRow.PoProductId}}</td>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12 col-md-4 mt-2" style="display: flex;">
+                                <label for="" style="margin-top: 0.5rem;">Transporter_Name:</label>
+                                <input type="text" class="form-control" [value]="this.transporterName" readonly>
+                            </div>
+                            <div *ngFor="let mainTable1 of POMainTableArray1" class="col-12 col-md-4 mt-2"
+                                style="display: flex;">
+                                <label for="" style="margin-top: 0.5rem;">Transporter_INCL:</label>
+                                <input type="text" class="form-control" [value]="mainTable1.freight_incl" readonly>
+                            </div>
+                        </div>
+                        <div class=" row mt-3 ">
+                            <div class="mt-2 col" style="text-align: right;margin-right: 0.5rem;">
+                                <button mat-raised-button color="primary"
+                                    style="margin-right: 0.5rem;font-family: 'Times New Roman', Times, serif; font-size: 18px;color:white"
+                                    data-bs-toggle="modal" data-bs-target="#viewTaxDetails">View</button>
+                                <button mat-raised-button id="release" data-bs-toggle="modal" data-bs-target="#save"
+                                    style="background-color: rgb(69, 171, 69);color:white; font-family: 'Times New Roman', Times, serif;font-size: 18px;">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab label="PO details">
+            <div class="modal-body mt-5">
+                <h1 style="text-align: center;color: brown;font-family:'Times New Roman', Times, serif;">Old PO</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <h1 style="text-align: center;font-family:'Times New Roman', Times, serif;">
+                            Unit -1<h4>{{this.rawmatname}}</h4>
+                        </h1>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="background-color: #4863a0;color:white;font-size:13px">PONo</th>
+                                        <th style="background-color: #4863a0;color:white;font-size:13px">PO Date</th>
+                                        <th style="background-color: #4863a0;color:white;font-size:13px">Supplier Name
+                                        </th>
+                                        <th style="background-color: #4863a0;color:white;font-size:13px">PO Qty</th>
+                                        <th style="background-color: #4863a0;color:white;font-size:13px">PO Rate</th>
+                                        <th style="background-color: #4863a0;color:white;font-size:13px">Discount</th>
+                                        <th style="background-color: #4863a0;color:white;font-size:13px">Freight</th>
+                                        <th style="background-color: #4863a0;color:white;font-size:13px">LeadDays</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let oldpo1 of oldpo1Ar">
+                                        <td style="text-align: left;">{{oldpo1.pono}}</td>
+                                        <td style="text-align: center;">{{(oldpo1.podate).split('T')[0]}}</td>
+                                        <td style="text-align: left;">{{oldpo1.supname}}</td>
+                                        <td>{{oldpo1.ord_qty}}</td>
+                                        <td>{{oldpo1.porate}}</td>
+                                        <td>{{oldpo1.discount}}</td>
+                                        <td>{{oldpo1.freight}}</td>
+                                        <td>{{oldpo1.leddays}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body mt-5"></div>
+            <div class="card">
+                <div class="card-body">
+                    <h1 style="text-align: center;font-family:'Times New Roman', Times, serif;">
+                        Unit -2 <h4>{{this.rawmatname }}</h4>
+                    </h1>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="background-color: #4863a0;color:white;font-size:13px">PONo</th>
+                                    <th style="background-color: #4863a0;color:white;font-size:13px">PO Date</th>
+                                    <th style="background-color: #4863a0;color:white;font-size:13px">Supplier Name</th>
+                                    <th style="background-color: #4863a0;color:white;font-size:13px">PO Qty</th>
+                                    <th style="background-color: #4863a0;color:white;font-size:13px">PO Rate</th>
+                                    <th style="background-color: #4863a0;color:white;font-size:13px">Discount</th>
+                                    <th style="background-color: #4863a0;color:white;font-size:13px">Freight</th>
+                                    <th style="background-color: #4863a0;color:white;font-size:13px">LeadDays</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let oldpo1 of oldpo2Ar">
+                                    <td style="text-align: left;">{{oldpo1.pono}}</td>
+                                    <td style="text-align: center;">{{(oldpo1.podate).split('T')[0]}}</td>
+                                    <td style="text-align: left;">{{oldpo1.supname}}</td>
+                                    <td>{{oldpo1.ord_qty}}</td>
+                                    <td>{{oldpo1.porate}}</td>
+                                    <td>{{oldpo1.discount}}</td>
+                                    <td>{{oldpo1.freight}}</td>
+                                    <td>{{oldpo1.leddays}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</mat-card>
+<!-- Modal -->
+<div class="modal fade" id="viewTaxDetails" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5"><b>Tax Details</b></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <thead>
+                        <th>Tax name</th>
+                        <th>Percentage</th>
+                        <th>Value</th>
+                    </thead>
+                    <tbody *ngFor="let tax of TaxArray ">
+                        <td style="text-align: left;">{{tax.taxtype}}</td>
+                        <td>{{tax.DefaultValue}}</td>
+                        <td>{{this.POQty*this.restrict}}</td>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" mat-raised-button color="primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Select the rows -->
+<button class="btn" style="display: none;" data-bs-backdrop="static" data-bs-toggle="modal" id="selrows"
+    data-bs-target="#seltherows">
+</button>
+<div class="modal fade" id="seltherows">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color:orange; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0;font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Alert!</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                Select the rows
+            </div>
+            <button type="button" mat-raised-button color="warn" data-bs-dismiss="modal"
+                style="text-align: center;font-family: 'Times New Roman', Times, serif;">
+                No</button>
+        </div>
+    </div>
+</div>
+<!-- Alreay exists -->
+<button class="btn" style="display:none;" id="alreayexisting" data-bs-backdrop="static" data-bs-toggle="modal"
+    data-bs-target="#alreayexists"></button>
+<div class="modal fade" id="alreayexists">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color: orange; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Alert!</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                Row is Already existing
+            </div>
+            <div class="text-center mb-2">
+                <button type="button" mat-raised-button color="primary" data-bs-dismiss="modal">Ok</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- Save  -->
+<div class="modal fade" id="save" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color:#4863a0; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Status</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                Are You sure to save the New Purchase Order?
+            </div>
+            <div class="text-center mb-1">
+                <button type="button" mat-raised-button
+                    style="background-color: rgb(69, 171, 69);color:white; font-family: 'Times New Roman', Times, serif;text-align: center;margin-right:10px"
+                    data-bs-dismiss="modal" (click)="save()">
+                    Save</button>
+                <button type="button" mat-raised-button color="warn" data-bs-dismiss="modal"
+                    style="text-align: center;font-family: 'Times New Roman', Times, serif;">
+                    No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Release action already performed-->
+<button class="btn" style="display:none;" id="releasedaction" data-bs-toggle="modal" data-bs-target="#releaseaction"
+    data-bs-backdrop="static"></button>
+<div class="modal fade" id="releaseaction">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color: red; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Alert!</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                Release action already performed
+            </div>
+            <div class="text-center mb-1">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" style="text-align: center;">
+                    OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Released Status  -->
+<button class="btn" style="display:none;" id="releasedstatus" data-bs-toggle="modal" data-bs-target="#relstatus"
+    data-bs-backdrop="static"></button>
+<div class="modal fade" id="relstatus">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color: rgb(69, 171, 69); text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Alert!</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                <p>PO released </p> <br>
+                <p>Kindly save the PO</p>
+            </div>
+            <div class="text-center mb-1">
+                <button mat-raised-button color="primary" data-bs-dismiss="modal" style="text-align: center;">
+                    OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Saved Succfully  -->
+<button class="btn" style="display: none;" data-bs-toggle="modal" id="savedpop" data-bs-target="#saved">
+</button>
+<div class="modal fade" id="saved" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color:  rgb(69, 171, 69); text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Alert!</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                Saved Succesfully
+            </div>
+            <div class="text-center mb-1">
+                <button type="button" mat-raised-button data-bs-dismiss="modal"
+                    style="text-align: center;background-color: #4863a0;font-family:'Times New Roman', Times, serif;color: white;">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- PO Schedule -->
+<button id="POSchedule" style="display: none;" data-bs-toggle="modal" data-bs-target="#POSchedule1"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+</button>
+<div class="modal fade" id="POSchedule1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div style="background-color: #4863a0;color:white">
+                <p
+                    style="text-align: center;font-size: 25px;margin-top:3px;font-family: 'Times New Roman', Times, serif; color:white;padding:10px">
+                    Delivery Schedule</p>
+            </div>
+            <div style="padding: 10px;">
+                <div class="card mt-1 mb-2" style="border: 1px solid #4863a0;">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <label style="padding-left: 10px" class="form-label" style="font-size:17px">Raw
+                                    Material</label>
+                                <input type="text" class="form-control" [value]="this.rawmatname" readonly>
+                            </div>
+                            <div class="col-6">
+                                <label style="padding-left: 10px" class="form-label" style="font-size:17px">Uom</label>
+                                <input type="text" class="form-control" [value]=" this.UOM" readonly>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table mt-3">
+                                <thead>
+                                    <tr>
+                                        <th style="background-color: #4863a0; color:white">Select</th>
+                                        <th style="background-color: #4863a0; color:white">Qty</th>
+                                        <th style="background-color: #4863a0; color:white">UOM</th>
+                                        <th style="background-color: #4863a0; color:white">Internal Commitment</th>
+                                        <th style="background-color: #4863a0; color:white">Supplier Commitment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let row of schedulepopAr">
+                                        <td style="text-align: center;"><input type="checkbox" class="form-check-input"
+                                                [(ngModel)]="row.selected"></td>
+                                        <td style="text-align:right">{{row.inputQty}}</td>
+                                        <td style="text-align:left">{{row.uom}}</td>
+                                        <td style="text-align: center;">{{row.internalCommitment}}</td>
+                                        <td style="text-align:center">{{row.suppliercommitment}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                                <label class="form-label">Ord_Qty</label>
+                                <input type="text" class="form-control" [value]="this.orderquantity" readonly>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                                <label class="form-label">Qty</label>
+                                <input type="text" class="form-control" [(ngModel)]="inputQty">
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                                <label class="form-group">Internal</label>
+                                <input type="date" class="form-control mt-1" [min]="today" [value]="this.Internal"
+                                    (change)="internaldate($event)">
+                            </div>
+                            <div>
+                                <label class="form-label">Comments</label>
+                                <textarea class="form-control" style="resize: none;field-sizing: content;"
+                                    [(ngModel)]="Commentsch"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" style="text-align: right;">
+                                <button mat-raised-button
+                                    style="background-color:orange;margin-right:10px;font-family: 'Times New Roman', Times, serif;color:white;"
+                                    (click)="insert()">Insert
+                                </button>
+                                <button mat-raised-button
+                                    style="background-color:rgb(243, 97, 97);margin-right:10px;font-family: 'Times New Roman', Times, serif;color:white"
+                                    (click)=" remove()">Remove
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4" style="text-align: center;">
+                                <button mat-raised-button
+                                    style="background-color:rgb(69, 171, 69);font-family:'Times New Roman', Times, serif;font-size:18px;color:white"
+                                    (click)="savetoast()">Save
+                                </button>
+                            </div>
+                            <div class="col-4" style="text-align: center;">
+                                <button mat-raised-button
+                                    style="background-color:rgb(219, 81, 81);text-align:center;font-family: 'Times New Roman', Times, serif;color:white;font-size:18px;"
+                                    data-bs-toggle="modal" data-bs-target="#posdelete" (click)="deletepop()">Delete
+                                </button>
+                            </div>
+                            <div class="col-4" style="text-align: center;">
+                                <button mat-raised-button color="warn" data-bs-dismiss="modal"
+                                    style="font-family: 'Times New Roman', Times, serif;font-size:18px;"
+                                    (click)="closepop()">Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="card mb-3 mt-3" style="border: 1px solid #4863a0;">
+                    <h1
+                        style="text-align: center;color: brown;font-family: 'Times New Roman', Times, serif;font-weight: 700;">
+                        Commitment
+                        Date</h1>
+                    <div class="row">
+                        <div class="col-6" style="padding-right:1rem">
+                            <label class="form-group">Supplier</label>
+                            <input type="date" class="form-control" [min]="today" [value]="this.suppldate"
+                                (change)="supplierdate($event)">
+                        </div>
+                    </div>
+                    <p class="text-center mt-2"> -->
+            <!-- <mat-button-toggle-group name="fontStyle" aria-label="Font Style"
+                            style="font-family:'Times New Roman', Times, serif;font-size:18px">
+                            <mat-button-toggle value="" data-bs-toggle="modal"
+                                data-bs-target="#pos">Save</mat-button-toggle>
+                            <mat-button-toggle data-bs-toggle="modal"
+                                data-bs-target="#posdelete">Delete</mat-button-toggle>
+                            <mat-button-toggle data-bs-dismiss="modal">Close</mat-button-toggle>
+                        </mat-button-toggle-group> -->
+            <!-- </p> -->
+
+            <!-- </div>  -->
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------------------------  Enter valid PO qty and Schedule the PO-->
+<button class="btn" style="display: none;" data-bs-toggle="modal" id="firstrelease" data-bs-target="#releasepo">
+</button>
+<div class="modal fade" id="releasepo" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color:orange; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Alert!</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 24px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                Enter valid PO qty and Schedule the PO
+                <br> <br>
+                <p style="color: rgb(219, 81, 81);font-size:13px">Note: PO qty must be greater than 0.
+                    <br> Every PO must be scheduled
+                </p>
+            </div>
+            <div class="text-center mb-1">
+                <button type="button" mat-raised-button data-bs-dismiss="modal"
+                    style="text-align: center;background-color: #4863a0;font-family:'Times New Roman', Times, serif;color: white;">
+                    OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- File uploaded successfully! -->
+<button class="btn" style="display: none;" data-bs-toggle="modal" id="uploaded"
+    data-bs-target="#uploadsuccess"></button>
+<div class="modal fade" id="uploadsuccess" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color:  rgb(69, 171, 69); text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Status</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                File uploaded Successfully
+            </div>
+            <div class="text-center mb-1">
+                <button type="button" mat-raised-button data-bs-dismiss="modal"
+                    style="text-align: center;background-color: #4863a0;font-family:'Times New Roman', Times, serif;color: white;">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- -------------------------------------------------- --No file selected---------->
+<button class="btn" style="display: none;" data-bs-toggle="modal" id="nofiles" data-bs-target="#nofile"></button>
+
+<div class="modal fade" id="nofile" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color:orange; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Alert!</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                No File Selected
+            </div>
+            <div class="text-center mb-1">
+                <button type="button" mat-raised-button data-bs-dismiss="modal"
+                    style="text-align: center;background-color: #4863a0;font-family:'Times New Roman', Times, serif;color: white;">
+                    OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ------------------------------------------------Please select a file from the dropdown ----- -->
+<button class="btn" style="display: none;" data-bs-toggle="modal" id="dropfile" data-bs-target="#drop"></button>
+
+<div class="modal fade" id="drop" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color: orange; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Alert!</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                Please select a file from the dropdown
+            </div>
+            <div class="text-center mb-1">
+                <button type="button" mat-raised-button data-bs-dismiss="modal"
+                    style="text-align: center;background-color: #4863a0;font-family:'Times New Roman', Times, serif;color: white;">
+                    OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- File not found in IndexedDB. -->
+<button class="btn" style="display: none;" data-bs-toggle="modal" id="db" data-bs-target="#indexdb"></button>
+
+<div class="modal fade" id="indexdb" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color: orange; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Alert!</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                File not found in IndexedDB.
+            </div>
+            <div class="text-center mb-1">
+                <button type="button" mat-raised-button data-bs-dismiss="modal"
+                    style="text-align: center;background-color: #4863a0;font-family:'Times New Roman', Times, serif;color: white;">
+                    OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- "enter valid quantity -->
+<!-- <button class="btn" style="display: none;" data-bs-toggle="modal" id="qty" data-bs-target="#vqty"></button>
+<div class="modal fade" id="vqty" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color: orange; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Alert!</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                Enter valid quantity
+            </div>
+            <div class="text-center mb-1">
+                <button type="button" mat-raised-button data-bs-dismiss="modal"
+                    style="text-align: center;background-color: #4863a0;font-family:'Times New Roman', Times, serif;color: white;">
+                    OK</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<button type="button" class="btn btn-primary" id="validqty" style="display:none"></button>
+<div class="toast-container position-fixed top-50 start-50 translate-middle p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header"
+            style="background-color: orange; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+            <strong class="me-auto">Alert</strong>
+            <button type=" button" style="margin-right:2px" class="btn-close" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Invalid input. Please check the input quantities.
+        </div>
+    </div>
+</div>
+<!-- Nothing to remove -->
+<div class="toast-container position-fixed top-50 start-50 translate-middle p-3">
+    <div id="nothing" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header"
+            style="background-color: orange; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+            <strong class="me-auto">Alert</strong>
+            <button type="button" class="btn-close" style="margin-right:2px" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Select rows to remove
+        </div>
+    </div>
+</div>
+<!--  -->
+<div class="toast-container position-fixed top-50 start-50 translate-middle p-3">
+    <div id="insert1" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header"
+            style="background-color: orange; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+            <strong class="me-auto">Alert</strong>
+            <button type="button" class="btn-close" style="margin-right:2px" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Insert quantity in table
+        </div>
+    </div>
+</div>
+<!-- enter poQty -->
+<button class="btn" style="display: none;" data-bs-toggle="modal" id="poqty" data-bs-target="#poqty1"></button>
+<div class="modal fade" id="poqty1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color: orange; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Alert!</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                Enter the POQty
+            </div>
+            <div class="text-center mb-1">
+                <button type="button" mat-raised-button data-bs-dismiss="modal"
+                    style="text-align: center;background-color: #4863a0;font-family:'Times New Roman', Times, serif;color: white;">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  -->
+<div class="toast-container position-fixed top-50 start-50 translate-middle p-3">
+    <div id="poschedule1" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+        <div class="toast-header"
+            style="background-color: orange; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+            <strong class="me-auto">Alert</strong>
+            <button type="button" class="btn-close" style="margin-right:2px" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Are you sure to save the PO schedule?
+        </div>
+        <div class="text-center mb-1">
+            <button type="button" mat-raised-button class="btn-close"
+                style="background-color: rgb(69, 171, 69);color:white; font-family: 'Times New Roman', Times, serif;text-align: center;margin-right:10px"
+                data-bs-dismiss="toast" (click)="poschedule()">
+                Save</button>
+            <button type="button" mat-raised-button color="warn" data-bs-dismiss="modal" class="btn-close"
+                data-bs-dismiss="toast" style="text-align: center;font-family: 'Times New Roman', Times, serif;">
+                No</button>
+        </div>
+    </div>
+</div>
+<!--  -->
+<button class="btn" style="display: none;" data-bs-toggle="modal" id="kindly" data-bs-target="#knsave"></button>
+<div class="modal fade" id="knsave" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color: orange; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Alert!</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                PO Sheduled / Kindly Don't save again
+            </div>
+            <div class="text-center mb-1">
+                <button type="button" mat-raised-button data-bs-dismiss="modal"
+                    style="text-align: center;background-color: #4863a0;font-family:'Times New Roman', Times, serif;color: white;">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  -->
+<div class="modal fade" id="posdelete" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color:orange ;text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Status</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;">
+                Deleted Successfully
+            </div>
+            <div class="text-center mb-1">
+                <button type="button" mat-raised-button data-bs-dismiss="modal"
+                    style="text-align: center;background-color: #4863a0;font-family:'Times New Roman', Times, serif;color: white;">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  -->
+<div class="toast-container position-fixed top-50 start-50 translate-middle p-3">
+    <div id="internaldate" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+        <div class="toast-header"
+            style="background-color: orange; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+            <strong class="me-auto">Alert</strong>
+            <button type="button" class="btn-close" style="margin-right:2px" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            The new date should be greater than the previously selected date.
+        </div>
+        <div class="text-center mb-1">
+            <button type="button" mat-raised-button color="warn" data-bs-dismiss="modal" class="btn-close"
+                data-bs-dismiss="toast" style="text-align: center;font-family: 'Times New Roman', Times, serif;">
+                Ok</button>
+        </div>
+    </div>
+</div>
+<!--  -->
+<button class="btn" style="display: none;" data-bs-toggle="modal" id="eror" data-bs-target="#error"></button>
+<div class="modal fade" id="error" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"
+            style="border-radius: 10px; overflow: hidden;font-family: 'Times New Roman', Times, serif;">
+            <div
+                style="background-color:#4863a0; text-align: center; font-size: 20px; padding: 10px;font-family: 'Times New Roman', Times, serif;">
+                <h4 style="margin: 0; font-size: 20px;font-family: 'Times New Roman', Times, serif;color:white">
+                    Status</h4>
+            </div>
+            <div class="modal-body text-center"
+                style="text-align: center; font-size: 20px; padding: 20px;font-family: 'Times New Roman', Times, serif;"
+                *ngFor="let er of this.savedataArray">
+                <p> {{er.Msg}} </p>
+            </div>
+            <div class="text-center mb-1">
+                <button type="button" mat-raised-button data-bs-dismiss="modal"
+                    style="text-align: center;background-color: #4863a0;font-family:'Times New Roman', Times, serif;color: white;">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  -->
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box" [fullScreen]="true">
+    <p style="color: white;font: size 18px;font-family: 'Times New Roman', Times, serif;"> Loading... </p>
+</ngx-spinner>

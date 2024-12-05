@@ -21,7 +21,6 @@ export class PurchaseRequestService {
   Capex(Empid:any){
     return this.http.get('http://192.168.203.59:3000/Request/Capexvisibile?Empid='+Empid).pipe(
       catchError(this.handleError))
-
   }
   Department(Empid:any){
     return this.http.get('http://192.168.203.59:3000/Request/Department?Empid='+Empid)
@@ -80,6 +79,6 @@ export class PurchaseRequestService {
     return this.http.get("http://192.168.203.59:3000/Request/OldPoView?locid="+locid+'&Rawmatid='+Rawmatid)
   }
   Save(PurchaseReqSave:any){
-    return this.http.post('http://192.168.203.59.3000/Request/Post_PurchaseReq',PurchaseReqSave)
+    return this.http.post("http://192.168.203.59:3000/Request/Post_PurchaseReq",PurchaseReqSave)
   }
 }
